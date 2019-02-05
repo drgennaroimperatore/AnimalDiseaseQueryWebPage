@@ -12,8 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AnimalDiseaseQueryPage
 {
+   
+
     public class Startup
     {
+       
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;

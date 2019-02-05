@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimalDiseaseQueryPage", "AnimalDiseaseQueryPage\AnimalDiseaseQueryPage.csproj", "{8F42E828-0934-474C-8E98-BE289EE870CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimalDiseaseQueryWebApp", "AnimalDiseaseQueryWebApp\AnimalDiseaseQueryWebApp.csproj", "{79AAC1F2-5BAD-45A0-A820-D75C37E0CDBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8F42E828-0934-474C-8E98-BE289EE870CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F42E828-0934-474C-8E98-BE289EE870CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F42E828-0934-474C-8E98-BE289EE870CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F42E828-0934-474C-8E98-BE289EE870CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79AAC1F2-5BAD-45A0-A820-D75C37E0CDBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79AAC1F2-5BAD-45A0-A820-D75C37E0CDBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79AAC1F2-5BAD-45A0-A820-D75C37E0CDBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79AAC1F2-5BAD-45A0-A820-D75C37E0CDBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
