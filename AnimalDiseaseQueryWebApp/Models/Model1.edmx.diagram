@@ -6,7 +6,9 @@
     <edmx:Diagrams>
       <Diagram DiagramId="77ff7a4405ed431cbe341ab5571800d9" Name="Diagram1" >
         <EntityTypeShape EntityType="ADDBModel.Animal" Width="1.5" PointX="0.625" PointY="0.5" />
-        <EntityTypeShape EntityType="ADDBModel.Disease" Width="1.5" PointX="3.25" PointY="0.5" />
+        <EntityTypeShape EntityType="ADDBModel.Disease" Width="1.5" PointX="2.5" PointY="0.5" />
+        <EntityTypeShape EntityType="ADDBModel.Sign" Width="1.5" PointX="4.75" PointY="0.5" />
+        <EntityTypeShape EntityType="ADDBModel.Priors" Width="1.5" PointX="6.5" PointY="0.5" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

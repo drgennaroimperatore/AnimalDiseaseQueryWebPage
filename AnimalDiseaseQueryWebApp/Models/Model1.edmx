@@ -14,6 +14,8 @@
         <EntityContainer Name="ADDBEntities" annotation:LazyLoadingEnabled="true" >
           <EntitySet Name="Animals" EntityType="ADDBModel.Animal" />
           <EntitySet Name="Diseases" EntityType="ADDBModel.Disease" />
+          <EntitySet Name="Signs" EntityType="ADDBModel.Sign" />
+          <EntitySet Name="Priors" EntityType="ADDBModel.Priors" />
         </EntityContainer>
         <EntityType Name="Animal">
           <Key>
@@ -27,6 +29,18 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sign">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Priors">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
