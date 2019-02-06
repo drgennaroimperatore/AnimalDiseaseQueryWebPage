@@ -14,6 +14,24 @@ namespace AnimalDiseaseQueryWebApp.Models
     
     public partial class Animal
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Animal()
+        {
+            this.Priors = new HashSet<Priors>();
+            this.Probabilities = new HashSet<Probability>();
+            this.Signs = new HashSet<Sign>();
+        }
+    
         public int Id { get; set; }
+        public string Name { get; set; }
+        public string Sex { get; set; }
+        public string Age { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Priors> Priors { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Probability> Probabilities { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Sign> Signs { get; set; }
     }
 }
