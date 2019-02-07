@@ -11,9 +11,10 @@ namespace AnimalDiseaseQueryWebApp.Controllers
     public class EditDBController : Controller
     {
         // GET: EditDB
-        public ActionResult Index(EditDBViewModel model)
+        public ActionResult Index(ADDB context)
         {
-            
+            EditDBViewModel model = new EditDBViewModel();
+            model.animals = context.Animals.ToList();
             return View(model);
         }
         #region Animals Table
