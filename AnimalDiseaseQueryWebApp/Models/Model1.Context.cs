@@ -13,10 +13,10 @@ namespace AnimalDiseaseQueryWebApp.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class ADDBEntities : DbContext
+    public partial class ADDB : DbContext
     {
-        public ADDBEntities()
-            : base("name=ADDBEntities")
+        public ADDB()
+            : base("name=ADDB")
         {
         }
     

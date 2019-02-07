@@ -207,7 +207,7 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ADDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="ADDBEntities" annotation:LazyLoadingEnabled="true" >
+        <EntityContainer Name="ADDB" annotation:LazyLoadingEnabled="true" >
           <EntitySet Name="Animals" EntityType="ADDBModel.Animal" />
           <EntitySet Name="Diseases" EntityType="ADDBModel.Disease" />
           <EntitySet Name="Signs" EntityType="ADDBModel.Sign" />
@@ -391,7 +391,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="ADDBModelStoreContainer" CdmEntityContainer="ADDBEntities">
+  <EntityContainerMapping StorageEntityContainer="ADDBModelStoreContainer" CdmEntityContainer="ADDB">
     <EntitySetMapping Name="Animals">
       <EntityTypeMapping TypeName="IsTypeOf(ADDBModel.Animal)">
         <MappingFragment StoreEntitySet="Animals">

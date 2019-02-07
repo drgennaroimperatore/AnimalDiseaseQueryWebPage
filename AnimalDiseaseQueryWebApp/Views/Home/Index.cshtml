@@ -2,20 +2,11 @@
     ViewData["Title"] = "Web Diagnostic Tool";
 }
 
-
-
 <div class="row">
 
     <div class="col-md-3">
         <h2>Diagnose By Symptoms</h2>
-
-        @using (Html.BeginForm("", "", FormMethod.Post, new { @id = "" }))
-        {
-
-            <button type="submit"> Go To Diagnosis Page </button>
-        }
-
-
+                    
     </div>
     <div class="col-md-3">
         <h2>Other Queries</h2>
@@ -23,7 +14,27 @@
     </div>
     <div class="col-md-3">
         <h2>Edit Database</h2>
-        <button type="submit"> Go To Edit DB Page </button>
-
-    </div>
+     </div>
 </div>
+
+<div class="row">
+
+<div class="col-md-3">    
+        @using (Html.BeginForm("", "", FormMethod.Post, new { @id = "" }))
+        {
+
+            <button type="submit"> Go To Diagnosis Page </button>
+        }  
+</div>
+<div class="col-md-3">
+    
+
+</div>
+<div class="col-md-3">
+    @using (Html.BeginForm("Index", "EditDB", FormMethod.Post, new { @id = "" }))
+    {
+
+        <button type="submit"> Go To Edit DB Page </button>
+    }
+    </div>
+    </div>
