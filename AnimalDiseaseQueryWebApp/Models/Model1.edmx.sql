@@ -2,9 +2,10 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/08/2019 12:47:30
+-- Date Created: 02/08/2019 14:18:30
 -- Generated from EDMX file: C:\Users\spike\source\repos\AnimalDiseaseQueryPage\AnimalDiseaseQueryWebApp\Models\Model1.edmx
 -- --------------------------------------------------
+
 
 
 -- --------------------------------------------------
@@ -34,6 +35,9 @@ IF OBJECT_ID(N'[dbo].[FK_DiseaseTreatment_Disease]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_DiseaseTreatment_Treatment]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[DiseaseTreatment] DROP CONSTRAINT [FK_DiseaseTreatment_Treatment];
+GO
+IF OBJECT_ID(N'[dbo].[FK_AnimalDisease]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Diseases] DROP CONSTRAINT [FK_AnimalDisease];
 GO
 
 -- --------------------------------------------------
@@ -78,9 +82,7 @@ GO
 -- Creating table 'Diseases'
 CREATE TABLE [dbo].[Diseases] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [Name] nvarchar(max)  NOT NULL,
-    [Probability] nvarchar(max)  NOT NULL,
-    [AnimalId] int  NOT NULL
+    [Name] nvarchar(max)  NOT NULL
 );
 GO
 
@@ -94,8 +96,8 @@ CREATE TABLE [dbo].[Signs] (
 );
 GO
 
--- Creating table 'Priors'
-CREATE TABLE [dbo].[Priors] (
+-- Creating table 'PriorsDiseases'
+CREATE TABLE [dbo].[PriorsDiseases] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [AnimalId] int  NOT NULL,
     [DiseaseId] int  NOT NULL,
@@ -103,8 +105,8 @@ CREATE TABLE [dbo].[Priors] (
 );
 GO
 
--- Creating table 'Probabilities'
-CREATE TABLE [dbo].[Probabilities] (
+-- Creating table 'Likelihoods'
+CREATE TABLE [dbo].[Likelihoods] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Value] nvarchar(max)  NOT NULL,
     [AnimalId] int  NOT NULL,
@@ -149,15 +151,15 @@ ADD CONSTRAINT [PK_Signs]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'Priors'
-ALTER TABLE [dbo].[Priors]
-ADD CONSTRAINT [PK_Priors]
+-- Creating primary key on [Id] in table 'PriorsDiseases'
+ALTER TABLE [dbo].[PriorsDiseases]
+ADD CONSTRAINT [PK_PriorsDiseases]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'Probabilities'
-ALTER TABLE [dbo].[Probabilities]
-ADD CONSTRAINT [PK_Probabilities]
+-- Creating primary key on [Id] in table 'Likelihoods'
+ALTER TABLE [dbo].[Likelihoods]
+ADD CONSTRAINT [PK_Likelihoods]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -177,8 +179,8 @@ GO
 -- Creating all FOREIGN KEY constraints
 -- --------------------------------------------------
 
--- Creating foreign key on [AnimalId] in table 'Priors'
-ALTER TABLE [dbo].[Priors]
+-- Creating foreign key on [AnimalId] in table 'PriorsDiseases'
+ALTER TABLE [dbo].[PriorsDiseases]
 ADD CONSTRAINT [FK_AnimalPriors]
     FOREIGN KEY ([AnimalId])
     REFERENCES [dbo].[Animals]
@@ -188,12 +190,12 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_AnimalPriors'
 CREATE INDEX [IX_FK_AnimalPriors]
-ON [dbo].[Priors]
+ON [dbo].[PriorsDiseases]
     ([AnimalId]);
 GO
 
--- Creating foreign key on [DiseaseId] in table 'Priors'
-ALTER TABLE [dbo].[Priors]
+-- Creating foreign key on [DiseaseId] in table 'PriorsDiseases'
+ALTER TABLE [dbo].[PriorsDiseases]
 ADD CONSTRAINT [FK_DiseasePriors]
     FOREIGN KEY ([DiseaseId])
     REFERENCES [dbo].[Diseases]
@@ -203,12 +205,12 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_DiseasePriors'
 CREATE INDEX [IX_FK_DiseasePriors]
-ON [dbo].[Priors]
+ON [dbo].[PriorsDiseases]
     ([DiseaseId]);
 GO
 
--- Creating foreign key on [AnimalId] in table 'Probabilities'
-ALTER TABLE [dbo].[Probabilities]
+-- Creating foreign key on [AnimalId] in table 'Likelihoods'
+ALTER TABLE [dbo].[Likelihoods]
 ADD CONSTRAINT [FK_ProbabilityAnimal]
     FOREIGN KEY ([AnimalId])
     REFERENCES [dbo].[Animals]
@@ -218,12 +220,12 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_ProbabilityAnimal'
 CREATE INDEX [IX_FK_ProbabilityAnimal]
-ON [dbo].[Probabilities]
+ON [dbo].[Likelihoods]
     ([AnimalId]);
 GO
 
--- Creating foreign key on [SignId] in table 'Probabilities'
-ALTER TABLE [dbo].[Probabilities]
+-- Creating foreign key on [SignId] in table 'Likelihoods'
+ALTER TABLE [dbo].[Likelihoods]
 ADD CONSTRAINT [FK_SignProbability]
     FOREIGN KEY ([SignId])
     REFERENCES [dbo].[Signs]
@@ -233,12 +235,12 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_SignProbability'
 CREATE INDEX [IX_FK_SignProbability]
-ON [dbo].[Probabilities]
+ON [dbo].[Likelihoods]
     ([SignId]);
 GO
 
--- Creating foreign key on [DiseaseId] in table 'Probabilities'
-ALTER TABLE [dbo].[Probabilities]
+-- Creating foreign key on [DiseaseId] in table 'Likelihoods'
+ALTER TABLE [dbo].[Likelihoods]
 ADD CONSTRAINT [FK_DiseaseProbability]
     FOREIGN KEY ([DiseaseId])
     REFERENCES [dbo].[Diseases]
@@ -248,7 +250,7 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_DiseaseProbability'
 CREATE INDEX [IX_FK_DiseaseProbability]
-ON [dbo].[Probabilities]
+ON [dbo].[Likelihoods]
     ([DiseaseId]);
 GO
 
@@ -289,21 +291,6 @@ GO
 CREATE INDEX [IX_FK_DiseaseTreatment_Treatment]
 ON [dbo].[DiseaseTreatment]
     ([Treatments_Id]);
-GO
-
--- Creating foreign key on [AnimalId] in table 'Diseases'
-ALTER TABLE [dbo].[Diseases]
-ADD CONSTRAINT [FK_AnimalDisease]
-    FOREIGN KEY ([AnimalId])
-    REFERENCES [dbo].[Animals]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_AnimalDisease'
-CREATE INDEX [IX_FK_AnimalDisease]
-ON [dbo].[Diseases]
-    ([AnimalId]);
 GO
 
 -- --------------------------------------------------

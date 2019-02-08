@@ -17,10 +17,9 @@ namespace AnimalDiseaseQueryWebApp.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Animal()
         {
-            this.Priors = new HashSet<Priors>();
-            this.Probabilities = new HashSet<Probability>();
+            this.Priors = new HashSet<PriorsDiseases>();
+            this.Probabilities = new HashSet<Likelihood>();
             this.Signs = new HashSet<Sign>();
-            this.Diseases = new HashSet<Disease>();
         }
     
         public int Id { get; set; }
@@ -29,12 +28,10 @@ namespace AnimalDiseaseQueryWebApp.Models
         public string Age { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Priors> Priors { get; set; }
+        public virtual ICollection<PriorsDiseases> Priors { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Probability> Probabilities { get; set; }
+        public virtual ICollection<Likelihood> Probabilities { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Sign> Signs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Disease> Diseases { get; set; }
     }
 }

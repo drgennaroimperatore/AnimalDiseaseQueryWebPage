@@ -12,7 +12,7 @@ namespace AnimalDiseaseQueryWebApp.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Probability
+    public partial class Likelihood
     {
         public int Id { get; set; }
         public string Value { get; set; }

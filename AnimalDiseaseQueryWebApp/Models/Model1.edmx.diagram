@@ -8,18 +8,17 @@
         <EntityTypeShape EntityType="ADDBModel.Animal" Width="1.5" PointX="1.25" PointY="0.5" />
         <EntityTypeShape EntityType="ADDBModel.Disease" Width="1.5" PointX="8.375" PointY="0.5" />
         <EntityTypeShape EntityType="ADDBModel.Sign" Width="1.5" PointX="1.75" PointY="3.875" />
-        <EntityTypeShape EntityType="ADDBModel.Priors" Width="1.5" PointX="5.375" PointY="3.75" />
+        <EntityTypeShape EntityType="ADDBModel.PriorsDiseases" Width="1.5" PointX="5.375" PointY="3.75" />
         <AssociationConnector Association="ADDBModel.AnimalPriors" ManuallyRouted="false" >
         </AssociationConnector>
         <AssociationConnector Association="ADDBModel.DiseasePriors" />
-        <EntityTypeShape EntityType="ADDBModel.Probability" Width="1.5" PointX="5.25" PointY="0.5" />
+        <EntityTypeShape EntityType="ADDBModel.Likelihood" Width="1.5" PointX="5.25" PointY="0.5" />
         <AssociationConnector Association="ADDBModel.ProbabilityAnimal" />
         <AssociationConnector Association="ADDBModel.SignProbability" />
         <AssociationConnector Association="ADDBModel.DiseaseProbability" />
         <AssociationConnector Association="ADDBModel.AnimalSign" />
         <EntityTypeShape EntityType="ADDBModel.Treatment" Width="1.5" PointX="8.75" PointY="4" />
         <AssociationConnector Association="ADDBModel.DiseaseTreatment" />
-        <AssociationConnector Association="ADDBModel.AnimalDisease" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

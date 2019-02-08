@@ -28,8 +28,8 @@ namespace AnimalDiseaseQueryWebApp.Models
         public virtual DbSet<Animal> Animals { get; set; }
         public virtual DbSet<Disease> Diseases { get; set; }
         public virtual DbSet<Sign> Signs { get; set; }
-        public virtual DbSet<Priors> Priors { get; set; }
-        public virtual DbSet<Probability> Probabilities { get; set; }
+        public virtual DbSet<PriorsDiseases> PriorsDiseases { get; set; }
+        public virtual DbSet<Likelihood> Likelihoods { get; set; }
         public virtual DbSet<Treatment> Treatments { get; set; }
     }
 }

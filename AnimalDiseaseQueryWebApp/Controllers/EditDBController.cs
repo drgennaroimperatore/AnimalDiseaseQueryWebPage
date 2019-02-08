@@ -20,6 +20,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             }
             
             model.animals = context.Animals.ToList();
+            model.diseases = context.Diseases.ToList();
             return View(model);
         }
                 #region Animals Table
@@ -72,6 +73,15 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         #region Disease Table
         public ActionResult InsertNewDisease (ADDB context, Disease disease)
         {
+            if (disease.Name == null)
+            {
+                TempData["Errors"] = "Missing Fields";
+            }
+            else
+            {
+                context.Diseases.Add(disease);
+                context.SaveChanges();
+            }
 
 
             return RedirectToAction("Index");

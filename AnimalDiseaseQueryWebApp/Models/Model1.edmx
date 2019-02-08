@@ -9,29 +9,29 @@
     <EntitySet Name="Animals" EntityType="ADDBModel.Store.Animals" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Diseases" EntityType="ADDBModel.Store.Diseases" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Signs" EntityType="ADDBModel.Store.Signs" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Priors" EntityType="ADDBModel.Store.Priors" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Probabilities" EntityType="ADDBModel.Store.Probabilities" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PriorsDiseases" EntityType="ADDBModel.Store.PriorsDiseases" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Likelihoods" EntityType="ADDBModel.Store.Likelihoods" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Treatments" EntityType="ADDBModel.Store.Treatments" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="DiseaseTreatment" EntityType="ADDBModel.Store.DiseaseTreatment" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="AnimalPriors" Association="ADDBModel.Store.AnimalPriors">
       <End Role="Animal" EntitySet="Animals" />
-      <End Role="Priors" EntitySet="Priors" />
+      <End Role="Priors" EntitySet="PriorsDiseases" />
     </AssociationSet>
     <AssociationSet Name="DiseasePriors" Association="ADDBModel.Store.DiseasePriors">
       <End Role="Disease" EntitySet="Diseases" />
-      <End Role="Priors" EntitySet="Priors" />
+      <End Role="Priors" EntitySet="PriorsDiseases" />
     </AssociationSet>
     <AssociationSet Name="ProbabilityAnimal" Association="ADDBModel.Store.ProbabilityAnimal">
-      <End Role="Probability" EntitySet="Probabilities" />
+      <End Role="Probability" EntitySet="Likelihoods" />
       <End Role="Animal" EntitySet="Animals" />
     </AssociationSet>
     <AssociationSet Name="SignProbability" Association="ADDBModel.Store.SignProbability">
       <End Role="Sign" EntitySet="Signs" />
-      <End Role="Probability" EntitySet="Probabilities" />
+      <End Role="Probability" EntitySet="Likelihoods" />
     </AssociationSet>
     <AssociationSet Name="DiseaseProbability" Association="ADDBModel.Store.DiseaseProbability">
       <End Role="Disease" EntitySet="Diseases" />
-      <End Role="Probability" EntitySet="Probabilities" />
+      <End Role="Probability" EntitySet="Likelihoods" />
     </AssociationSet>
     <AssociationSet Name="AnimalSign" Association="ADDBModel.Store.AnimalSign">
       <End Role="Animal" EntitySet="Animals" />
@@ -44,10 +44,6 @@
     <AssociationSet Name="FK_DiseaseTreatment_Treatment" Association="ADDBModel.Store.FK_DiseaseTreatment_Treatment">
       <End Role="Treatment" EntitySet="Treatments" />
       <End Role="DiseaseTreatment" EntitySet="DiseaseTreatment" />
-    </AssociationSet>
-    <AssociationSet Name="AnimalDisease" Association="ADDBModel.Store.AnimalDisease">
-      <End Role="Animal" EntitySet="Animals" />
-      <End Role="Disease" EntitySet="Diseases" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Animals">
@@ -65,8 +61,6 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Probability" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="AnimalId" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Signs">
     <Key>
@@ -78,7 +72,7 @@
     <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Probability" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
-  <EntityType Name="Priors">
+  <EntityType Name="PriorsDiseases">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
@@ -87,7 +81,7 @@
     <Property Name="DiseaseId" Type="int" Nullable="false" />
     <Property Name="Probability" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
-  <EntityType Name="Probabilities">
+  <EntityType Name="Likelihoods">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
@@ -114,7 +108,7 @@
   </EntityType>
   <Association Name="AnimalPriors">
     <End Role="Animal" Type="ADDBModel.Store.Animals" Multiplicity="1" />
-    <End Role="Priors" Type="ADDBModel.Store.Priors" Multiplicity="*" />
+    <End Role="Priors" Type="ADDBModel.Store.PriorsDiseases" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Animal">
         <PropertyRef Name="Id" />
@@ -126,7 +120,7 @@
   </Association>
   <Association Name="DiseasePriors">
     <End Role="Disease" Type="ADDBModel.Store.Diseases" Multiplicity="1" />
-    <End Role="Priors" Type="ADDBModel.Store.Priors" Multiplicity="*" />
+    <End Role="Priors" Type="ADDBModel.Store.PriorsDiseases" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Disease">
         <PropertyRef Name="Id" />
@@ -137,7 +131,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="ProbabilityAnimal">
-    <End Role="Probability" Type="ADDBModel.Store.Probabilities" Multiplicity="*" />
+    <End Role="Probability" Type="ADDBModel.Store.Likelihoods" Multiplicity="*" />
     <End Role="Animal" Type="ADDBModel.Store.Animals" Multiplicity="1" />
     <ReferentialConstraint>
       <Principal Role="Animal">
@@ -150,7 +144,7 @@
   </Association>
   <Association Name="SignProbability">
     <End Role="Sign" Type="ADDBModel.Store.Signs" Multiplicity="1" />
-    <End Role="Probability" Type="ADDBModel.Store.Probabilities" Multiplicity="*" />
+    <End Role="Probability" Type="ADDBModel.Store.Likelihoods" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Sign">
         <PropertyRef Name="Id" />
@@ -162,7 +156,7 @@
   </Association>
   <Association Name="DiseaseProbability">
     <End Role="Disease" Type="ADDBModel.Store.Diseases" Multiplicity="1" />
-    <End Role="Probability" Type="ADDBModel.Store.Probabilities" Multiplicity="*" />
+    <End Role="Probability" Type="ADDBModel.Store.Likelihoods" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Disease">
         <PropertyRef Name="Id" />
@@ -180,18 +174,6 @@
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="Sign">
-        <PropertyRef Name="AnimalId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="AnimalDisease">
-    <End Role="Animal" Type="ADDBModel.Store.Animals" Multiplicity="1" />
-    <End Role="Disease" Type="ADDBModel.Store.Diseases" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Animal">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Disease">
         <PropertyRef Name="AnimalId" />
       </Dependent>
     </ReferentialConstraint>
@@ -228,27 +210,27 @@
           <EntitySet Name="Animals" EntityType="ADDBModel.Animal" />
           <EntitySet Name="Diseases" EntityType="ADDBModel.Disease" />
           <EntitySet Name="Signs" EntityType="ADDBModel.Sign" />
-          <EntitySet Name="Priors" EntityType="ADDBModel.Priors" />
+          <EntitySet Name="PriorsDiseases" EntityType="ADDBModel.PriorsDiseases" />
           <AssociationSet Name="AnimalPriors" Association="ADDBModel.AnimalPriors">
             <End Role="Animal" EntitySet="Animals" />
-            <End Role="Priors" EntitySet="Priors" />
+            <End Role="Priors" EntitySet="PriorsDiseases" />
           </AssociationSet>
           <AssociationSet Name="DiseasePriors" Association="ADDBModel.DiseasePriors">
             <End Role="Disease" EntitySet="Diseases" />
-            <End Role="Priors" EntitySet="Priors" />
+            <End Role="Priors" EntitySet="PriorsDiseases" />
           </AssociationSet>
-          <EntitySet Name="Probabilities" EntityType="ADDBModel.Probability" />
+          <EntitySet Name="Likelihoods" EntityType="ADDBModel.Likelihood" />
           <AssociationSet Name="ProbabilityAnimal" Association="ADDBModel.ProbabilityAnimal">
-            <End Role="Probability" EntitySet="Probabilities" />
+            <End Role="Probability" EntitySet="Likelihoods" />
             <End Role="Animal" EntitySet="Animals" />
           </AssociationSet>
           <AssociationSet Name="SignProbability" Association="ADDBModel.SignProbability">
             <End Role="Sign" EntitySet="Signs" />
-            <End Role="Probability" EntitySet="Probabilities" />
+            <End Role="Probability" EntitySet="Likelihoods" />
           </AssociationSet>
           <AssociationSet Name="DiseaseProbability" Association="ADDBModel.DiseaseProbability">
             <End Role="Disease" EntitySet="Diseases" />
-            <End Role="Probability" EntitySet="Probabilities" />
+            <End Role="Probability" EntitySet="Likelihoods" />
           </AssociationSet>
           <AssociationSet Name="AnimalSign" Association="ADDBModel.AnimalSign">
             <End Role="Animal" EntitySet="Animals" />
@@ -258,10 +240,6 @@
           <AssociationSet Name="DiseaseTreatment" Association="ADDBModel.DiseaseTreatment">
             <End Role="Disease" EntitySet="Diseases" />
             <End Role="Treatment" EntitySet="Treatments" />
-          </AssociationSet>
-          <AssociationSet Name="AnimalDisease" Association="ADDBModel.AnimalDisease">
-            <End Role="Animal" EntitySet="Animals" />
-            <End Role="Disease" EntitySet="Diseases" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Animal">
@@ -275,7 +253,6 @@
           <NavigationProperty Name="Priors" Relationship="ADDBModel.AnimalPriors" FromRole="Animal" ToRole="Priors" />
           <NavigationProperty Name="Probabilities" Relationship="ADDBModel.ProbabilityAnimal" FromRole="Animal" ToRole="Probability" />
           <NavigationProperty Name="Signs" Relationship="ADDBModel.AnimalSign" FromRole="Animal" ToRole="Sign" />
-          <NavigationProperty Name="Diseases" Relationship="ADDBModel.AnimalDisease" FromRole="Animal" ToRole="Disease" />
         </EntityType>
         <EntityType Name="Disease">
           <Key>
@@ -283,12 +260,9 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" />
-          <Property Name="Probability" Type="String" Nullable="false" />
           <NavigationProperty Name="Priors" Relationship="ADDBModel.DiseasePriors" FromRole="Disease" ToRole="Priors" />
           <NavigationProperty Name="Probabilities" Relationship="ADDBModel.DiseaseProbability" FromRole="Disease" ToRole="Probability" />
           <NavigationProperty Name="Treatments" Relationship="ADDBModel.DiseaseTreatment" FromRole="Disease" ToRole="Treatment" />
-          <NavigationProperty Name="Animal" Relationship="ADDBModel.AnimalDisease" FromRole="Disease" ToRole="Animal" />
-          <Property Name="AnimalId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Sign">
           <Key>
@@ -302,7 +276,7 @@
           <Property Name="Value" Type="String" Nullable="false" />
           <Property Name="Probability" Type="String" Nullable="false" />
         </EntityType>
-        <EntityType Name="Priors">
+        <EntityType Name="PriorsDiseases">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -315,7 +289,7 @@
         </EntityType>
         <Association Name="AnimalPriors">
           <End Type="ADDBModel.Animal" Role="Animal" Multiplicity="1" />
-          <End Type="ADDBModel.Priors" Role="Priors" Multiplicity="*" />
+          <End Type="ADDBModel.PriorsDiseases" Role="Priors" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Animal">
               <PropertyRef Name="Id" />
@@ -327,7 +301,7 @@
         </Association>
         <Association Name="DiseasePriors">
           <End Type="ADDBModel.Disease" Role="Disease" Multiplicity="1" />
-          <End Type="ADDBModel.Priors" Role="Priors" Multiplicity="*" />
+          <End Type="ADDBModel.PriorsDiseases" Role="Priors" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Disease">
               <PropertyRef Name="Id" />
@@ -337,7 +311,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Probability">
+        <EntityType Name="Likelihood">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -351,7 +325,7 @@
           <Property Name="DiseaseId" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="ProbabilityAnimal">
-          <End Type="ADDBModel.Probability" Role="Probability" Multiplicity="*" />
+          <End Type="ADDBModel.Likelihood" Role="Probability" Multiplicity="*" />
           <End Type="ADDBModel.Animal" Role="Animal" Multiplicity="1" />
           <ReferentialConstraint>
             <Principal Role="Animal">
@@ -364,7 +338,7 @@
         </Association>
         <Association Name="SignProbability">
           <End Type="ADDBModel.Sign" Role="Sign" Multiplicity="1" />
-          <End Type="ADDBModel.Probability" Role="Probability" Multiplicity="*" />
+          <End Type="ADDBModel.Likelihood" Role="Probability" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Sign">
               <PropertyRef Name="Id" />
@@ -376,7 +350,7 @@
         </Association>
         <Association Name="DiseaseProbability">
           <End Type="ADDBModel.Disease" Role="Disease" Multiplicity="1" />
-          <End Type="ADDBModel.Probability" Role="Probability" Multiplicity="*" />
+          <End Type="ADDBModel.Likelihood" Role="Probability" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Disease">
               <PropertyRef Name="Id" />
@@ -410,18 +384,6 @@
           <End Type="ADDBModel.Disease" Role="Disease" Multiplicity="*" />
           <End Type="ADDBModel.Treatment" Role="Treatment" Multiplicity="*" />
         </Association>
-        <Association Name="AnimalDisease">
-          <End Type="ADDBModel.Animal" Role="Animal" Multiplicity="1" />
-          <End Type="ADDBModel.Disease" Role="Disease" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Animal">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Disease">
-              <PropertyRef Name="AnimalId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -443,8 +405,6 @@
         <MappingFragment StoreEntitySet="Diseases">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Probability" ColumnName="Probability" />
-          <ScalarProperty Name="AnimalId" ColumnName="AnimalId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -459,9 +419,9 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Priors">
-      <EntityTypeMapping TypeName="IsTypeOf(ADDBModel.Priors)">
-        <MappingFragment StoreEntitySet="Priors">
+    <EntitySetMapping Name="PriorsDiseases">
+      <EntityTypeMapping TypeName="IsTypeOf(ADDBModel.PriorsDiseases)">
+        <MappingFragment StoreEntitySet="PriorsDiseases">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="AnimalId" ColumnName="AnimalId" />
           <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
@@ -469,9 +429,9 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Probabilities">
-      <EntityTypeMapping TypeName="IsTypeOf(ADDBModel.Probability)">
-        <MappingFragment StoreEntitySet="Probabilities">
+    <EntitySetMapping Name="Likelihoods">
+      <EntityTypeMapping TypeName="IsTypeOf(ADDBModel.Likelihood)">
+        <MappingFragment StoreEntitySet="Likelihoods">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Value" ColumnName="Value" />
           <ScalarProperty Name="AnimalId" ColumnName="AnimalId" />

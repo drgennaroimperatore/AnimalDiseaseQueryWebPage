@@ -12,22 +12,14 @@ namespace AnimalDiseaseQueryWebApp.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Sign
+    public partial class PriorsDiseases
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Sign()
-        {
-            this.Probabilities = new HashSet<Likelihood>();
-        }
-    
         public int Id { get; set; }
         public int AnimalId { get; set; }
-        public string Type_of_Value { get; set; }
-        public string Value { get; set; }
+        public int DiseaseId { get; set; }
         public string Probability { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Likelihood> Probabilities { get; set; }
         public virtual Animal Animal { get; set; }
+        public virtual Disease Disease { get; set; }
     }
 }
