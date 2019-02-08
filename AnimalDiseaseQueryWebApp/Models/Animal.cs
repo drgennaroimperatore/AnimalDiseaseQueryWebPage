@@ -17,7 +17,6 @@ namespace AnimalDiseaseQueryWebApp.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Animal()
         {
-            this.Priors = new HashSet<PriorsDiseases>();
             this.Probabilities = new HashSet<Likelihood>();
             this.Signs = new HashSet<Sign>();
         }
@@ -27,8 +26,6 @@ namespace AnimalDiseaseQueryWebApp.Models
         public string Sex { get; set; }
         public string Age { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PriorsDiseases> Priors { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Likelihood> Probabilities { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

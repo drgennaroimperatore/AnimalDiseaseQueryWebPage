@@ -9,8 +9,6 @@
         <EntityTypeShape EntityType="ADDBModel.Disease" Width="1.5" PointX="8.375" PointY="0.5" />
         <EntityTypeShape EntityType="ADDBModel.Sign" Width="1.5" PointX="1.75" PointY="3.875" />
         <EntityTypeShape EntityType="ADDBModel.PriorsDiseases" Width="1.5" PointX="5.375" PointY="3.75" />
-        <AssociationConnector Association="ADDBModel.AnimalPriors" ManuallyRouted="false" >
-        </AssociationConnector>
         <AssociationConnector Association="ADDBModel.DiseasePriors" />
         <EntityTypeShape EntityType="ADDBModel.Likelihood" Width="1.5" PointX="5.25" PointY="0.5" />
         <AssociationConnector Association="ADDBModel.ProbabilityAnimal" />

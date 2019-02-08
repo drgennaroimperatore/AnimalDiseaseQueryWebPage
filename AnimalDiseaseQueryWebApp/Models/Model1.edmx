@@ -211,10 +211,6 @@
           <EntitySet Name="Diseases" EntityType="ADDBModel.Disease" />
           <EntitySet Name="Signs" EntityType="ADDBModel.Sign" />
           <EntitySet Name="PriorsDiseases" EntityType="ADDBModel.PriorsDiseases" />
-          <AssociationSet Name="AnimalPriors" Association="ADDBModel.AnimalPriors">
-            <End Role="Animal" EntitySet="Animals" />
-            <End Role="Priors" EntitySet="PriorsDiseases" />
-          </AssociationSet>
           <AssociationSet Name="DiseasePriors" Association="ADDBModel.DiseasePriors">
             <End Role="Disease" EntitySet="Diseases" />
             <End Role="Priors" EntitySet="PriorsDiseases" />
@@ -250,7 +246,6 @@
           <Property Name="Name" Type="String" Nullable="false" />
           <Property Name="Sex" Type="String" Nullable="false" />
           <Property Name="Age" Type="String" Nullable="false" />
-          <NavigationProperty Name="Priors" Relationship="ADDBModel.AnimalPriors" FromRole="Animal" ToRole="Priors" />
           <NavigationProperty Name="Probabilities" Relationship="ADDBModel.ProbabilityAnimal" FromRole="Animal" ToRole="Probability" />
           <NavigationProperty Name="Signs" Relationship="ADDBModel.AnimalSign" FromRole="Animal" ToRole="Sign" />
         </EntityType>
@@ -281,23 +276,10 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Animal" Relationship="ADDBModel.AnimalPriors" FromRole="Priors" ToRole="Animal" />
           <NavigationProperty Name="Disease" Relationship="ADDBModel.DiseasePriors" FromRole="Priors" ToRole="Disease" />
           <Property Name="DiseaseId" Type="Int32" Nullable="false" />
           <Property Name="Probability" Type="String" Nullable="false" />
         </EntityType>
-        <Association Name="AnimalPriors">
-          <End Type="ADDBModel.Animal" Role="Animal" Multiplicity="1" />
-          <End Type="ADDBModel.PriorsDiseases" Role="Priors" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Animal">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Priors">
-              <PropertyRef Name="AnimalId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="DiseasePriors">
           <End Type="ADDBModel.Disease" Role="Disease" Multiplicity="1" />
           <End Type="ADDBModel.PriorsDiseases" Role="Priors" Multiplicity="*" />
