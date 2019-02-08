@@ -20,6 +20,7 @@ namespace AnimalDiseaseQueryWebApp.Models
             this.Priors = new HashSet<Priors>();
             this.Probabilities = new HashSet<Probability>();
             this.Signs = new HashSet<Sign>();
+            this.Diseases = new HashSet<Disease>();
         }
     
         public int Id { get; set; }
@@ -33,5 +34,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         public virtual ICollection<Probability> Probabilities { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Sign> Signs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Disease> Diseases { get; set; }
     }
 }

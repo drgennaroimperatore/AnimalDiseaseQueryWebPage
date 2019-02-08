@@ -9,8 +9,10 @@ namespace AnimalDiseaseQueryWebApp.Models
     public class EditDBViewModel
     {
         public List<Animal> animals;
+        public List<Disease> diseases;
+        public List<Sign> signs;
 
-        public List<String> errors = new List<string>(); 
+       
        
         //to do other tables
     }

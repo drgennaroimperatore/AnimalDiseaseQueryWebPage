@@ -19,6 +19,7 @@
         <AssociationConnector Association="ADDBModel.AnimalSign" />
         <EntityTypeShape EntityType="ADDBModel.Treatment" Width="1.5" PointX="8.75" PointY="4" />
         <AssociationConnector Association="ADDBModel.DiseaseTreatment" />
+        <AssociationConnector Association="ADDBModel.AnimalDisease" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

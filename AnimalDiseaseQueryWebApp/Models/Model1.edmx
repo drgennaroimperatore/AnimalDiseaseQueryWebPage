@@ -45,6 +45,10 @@
       <End Role="Treatment" EntitySet="Treatments" />
       <End Role="DiseaseTreatment" EntitySet="DiseaseTreatment" />
     </AssociationSet>
+    <AssociationSet Name="AnimalDisease" Association="ADDBModel.Store.AnimalDisease">
+      <End Role="Animal" EntitySet="Animals" />
+      <End Role="Disease" EntitySet="Diseases" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Animals">
     <Key>
@@ -62,6 +66,7 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Probability" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="AnimalId" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Signs">
     <Key>
@@ -179,6 +184,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="AnimalDisease">
+    <End Role="Animal" Type="ADDBModel.Store.Animals" Multiplicity="1" />
+    <End Role="Disease" Type="ADDBModel.Store.Diseases" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Animal">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Disease">
+        <PropertyRef Name="AnimalId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_DiseaseTreatment_Disease">
     <End Role="Disease" Type="ADDBModel.Store.Diseases" Multiplicity="1" />
     <End Role="DiseaseTreatment" Type="ADDBModel.Store.DiseaseTreatment" Multiplicity="*" />
@@ -242,6 +259,10 @@
             <End Role="Disease" EntitySet="Diseases" />
             <End Role="Treatment" EntitySet="Treatments" />
           </AssociationSet>
+          <AssociationSet Name="AnimalDisease" Association="ADDBModel.AnimalDisease">
+            <End Role="Animal" EntitySet="Animals" />
+            <End Role="Disease" EntitySet="Diseases" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Animal">
           <Key>
@@ -254,6 +275,7 @@
           <NavigationProperty Name="Priors" Relationship="ADDBModel.AnimalPriors" FromRole="Animal" ToRole="Priors" />
           <NavigationProperty Name="Probabilities" Relationship="ADDBModel.ProbabilityAnimal" FromRole="Animal" ToRole="Probability" />
           <NavigationProperty Name="Signs" Relationship="ADDBModel.AnimalSign" FromRole="Animal" ToRole="Sign" />
+          <NavigationProperty Name="Diseases" Relationship="ADDBModel.AnimalDisease" FromRole="Animal" ToRole="Disease" />
         </EntityType>
         <EntityType Name="Disease">
           <Key>
@@ -265,6 +287,8 @@
           <NavigationProperty Name="Priors" Relationship="ADDBModel.DiseasePriors" FromRole="Disease" ToRole="Priors" />
           <NavigationProperty Name="Probabilities" Relationship="ADDBModel.DiseaseProbability" FromRole="Disease" ToRole="Probability" />
           <NavigationProperty Name="Treatments" Relationship="ADDBModel.DiseaseTreatment" FromRole="Disease" ToRole="Treatment" />
+          <NavigationProperty Name="Animal" Relationship="ADDBModel.AnimalDisease" FromRole="Disease" ToRole="Animal" />
+          <Property Name="AnimalId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Sign">
           <Key>
@@ -386,6 +410,18 @@
           <End Type="ADDBModel.Disease" Role="Disease" Multiplicity="*" />
           <End Type="ADDBModel.Treatment" Role="Treatment" Multiplicity="*" />
         </Association>
+        <Association Name="AnimalDisease">
+          <End Type="ADDBModel.Animal" Role="Animal" Multiplicity="1" />
+          <End Type="ADDBModel.Disease" Role="Disease" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Animal">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Disease">
+              <PropertyRef Name="AnimalId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -408,6 +444,7 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Probability" ColumnName="Probability" />
+          <ScalarProperty Name="AnimalId" ColumnName="AnimalId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

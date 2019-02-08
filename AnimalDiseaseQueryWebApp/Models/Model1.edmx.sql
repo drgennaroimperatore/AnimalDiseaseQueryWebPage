@@ -2,10 +2,65 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/07/2019 15:48:06
+-- Date Created: 02/08/2019 12:47:30
 -- Generated from EDMX file: C:\Users\spike\source\repos\AnimalDiseaseQueryPage\AnimalDiseaseQueryWebApp\Models\Model1.edmx
 -- --------------------------------------------------
 
+
+-- --------------------------------------------------
+-- Dropping existing FOREIGN KEY constraints
+-- --------------------------------------------------
+
+IF OBJECT_ID(N'[dbo].[FK_AnimalPriors]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Priors] DROP CONSTRAINT [FK_AnimalPriors];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DiseasePriors]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Priors] DROP CONSTRAINT [FK_DiseasePriors];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ProbabilityAnimal]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Probabilities] DROP CONSTRAINT [FK_ProbabilityAnimal];
+GO
+IF OBJECT_ID(N'[dbo].[FK_SignProbability]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Probabilities] DROP CONSTRAINT [FK_SignProbability];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DiseaseProbability]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Probabilities] DROP CONSTRAINT [FK_DiseaseProbability];
+GO
+IF OBJECT_ID(N'[dbo].[FK_AnimalSign]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Signs] DROP CONSTRAINT [FK_AnimalSign];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DiseaseTreatment_Disease]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[DiseaseTreatment] DROP CONSTRAINT [FK_DiseaseTreatment_Disease];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DiseaseTreatment_Treatment]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[DiseaseTreatment] DROP CONSTRAINT [FK_DiseaseTreatment_Treatment];
+GO
+
+-- --------------------------------------------------
+-- Dropping existing tables
+-- --------------------------------------------------
+
+IF OBJECT_ID(N'[dbo].[Animals]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Animals];
+GO
+IF OBJECT_ID(N'[dbo].[Diseases]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Diseases];
+GO
+IF OBJECT_ID(N'[dbo].[Signs]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Signs];
+GO
+IF OBJECT_ID(N'[dbo].[Priors]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Priors];
+GO
+IF OBJECT_ID(N'[dbo].[Probabilities]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Probabilities];
+GO
+IF OBJECT_ID(N'[dbo].[Treatments]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Treatments];
+GO
+IF OBJECT_ID(N'[dbo].[DiseaseTreatment]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[DiseaseTreatment];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -24,7 +79,8 @@ GO
 CREATE TABLE [dbo].[Diseases] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL,
-    [Probability] nvarchar(max)  NOT NULL
+    [Probability] nvarchar(max)  NOT NULL,
+    [AnimalId] int  NOT NULL
 );
 GO
 
@@ -233,6 +289,21 @@ GO
 CREATE INDEX [IX_FK_DiseaseTreatment_Treatment]
 ON [dbo].[DiseaseTreatment]
     ([Treatments_Id]);
+GO
+
+-- Creating foreign key on [AnimalId] in table 'Diseases'
+ALTER TABLE [dbo].[Diseases]
+ADD CONSTRAINT [FK_AnimalDisease]
+    FOREIGN KEY ([AnimalId])
+    REFERENCES [dbo].[Animals]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_AnimalDisease'
+CREATE INDEX [IX_FK_AnimalDisease]
+ON [dbo].[Diseases]
+    ([AnimalId]);
 GO
 
 -- --------------------------------------------------

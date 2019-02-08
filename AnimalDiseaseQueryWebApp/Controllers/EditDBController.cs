@@ -16,13 +16,13 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             if(ModelState.IsValid)
             {
                if(TempData["Errors"]!=null)
-                    ModelState.AddModelError("Name","Required Field Was Not Filled");
+                    ModelState.AddModelError("Animal Name","Required Field Was Not Filled");
             }
             
             model.animals = context.Animals.ToList();
             return View(model);
         }
-        #region Animals Table
+                #region Animals Table
         [HttpPost]
         public ActionResult InsertNewAnimal(ADDB context, Animal animal, EditDBViewModel model)
         {
@@ -40,6 +40,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             }
 
             return RedirectToAction("Index", "EditDB",model);
+
 
 
         }
@@ -62,6 +63,19 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         }
 
 
+        #endregion
+
+        #region Signs Table
+
+        #endregion
+
+        #region Disease Table
+        public ActionResult InsertNewDisease (ADDB context, Disease disease)
+        {
+
+
+            return RedirectToAction("Index");
+        }
         #endregion
 
     }

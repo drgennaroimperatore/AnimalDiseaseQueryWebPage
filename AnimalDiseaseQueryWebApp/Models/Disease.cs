@@ -25,6 +25,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Probability { get; set; }
+        public int AnimalId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Priors> Priors { get; set; }
@@ -32,5 +33,6 @@ namespace AnimalDiseaseQueryWebApp.Models
         public virtual ICollection<Probability> Probabilities { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Treatment> Treatments { get; set; }
+        public virtual Animal Animal { get; set; }
     }
 }

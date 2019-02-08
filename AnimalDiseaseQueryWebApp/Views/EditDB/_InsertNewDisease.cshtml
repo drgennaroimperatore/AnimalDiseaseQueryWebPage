@@ -1,0 +1,53 @@
+﻿@model AnimalDiseaseQueryWebApp.Models.EditDBViewModel
+<div class="row">
+
+    @using (Html.BeginForm("InsertNewDisease", "EditDB", FormMethod.Post, new { @id = "form_add_animal" }))
+    {
+        <div class="col-md-2">
+            ID
+        </div>
+
+        <div class="col-md-2">
+            @Html.TextBox("Name")
+
+        </div>
+
+        
+            int animalCount = Model.animals.Count;
+            
+        
+
+        <div class="col-md-2">
+
+            @if (animalCount==0)
+            {
+                Html.Label("No animals found");
+
+
+            }
+            else
+            {
+            <select name="AnimalId">
+               @for(int i=0; i<animalCount; i++)
+               {
+                   AnimalDiseaseQueryWebApp.Models.Animal currentAnimal = Model.animals[i];
+                  
+                   <option value="@Model.animals[i].Id"> @currentAnimal.Name @currentAnimal.Sex @currentAnimal.Age </option>
+               }
+            </select>
+            }
+
+
+        </div>
+
+        <div class="col-md-2">
+            <input type="number" name="probability" min="0" max="1" step="0.01" value="0">
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn-info" type="submit"> Add Disease </button>
+        </div>
+
+}
+
+</div>
