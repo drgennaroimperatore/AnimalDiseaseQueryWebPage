@@ -13,10 +13,6 @@
     <EntitySet Name="Likelihoods" EntityType="ADDBModel.Store.Likelihoods" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Treatments" EntityType="ADDBModel.Store.Treatments" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="DiseaseTreatment" EntityType="ADDBModel.Store.DiseaseTreatment" store:Type="Tables" Schema="dbo" />
-    <AssociationSet Name="AnimalPriors" Association="ADDBModel.Store.AnimalPriors">
-      <End Role="Animal" EntitySet="Animals" />
-      <End Role="Priors" EntitySet="PriorsDiseases" />
-    </AssociationSet>
     <AssociationSet Name="DiseasePriors" Association="ADDBModel.Store.DiseasePriors">
       <End Role="Disease" EntitySet="Diseases" />
       <End Role="Priors" EntitySet="PriorsDiseases" />
@@ -77,7 +73,6 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="AnimalId" Type="int" Nullable="false" />
     <Property Name="DiseaseId" Type="int" Nullable="false" />
     <Property Name="Probability" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
@@ -106,18 +101,6 @@
     <Property Name="Diseases_Id" Type="int" Nullable="false" />
     <Property Name="Treatments_Id" Type="int" Nullable="false" />
   </EntityType>
-  <Association Name="AnimalPriors">
-    <End Role="Animal" Type="ADDBModel.Store.Animals" Multiplicity="1" />
-    <End Role="Priors" Type="ADDBModel.Store.PriorsDiseases" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Animal">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Priors">
-        <PropertyRef Name="AnimalId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="DiseasePriors">
     <End Role="Disease" Type="ADDBModel.Store.Diseases" Multiplicity="1" />
     <End Role="Priors" Type="ADDBModel.Store.PriorsDiseases" Multiplicity="*" />
@@ -246,7 +229,7 @@
           <Property Name="Name" Type="String" Nullable="false" />
           <Property Name="Sex" Type="String" Nullable="false" />
           <Property Name="Age" Type="String" Nullable="false" />
-          <NavigationProperty Name="Probabilities" Relationship="ADDBModel.ProbabilityAnimal" FromRole="Animal" ToRole="Probability" />
+          <NavigationProperty Name="Likelihoods" Relationship="ADDBModel.ProbabilityAnimal" FromRole="Animal" ToRole="Probability" />
           <NavigationProperty Name="Signs" Relationship="ADDBModel.AnimalSign" FromRole="Animal" ToRole="Sign" />
         </EntityType>
         <EntityType Name="Disease">
@@ -256,7 +239,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" />
           <NavigationProperty Name="Priors" Relationship="ADDBModel.DiseasePriors" FromRole="Disease" ToRole="Priors" />
-          <NavigationProperty Name="Probabilities" Relationship="ADDBModel.DiseaseProbability" FromRole="Disease" ToRole="Probability" />
+          <NavigationProperty Name="Likelihoods" Relationship="ADDBModel.DiseaseProbability" FromRole="Disease" ToRole="Probability" />
           <NavigationProperty Name="Treatments" Relationship="ADDBModel.DiseaseTreatment" FromRole="Disease" ToRole="Treatment" />
         </EntityType>
         <EntityType Name="Sign">
@@ -264,7 +247,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Probabilities" Relationship="ADDBModel.SignProbability" FromRole="Sign" ToRole="Probability" />
+          <NavigationProperty Name="Likelihoods" Relationship="ADDBModel.SignProbability" FromRole="Sign" ToRole="Probability" />
           <NavigationProperty Name="Animal" Relationship="ADDBModel.AnimalSign" FromRole="Sign" ToRole="Animal" />
           <Property Name="AnimalId" Type="Int32" Nullable="false" />
           <Property Name="Type_of_Value" Type="String" Nullable="false" />
