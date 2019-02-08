@@ -234,6 +234,7 @@
     <Content Include="Views\EditDB\Index.cshtml" />
     <Content Include="Views\EditDB\_InsertNewAnimal.cshtml" />
     <Content Include="Views\EditDB\_InsertNewDisease.cshtml" />
+    <Content Include="Views\EditDB\_InsertNewDiseasePrior.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

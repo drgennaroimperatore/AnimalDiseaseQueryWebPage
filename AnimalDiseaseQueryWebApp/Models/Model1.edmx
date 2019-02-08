@@ -282,7 +282,6 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="Animal" Relationship="ADDBModel.AnimalPriors" FromRole="Priors" ToRole="Animal" />
-          <Property Name="AnimalId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Disease" Relationship="ADDBModel.DiseasePriors" FromRole="Priors" ToRole="Disease" />
           <Property Name="DiseaseId" Type="Int32" Nullable="false" />
           <Property Name="Probability" Type="String" Nullable="false" />
@@ -423,7 +422,6 @@
       <EntityTypeMapping TypeName="IsTypeOf(ADDBModel.PriorsDiseases)">
         <MappingFragment StoreEntitySet="PriorsDiseases">
           <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="AnimalId" ColumnName="AnimalId" />
           <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
           <ScalarProperty Name="Probability" ColumnName="Probability" />
         </MappingFragment>

@@ -1,0 +1,26 @@
+﻿@model AnimalDiseaseQueryWebApp.Models.EditDBViewModel
+<div class="row">
+
+    @using (Html.BeginForm("InsertNewDiseasePrior", "EditDB", FormMethod.Post, new { @id = "form_add_animal" }))
+    {
+        <div class="col-md-2">
+            ID
+        </div>
+
+
+
+        <div class="col-md-2">
+            <select name="diseaseId">
+                <option value=""></option>
+            </select>
+
+        </div>
+
+
+        <div class="col-md-2">
+            <button class="btn-info" type="submit"> Add Disease Prior </button>
+        </div>
+
+    }
+
+</div>
