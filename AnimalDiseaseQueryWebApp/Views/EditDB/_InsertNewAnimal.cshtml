@@ -1,0 +1,38 @@
+﻿
+@model AnimalDiseaseQueryWebApp.Models.EditDBViewModel
+
+
+<div class="row">
+
+    @using (Html.BeginForm("InsertNewAnimal", "EditDB", FormMethod.Post, new { @id = "form_add_animal" }))
+    {
+
+        <div class="col-md-2">
+            ID
+        </div>
+
+        <div class="col-md-2">
+            @Html.TextBox("Name")
+            @Html.ValidationMessage("Name")
+        </div>
+
+        <div class="col-md-2">
+            <select name="Sex">
+                <option value="male"> Male </option>
+                <option value="female"> Female </option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select name="Age">
+                <option value="calf"> Calf </option>
+                <option value="adult"> Adult </option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn-info" type="submit"> Add Animal </button>
+        </div>
+
+    }
+</div>

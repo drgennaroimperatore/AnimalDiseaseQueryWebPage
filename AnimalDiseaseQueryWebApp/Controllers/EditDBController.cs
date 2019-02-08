@@ -11,27 +11,35 @@ namespace AnimalDiseaseQueryWebApp.Controllers
     public class EditDBController : Controller
     {
         // GET: EditDB
-        public ActionResult Index(ADDB context)
+        public ActionResult Index(ADDB context, EditDBViewModel model)
         {
-            EditDBViewModel model = new EditDBViewModel();
+            if(ModelState.IsValid)
+            {
+               if(TempData["Errors"]!=null)
+                    ModelState.AddModelError("Name","Required Field Was Not Filled");
+            }
+            
             model.animals = context.Animals.ToList();
             return View(model);
         }
         #region Animals Table
         [HttpPost]
-        public ActionResult InsertNewAnimal(ADDB context, Animal animal)
+        public ActionResult InsertNewAnimal(ADDB context, Animal animal, EditDBViewModel model)
         {
-            //if(animal.Name==null)
-            //    ModelState.AddModelError("Name", "The Animal Name is required");
-
-            if (ModelState.IsValid)
+            if (animal.Name == null)
+            {
+                TempData["Errors"] = "Missing Fields";
+            }
+            
+            else
             {
 
+                TempData["Errors"] = null;
                 context.Animals.Add(animal);
                 context.SaveChanges();
             }
 
-            return RedirectToAction("Index", "EditDB");
+            return RedirectToAction("Index", "EditDB",model);
 
 
         }
