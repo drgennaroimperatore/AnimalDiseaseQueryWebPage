@@ -17,7 +17,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Sign()
         {
-            this.Probabilities = new HashSet<Likelihood>();
+            this.Likelihoods = new HashSet<Likelihood>();
         }
     
         public int Id { get; set; }
@@ -27,7 +27,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         public string Probability { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Likelihood> Probabilities { get; set; }
+        public virtual ICollection<Likelihood> Likelihoods { get; set; }
         public virtual Animal Animal { get; set; }
     }
 }

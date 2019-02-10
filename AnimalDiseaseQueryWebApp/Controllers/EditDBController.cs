@@ -25,23 +25,73 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         }
                 #region Animals Table
         [HttpPost]
-        public ActionResult InsertNewAnimal(ADDB context, Animal animal, EditDBViewModel model)
+        public ActionResult InsertNewAnimal(ADDB context, string name, EditDBViewModel model)
         {
-            if (animal.Name == null)
+            if (name == null)
             {
                 TempData["Errors"] = "Missing Fields";
             }
-            
+          
             else
             {
+                name = name.ToUpper();
+                //insert male
+
+                //baby
+                Animal a = new Animal();
+                a.Name = name;
+                context.Animals.Add(a);
+                a.Sex ="M";
+                a.Age = "BABY";
+                context.SaveChanges();
+
+                //young
+                a = new Animal();
+                a.Name = name;
+                context.Animals.Add(a);
+                a.Sex = "M";
+                a.Age = "YOUNG";
+                context.SaveChanges();
+                //old
+                a = new Animal();
+                a.Name = name;
+                context.Animals.Add(a);
+                a.Sex = "M";
+                a.Age = "OLD";
+                context.SaveChanges();
+
+                //insert female
+
+                //baby
+                a = new Animal();
+                a.Name = name;
+                context.Animals.Add(a);
+                a.Sex = "F";
+                a.Age = "BABY";
+                context.SaveChanges();
+
+                //young
+                a = new Animal();
+                a.Name = name;
+                context.Animals.Add(a);
+                a.Sex = "F";
+                a.Age = "YOUNG";
+                context.SaveChanges();
+                //old
+                a = new Animal();
+                a.Name = name;
+                context.Animals.Add(a);
+                a.Sex = "F";
+                a.Age = "OLD";
+                context.SaveChanges();
+
 
                 TempData["Errors"] = null;
-                context.Animals.Add(animal);
-                context.SaveChanges();
+               
+                
             }
 
             return RedirectToAction("Index", "EditDB",model);
-
 
 
         }
@@ -54,10 +104,10 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
 
         [HttpPost]
-        public ActionResult RemoveAnimal(ADDB context, int idToRemove)
+        public ActionResult RemoveAnimal(ADDB context, string name)
         {
-            Animal animalToRemove = context.Animals.Find(idToRemove);
-            context.Animals.Remove(animalToRemove);
+            var animalsToRemove =  context.Animals.Where(m => m.Name == name);
+            context.Animals.RemoveRange(animalsToRemove);
             context.SaveChanges();
 
             return RedirectToAction("Index", "EditDB");

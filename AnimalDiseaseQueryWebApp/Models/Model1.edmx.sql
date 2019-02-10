@@ -2,19 +2,14 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/08/2019 15:30:59
+-- Date Created: 02/10/2019 15:04:41
 -- Generated from EDMX file: C:\Users\spike\source\repos\AnimalDiseaseQueryPage\AnimalDiseaseQueryWebApp\Models\Model1.edmx
 -- --------------------------------------------------
-
-
 
 -- --------------------------------------------------
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[FK_AnimalPriors]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[PriorsDiseases] DROP CONSTRAINT [FK_AnimalPriors];
-GO
 IF OBJECT_ID(N'[dbo].[FK_DiseasePriors]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[PriorsDiseases] DROP CONSTRAINT [FK_DiseasePriors];
 GO
@@ -79,7 +74,8 @@ GO
 -- Creating table 'Diseases'
 CREATE TABLE [dbo].[Diseases] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [Name] nvarchar(max)  NOT NULL
+    [Name] nvarchar(max)  NOT NULL,
+    [PriorsDiseas_Id] int  NOT NULL
 );
 GO
 
@@ -175,21 +171,6 @@ GO
 -- Creating all FOREIGN KEY constraints
 -- --------------------------------------------------
 
--- Creating foreign key on [DiseaseId] in table 'PriorsDiseases'
-ALTER TABLE [dbo].[PriorsDiseases]
-ADD CONSTRAINT [FK_DiseasePriors]
-    FOREIGN KEY ([DiseaseId])
-    REFERENCES [dbo].[Diseases]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_DiseasePriors'
-CREATE INDEX [IX_FK_DiseasePriors]
-ON [dbo].[PriorsDiseases]
-    ([DiseaseId]);
-GO
-
 -- Creating foreign key on [AnimalId] in table 'Likelihoods'
 ALTER TABLE [dbo].[Likelihoods]
 ADD CONSTRAINT [FK_ProbabilityAnimal]
@@ -272,6 +253,21 @@ GO
 CREATE INDEX [IX_FK_DiseaseTreatment_Treatment]
 ON [dbo].[DiseaseTreatment]
     ([Treatments_Id]);
+GO
+
+-- Creating foreign key on [PriorsDiseas_Id] in table 'Diseases'
+ALTER TABLE [dbo].[Diseases]
+ADD CONSTRAINT [FK_DiseasePriorsDiseases]
+    FOREIGN KEY ([PriorsDiseas_Id])
+    REFERENCES [dbo].[PriorsDiseases]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_DiseasePriorsDiseases'
+CREATE INDEX [IX_FK_DiseasePriorsDiseases]
+ON [dbo].[Diseases]
+    ([PriorsDiseas_Id]);
 GO
 
 -- --------------------------------------------------
