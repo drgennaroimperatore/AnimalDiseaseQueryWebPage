@@ -21,7 +21,15 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             
             model.animals = context.Animals.ToList();
             model.diseases = context.Diseases.ToList();
+
+            foreach (Animal n in model.animals)
+            {
+                model.animalNames.Add(n.Name);
+            }
+
             return View(model);
+
+            
         }
                 #region Animals Table
         [HttpPost]

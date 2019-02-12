@@ -12,7 +12,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         public List<Disease> diseases;
         public List<Sign> signs;
 
-       
+       public  HashSet<String> animalNames = new HashSet<string>();
        
         //to do other tables
     }
