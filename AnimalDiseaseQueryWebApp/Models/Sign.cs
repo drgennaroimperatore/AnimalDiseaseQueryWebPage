@@ -25,6 +25,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         public SignTypes Type_of_Value { get; set; }
         public string Value { get; set; }
         public string Probability { get; set; }
+        public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Likelihood> Likelihoods { get; set; }

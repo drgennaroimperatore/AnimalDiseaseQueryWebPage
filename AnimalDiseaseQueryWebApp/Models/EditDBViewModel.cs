@@ -11,9 +11,12 @@ namespace AnimalDiseaseQueryWebApp.Models
         public List<Animal> animals;
         public List<Disease> diseases;
         public List<Sign> signs;
+        public List<Likelihood> likelihoods;
 
         public HashSet<String> animalNames = new HashSet<string>();
 
+        public List<SignTypes> TypesOfValue = Enum.GetValues(typeof(SignTypes)).Cast<SignTypes>().ToList();
+        
         //to do other tables
     }
 

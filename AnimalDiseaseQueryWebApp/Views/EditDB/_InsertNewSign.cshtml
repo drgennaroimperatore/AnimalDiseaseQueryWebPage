@@ -1,0 +1,37 @@
+﻿@model AnimalDiseaseQueryWebApp.Models.EditDBViewModel
+
+<div class="row">
+    <div class="col-md-2">
+        ID
+    </div>
+
+    @using (Html.BeginForm("InsertNewSign", "EditDB", FormMethod.Post, new { @id = "form_add_signs" }))
+    {
+        <div class="col-md-2">
+            @Html.TextBox("Name")
+        </div>
+
+
+        <div class="col-md-2">
+            <select name="Type_of_Value">
+
+                @foreach (AnimalDiseaseQueryWebApp.Models.SignTypes st in Model.TypesOfValue)
+                {
+                    <option value="@st">@st.ToString()</option>
+                }
+            </select>
+        </div>
+
+
+        <div class="col-md-2">
+
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit">Add Sign </button>
+        </div>
+    }
+
+
+    </div>
+

@@ -21,6 +21,8 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             
             model.animals = context.Animals.ToList();
             model.diseases = context.Diseases.ToList();
+            model.signs = context.Signs.ToList();
+            model.likelihoods = context.Likelihoods.ToList();
 
             foreach (Animal n in model.animals)
             {
@@ -125,6 +127,29 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         #endregion
 
         #region Signs Table
+
+        public ActionResult InsertNewSign(ADDB context, Sign sign)
+        {
+            context.Signs.Add(sign);
+            context.SaveChanges();
+            //TO DO ADDITIONAL CHECKS 
+            switch(sign.Type_of_Value)
+            {
+                case SignTypes.NUMERICAL:
+                    break;
+
+                case SignTypes.OBSERVATIONAL:
+
+                    break;
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult RemoveSign(ADDB context, int id)
+        {
+            return RedirectToAction("Index");
+        }
 
         #endregion
 

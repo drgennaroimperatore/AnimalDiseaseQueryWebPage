@@ -68,6 +68,7 @@
     <Property Name="Type_of_Value" Type="int" Nullable="false" />
     <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Probability" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="PriorsDiseases">
     <Key>
@@ -253,6 +254,7 @@
           <Property Name="Type_of_Value" Type="ADDBModel.SignTypes" Nullable="false" />
           <Property Name="Value" Type="String" Nullable="false" />
           <Property Name="Probability" Type="String" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" />
         </EntityType>
         <EntityType Name="PriorsDiseases">
           <Key>
@@ -375,6 +377,7 @@
           <ScalarProperty Name="Type_of_Value" ColumnName="Type_of_Value" />
           <ScalarProperty Name="Value" ColumnName="Value" />
           <ScalarProperty Name="Probability" ColumnName="Probability" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

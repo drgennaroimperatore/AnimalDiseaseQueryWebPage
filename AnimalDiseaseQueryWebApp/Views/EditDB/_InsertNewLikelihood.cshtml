@@ -2,8 +2,32 @@
 
 <div class="row">
 
-    <div class="col-md-2">
-        ID
-    </div>
+    @if (Model.animals.Count == 0 || Model.diseases.Count == 0 || Model.signs.Count == 0)
+    {
+        <h4>There is not enough data in the database to add likelihoods </h4>
+
+    }
+    else
+    {
+
+        <div class="col-md-2">
+            ID
+        </div>
+
+        <div class="col-md-2">
+            Disease
+        </div>
+
+        <div class="col-md-2">
+            Animal
+        </div>
+
+        <div class="col-md-2">
+            Probability
+        </div>
+
+
+    }
+
 
 </div>
