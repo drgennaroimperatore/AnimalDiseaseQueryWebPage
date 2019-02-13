@@ -15,7 +15,6 @@ namespace AnimalDiseaseQueryWebApp.Models
     public partial class PriorsDiseases
     {
         public int Id { get; set; }
-        public int DiseaseId { get; set; }
         public string Probability { get; set; }
     
         public virtual Disease Disease { get; set; }

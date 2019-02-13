@@ -129,7 +129,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         #endregion
 
         #region Disease Table
-        public ActionResult InsertNewDisease (ADDB context, Disease disease)
+        public ActionResult InsertNewDisease (ADDB context, Disease disease, string Probability)
         {
             if (disease.Name == null)
             {
@@ -137,14 +137,44 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             }
             else
             {
+                PriorsDiseases prior = new PriorsDiseases();
+                prior.Probability = Probability;
+                disease.PriorsDiseas = prior;
+
                 context.Diseases.Add(disease);
+                context.PriorsDiseases.Add(prior);
                 context.SaveChanges();
             }
 
 
             return RedirectToAction("Index");
         }
+
+        public ActionResult RemoveDisease(ADDB context, int id)
+        {
+            Disease diseaseToRemove = context.Diseases.Find(id);
+
+            context.PriorsDiseases.Remove(diseaseToRemove.PriorsDiseas);
+            context.Diseases.Remove(diseaseToRemove);
+            context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
         #endregion
 
+        #region Likelihoods Tables
+
+        public ActionResult InsertNewLikelihood(ADDB context, Likelihood likelihood)
+        {
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult RemoveLikelihood(ADDB context, Likelihood likelihood)
+        {
+            return RedirectToAction("Index");
+        }
+
+
+        #endregion
     }
 }

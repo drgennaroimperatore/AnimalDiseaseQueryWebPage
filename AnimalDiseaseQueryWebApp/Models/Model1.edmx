@@ -74,7 +74,6 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="DiseaseId" Type="int" Nullable="false" />
     <Property Name="Probability" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="Likelihoods">
@@ -260,7 +259,6 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DiseaseId" Type="Int32" Nullable="false" />
           <Property Name="Probability" Type="String" Nullable="false" />
           <NavigationProperty Name="Disease" Relationship="ADDBModel.DiseasePriorsDiseases" FromRole="PriorsDiseases" ToRole="Disease" />
         </EntityType>
@@ -380,7 +378,6 @@
       <EntityTypeMapping TypeName="IsTypeOf(ADDBModel.PriorsDiseases)">
         <MappingFragment StoreEntitySet="PriorsDiseases">
           <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
           <ScalarProperty Name="Probability" ColumnName="Probability" />
         </MappingFragment>
       </EntityTypeMapping>

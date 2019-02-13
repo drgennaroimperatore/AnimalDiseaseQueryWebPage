@@ -15,6 +15,14 @@
     </div>
 </div>
 
+
+@{
+    Html.RenderPartial("_InsertNewAnimal");
+    int n = 0;
+}
+
+<br />
+
 <div class="row">
     <div class="col-md-2">
         ID
@@ -24,60 +32,51 @@
         Name
     </div>
 
-    <div class="col-md-2">
-        Sex
-    </div>
-
-    <div class="col-md-2">
-        Age
-    </div>
 </div>
-@{
-    Html.RenderPartial("_InsertNewAnimal");
-    int n = 0;
-}
+
+<br />
 
 @for (int i = 0; i < Model.animals.Count; i++)
 {
     AnimalDiseaseQueryWebApp.Models.Animal currentAnimal = Model.animals[i];
-<div class="row">
-    <div class="col-md-2">
-        @currentAnimal.Id
-    </div>
+    <div class="row">
+        <div class="col-md-2">
+            @currentAnimal.Id
+        </div>
 
-    <div class="col-md-2">
-        @currentAnimal.Name
-    </div>
+        <div class="col-md-2">
+            @currentAnimal.Name
+        </div>
 
-    <div class="col-md-2">
-        @currentAnimal.Sex
-    </div>
+        <div class="col-md-2">
+            @currentAnimal.Sex
+        </div>
 
-    <div class="col-md-2">
-        @currentAnimal.Age
-    </div>
+        <div class="col-md-2">
+            @currentAnimal.Age
+        </div>
 
-    @if (Model.animalNames.Count > 0)
-    {
-
-    if (Model.animalNames.ElementAt(n).Equals(currentAnimal.Name))
-    {
-        using (Html.BeginForm("RemoveAnimal", "EditDB", FormMethod.Post, new { @id = "form_remove_animal" }))
+        @if (Model.animalNames.Count > 0)
         {
-            @Html.Hidden("name", currentAnimal.Name)
-            <div class="col-md-2">
-                <button class="btn-danger" type="submit"> Remove Animal </button>
-            </div>
 
-            Model.animalNames.Remove(Model.animalNames.ElementAt(n));
+            if (Model.animalNames.ElementAt(n).Equals(currentAnimal.Name))
+            {
+                using (Html.BeginForm("RemoveAnimal", "EditDB", FormMethod.Post, new { @id = "form_remove_animal" }))
+                {
+                    @Html.Hidden("name", currentAnimal.Name)
+                    <div class="col-md-2">
+                        <button class="btn-danger" type="submit"> Remove Animal </button>
+                    </div>
+
+                    Model.animalNames.Remove(Model.animalNames.ElementAt(n));
+                }
+
+
+            }
         }
 
 
-    }
-    }
-
-
-</div>
+    </div>
 }
 
 
@@ -94,7 +93,7 @@
     <div class="col-md-3">
         <h3> Diseases</h3>
         <hr />
-
+       
     </div>
 </div>
 <div class="row">
@@ -106,18 +105,18 @@
         Name
     </div>
 
-    <div class="col-md-2">
-        Affected Animal
-    </div>
-
+   
     <div class="col-md-2">
         Probability
     </div>
 </div>
 
 @{
-    Html.RenderPartial("_InsertNewDisease");
+Html.RenderPartial("_InsertNewDisease");
 }
+
+<br />
+
 @for (int i = 0; i < Model.diseases.Count; i++)
 {
     AnimalDiseaseQueryWebApp.Models.Disease currentDisease = Model.diseases[i];
@@ -131,16 +130,16 @@
         </div>
 
         <div class="col-md-2">
-          
+            @currentDisease.PriorsDiseas.Probability
         </div>
 
         <div class="col-md-2">
-          
+
         </div>
 
         @using (Html.BeginForm("RemoveDisease", "EditDB", FormMethod.Post, new { @id = "form_remove_animal" }))
         {
-            @Html.Hidden("idToRemove", currentDisease.Id)
+            @Html.Hidden("id", currentDisease.Id)
             <div class="col-md-2">
                 <button class="btn-danger" type="submit"> Remove Disease </button>
             </div>

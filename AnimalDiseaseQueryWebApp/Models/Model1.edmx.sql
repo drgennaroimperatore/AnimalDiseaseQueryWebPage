@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/10/2019 15:04:41
+-- Date Created: 02/13/2019 09:16:23
 -- Generated from EDMX file: C:\Users\spike\source\repos\AnimalDiseaseQueryPage\AnimalDiseaseQueryWebApp\Models\Model1.edmx
 -- --------------------------------------------------
 
@@ -10,9 +10,6 @@
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[FK_DiseasePriors]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[PriorsDiseases] DROP CONSTRAINT [FK_DiseasePriors];
-GO
 IF OBJECT_ID(N'[dbo].[FK_ProbabilityAnimal]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Likelihoods] DROP CONSTRAINT [FK_ProbabilityAnimal];
 GO
@@ -30,6 +27,9 @@ IF OBJECT_ID(N'[dbo].[FK_DiseaseTreatment_Disease]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_DiseaseTreatment_Treatment]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[DiseaseTreatment] DROP CONSTRAINT [FK_DiseaseTreatment_Treatment];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DiseasePriorsDiseases]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Diseases] DROP CONSTRAINT [FK_DiseasePriorsDiseases];
 GO
 
 -- --------------------------------------------------
@@ -92,7 +92,6 @@ GO
 -- Creating table 'PriorsDiseases'
 CREATE TABLE [dbo].[PriorsDiseases] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [DiseaseId] int  NOT NULL,
     [Probability] nvarchar(max)  NOT NULL
 );
 GO
