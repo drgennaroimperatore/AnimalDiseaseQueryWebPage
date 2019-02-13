@@ -22,7 +22,7 @@ namespace AnimalDiseaseQueryWebApp.Models
     
         public int Id { get; set; }
         public int AnimalId { get; set; }
-        public string Type_of_Value { get; set; }
+        public SignTypes Type_of_Value { get; set; }
         public string Value { get; set; }
         public string Probability { get; set; }
     

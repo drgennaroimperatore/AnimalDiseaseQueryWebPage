@@ -65,7 +65,7 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="AnimalId" Type="int" Nullable="false" />
-    <Property Name="Type_of_Value" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Type_of_Value" Type="int" Nullable="false" />
     <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Probability" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
@@ -250,7 +250,7 @@
           <NavigationProperty Name="Likelihoods" Relationship="ADDBModel.SignProbability" FromRole="Sign" ToRole="Probability" />
           <NavigationProperty Name="Animal" Relationship="ADDBModel.AnimalSign" FromRole="Sign" ToRole="Animal" />
           <Property Name="AnimalId" Type="Int32" Nullable="false" />
-          <Property Name="Type_of_Value" Type="String" Nullable="false" />
+          <Property Name="Type_of_Value" Type="ADDBModel.SignTypes" Nullable="false" />
           <Property Name="Value" Type="String" Nullable="false" />
           <Property Name="Probability" Type="String" Nullable="false" />
         </EntityType>
@@ -339,6 +339,10 @@
           <End Type="ADDBModel.Disease" Role="Disease" Multiplicity="1" />
           <End Type="ADDBModel.PriorsDiseases" Role="PriorsDiseases" Multiplicity="1" />
         </Association>
+        <EnumType Name="SignTypes">
+          <Member Name="OBSERVATIONAL" />
+          <Member Name="NUMERICAL" />
+        </EnumType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->

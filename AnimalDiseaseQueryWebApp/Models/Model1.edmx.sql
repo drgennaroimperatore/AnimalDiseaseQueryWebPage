@@ -2,9 +2,16 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/13/2019 09:16:23
+-- Date Created: 02/13/2019 10:08:12
 -- Generated from EDMX file: C:\Users\spike\source\repos\AnimalDiseaseQueryPage\AnimalDiseaseQueryWebApp\Models\Model1.edmx
 -- --------------------------------------------------
+
+SET QUOTED_IDENTIFIER OFF;
+GO
+USE [ADDB];
+GO
+IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
+GO
 
 -- --------------------------------------------------
 -- Dropping existing FOREIGN KEY constraints
@@ -83,7 +90,7 @@ GO
 CREATE TABLE [dbo].[Signs] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [AnimalId] int  NOT NULL,
-    [Type_of_Value] nvarchar(max)  NOT NULL,
+    [Type_of_Value] int  NOT NULL,
     [Value] nvarchar(max)  NOT NULL,
     [Probability] nvarchar(max)  NOT NULL
 );

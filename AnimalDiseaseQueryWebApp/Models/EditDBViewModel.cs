@@ -12,10 +12,12 @@ namespace AnimalDiseaseQueryWebApp.Models
         public List<Disease> diseases;
         public List<Sign> signs;
 
-       public  HashSet<String> animalNames = new HashSet<string>();
-       
+        public HashSet<String> animalNames = new HashSet<string>();
+
         //to do other tables
     }
+
+    public enum Observational_Values {PRESENT, NOT_PRESENT, NOT_OBSERVED};
 
     
 }
