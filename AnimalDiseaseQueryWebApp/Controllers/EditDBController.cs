@@ -191,6 +191,9 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public ActionResult InsertNewLikelihood(ADDB context, Likelihood likelihood)
         {
+            context.Likelihoods.Add(likelihood);
+            context.SaveChanges();
+
             return RedirectToAction("Index");
         }
 

@@ -9,25 +9,53 @@
     }
     else
     {
+        using (Html.BeginForm("InsertNewLikelihood", "EditDB", FormMethod.Post, new { @id = "form_add_likelihood" }))
+        {
+            <div class="col-md-2">
+                ID
+            </div>
 
-        <div class="col-md-2">
-            ID
-        </div>
+            <div class="col-md-2">
+                <select name="AnimalId">
+                    @foreach (AnimalDiseaseQueryWebApp.Models.Animal a in Model.animals)
+                    {
+                        <option value="@a.Id">@a.Name @a.Sex @a.Age</option>
+                    }
+                </select>
+            </div>
 
-        <div class="col-md-2">
-            Disease
-        </div>
+            <div class="col-md-2">
+                <select name="SignId">
+                    @foreach (AnimalDiseaseQueryWebApp.Models.Sign s in Model.signs)
+                    {
+                        <option value="@s.Id"> @s.Name </option>
+                    }
+                </select>
 
-        <div class="col-md-2">
-            Animal
-        </div>
+            </div>
 
-        <div class="col-md-2">
-            Probability
-        </div>
+            <div class="col-md-2">
+                <select name="DiseaseId">
+                    @foreach (AnimalDiseaseQueryWebApp.Models.Disease d in Model.diseases)
+                    {
+                        <option value="@d.Id"> @d.Name </option>
+                    }
+                </select>
+
+            </div>
 
 
-    }
+
+            <div class="col-md-2">
+                <input type="number" name="Value" value="0.01" min="0" max="1" step="0.01" />
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit">Add Likelihood </button>
+            </div>
+            }
+
+        }
 
 
-</div>
+    </div>

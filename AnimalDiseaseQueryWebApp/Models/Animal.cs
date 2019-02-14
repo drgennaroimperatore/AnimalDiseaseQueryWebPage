@@ -18,7 +18,6 @@ namespace AnimalDiseaseQueryWebApp.Models
         public Animal()
         {
             this.Likelihoods = new HashSet<Likelihood>();
-            this.Signs = new HashSet<Sign>();
         }
     
         public int Id { get; set; }
@@ -28,7 +27,5 @@ namespace AnimalDiseaseQueryWebApp.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Likelihood> Likelihoods { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Sign> Signs { get; set; }
     }
 }

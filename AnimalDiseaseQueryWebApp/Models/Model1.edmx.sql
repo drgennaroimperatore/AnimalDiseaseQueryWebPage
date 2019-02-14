@@ -2,9 +2,10 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/13/2019 13:28:06
+-- Date Created: 02/14/2019 11:52:35
 -- Generated from EDMX file: C:\Users\spike\source\repos\AnimalDiseaseQueryPage\AnimalDiseaseQueryWebApp\Models\Model1.edmx
 -- --------------------------------------------------
+
 
 
 -- --------------------------------------------------
@@ -19,9 +20,6 @@ IF OBJECT_ID(N'[dbo].[FK_SignProbability]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_DiseaseProbability]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Likelihoods] DROP CONSTRAINT [FK_DiseaseProbability];
-GO
-IF OBJECT_ID(N'[dbo].[FK_AnimalSign]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Signs] DROP CONSTRAINT [FK_AnimalSign];
 GO
 IF OBJECT_ID(N'[dbo].[FK_DiseaseTreatment_Disease]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[DiseaseTreatment] DROP CONSTRAINT [FK_DiseaseTreatment_Disease];
@@ -83,10 +81,8 @@ GO
 -- Creating table 'Signs'
 CREATE TABLE [dbo].[Signs] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [AnimalId] int  NOT NULL,
     [Type_of_Value] int  NOT NULL,
-    [Value] nvarchar(max)  NOT NULL,
-    [Probability] nvarchar(max)  NOT NULL,
+    [Probability] nvarchar(max)  NULL,
     [Name] nvarchar(max)  NOT NULL
 );
 GO
@@ -215,21 +211,6 @@ GO
 CREATE INDEX [IX_FK_DiseaseProbability]
 ON [dbo].[Likelihoods]
     ([DiseaseId]);
-GO
-
--- Creating foreign key on [AnimalId] in table 'Signs'
-ALTER TABLE [dbo].[Signs]
-ADD CONSTRAINT [FK_AnimalSign]
-    FOREIGN KEY ([AnimalId])
-    REFERENCES [dbo].[Animals]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_AnimalSign'
-CREATE INDEX [IX_FK_AnimalSign]
-ON [dbo].[Signs]
-    ([AnimalId]);
 GO
 
 -- Creating foreign key on [Diseases_Id] in table 'DiseaseTreatment'

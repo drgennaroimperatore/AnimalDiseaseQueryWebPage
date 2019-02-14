@@ -1,0 +1,39 @@
+﻿@model AnimalDiseaseQueryWebApp.Models.EditDBViewModel
+
+@foreach (AnimalDiseaseQueryWebApp.Models.Sign s in Model.signs)
+{
+
+    <div class="row">
+
+        <div class="col-md-2">
+            <h4> @s.Name</h4>
+        </div>
+
+
+
+    </div>
+
+   
+        var likelihoodsForCurrentSign = Model.likelihoods.Where(m => m.Sign == s);
+
+    
+    foreach (var lcs in likelihoodsForCurrentSign)
+    {
+    <div class="row">
+        <div class="col-md-2">
+            @lcs.Disease.Name
+        </div>
+
+        <div class="col-md-2">
+            @lcs.Animal.Name @lcs.Animal.Sex @lcs.Animal.Age
+        </div>
+
+        <div class="col-md-2">
+            @lcs.Value
+        </div>
+
+
+    </div>
+    }
+
+}
