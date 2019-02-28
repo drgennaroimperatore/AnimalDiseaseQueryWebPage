@@ -156,20 +156,20 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         #region Disease Table
         public ActionResult InsertNewDisease (ADDB context, Disease disease, string Probability)
         {
-            if (disease.Name == null)
-            {
-                TempData["Errors"] = "Missing Fields";
-            }
-            else
-            {
-                PriorsDiseases prior = new PriorsDiseases();
-                prior.Probability = Probability;
-                disease.PriorsDiseas = prior;
+        //    if (disease.Name == null)
+        //    {
+        //        TempData["Errors"] = "Missing Fields";
+        //    }
+        //    else
+        //    {
+        //        PriorsDiseases prior = new PriorsDiseases();
+        //        prior.Probability = Probability;
+        //        disease.PriorsDiseas = prior;
 
-                context.Diseases.Add(disease);
-                context.PriorsDiseases.Add(prior);
-                context.SaveChanges();
-            }
+        //        context.Diseases.Add(disease);
+        //        context.PriorsDiseases.Add(prior);
+        //        context.SaveChanges();
+        //    }
 
 
             return RedirectToAction("Index");
@@ -179,7 +179,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         {
             Disease diseaseToRemove = context.Diseases.Find(id);
 
-            context.PriorsDiseases.Remove(diseaseToRemove.PriorsDiseas);
+        //    context.PriorsDiseases.Remove(diseaseToRemove.PriorsDiseas);
             context.Diseases.Remove(diseaseToRemove);
             context.SaveChanges();
 
