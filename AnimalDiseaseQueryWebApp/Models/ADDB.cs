@@ -17,7 +17,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         public virtual DbSet<Animal> Animals { get; set; }
         public virtual DbSet<Disease> Diseases { get; set; }
         public virtual DbSet<Sign> Signs { get; set; }
-     //   public virtual DbSet<PriorsDiseases> PriorsDiseases { get; set; }
+        public virtual DbSet<PriorsDiseases> PriorsDiseases { get; set; }
         public virtual DbSet<Likelihood> Likelihoods { get; set; }
         public virtual DbSet<Treatment> Treatments { get; set; }
     }
@@ -70,13 +70,13 @@ namespace AnimalDiseaseQueryWebApp.Models
         public virtual Sign Sign { get; set; }
         public virtual Disease Disease { get; set; }
     }
-    //public partial class PriorsDiseases
-    //{
-    //    public int Id { get; set; }
-    //    public string Probability { get; set; }
+    public partial class PriorsDiseases
+    {
+        public int Id { get; set; }
+        public string Probability { get; set; }
 
-    //    public virtual Disease Disease { get; set; }
-    //}
+        public virtual Disease Disease { get; set; }
+    }
 
     public partial class Sign
     {

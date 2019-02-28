@@ -9,7 +9,7 @@ namespace AnimalDiseaseQueryWebApp.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(AnimalDiseaseQueryWebApp.Models.ADDB context)

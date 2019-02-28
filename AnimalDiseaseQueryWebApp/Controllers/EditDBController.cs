@@ -179,7 +179,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         {
             Disease diseaseToRemove = context.Diseases.Find(id);
 
-        //    context.PriorsDiseases.Remove(diseaseToRemove.PriorsDiseas);
+          //  context.PriorsDiseases.Remove(diseaseToRemove.PriorsDiseas);
             context.Diseases.Remove(diseaseToRemove);
             context.SaveChanges();
 
