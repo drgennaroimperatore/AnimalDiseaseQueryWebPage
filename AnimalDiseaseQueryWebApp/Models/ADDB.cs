@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
@@ -35,31 +37,50 @@ namespace AnimalDiseaseQueryWebApp.Models
         public string Sex { get; set; }
         public string Age { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<Likelihood> Likelihoods { get; set; }
     }
 
     public partial class Disease
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        
         public Disease()
         {
             this.Likelihoods = new HashSet<Likelihood>();
             this.Treatments = new HashSet<Treatment>();
         }
-
+        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
+        
+        
+        
+
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Likelihood> Likelihoods { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Treatment> Treatments { get; set; }
-      //  public virtual PriorsDiseases PriorsDiseas { get; set; }
+
+        [ForeignKey("Id")]
+        public virtual PriorsDiseases PriorsDiseas { get; set; }
     }
+
+    public partial class PriorsDiseases
+    {
+        [Key]
+        public int Id { get; set; }
+       
+        
+        public string Probability { get; set; }
+
+       
+    }
+
 
     public partial class Likelihood
     {
+
         public int Id { get; set; }
         public string Value { get; set; }
         public int AnimalId { get; set; }
@@ -70,14 +91,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         public virtual Sign Sign { get; set; }
         public virtual Disease Disease { get; set; }
     }
-    public partial class PriorsDiseases
-    {
-        public int Id { get; set; }
-        public string Probability { get; set; }
-
-        public virtual Disease Disease { get; set; }
-    }
-
+   
     public partial class Sign
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

@@ -159,18 +159,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201902281536510_mig.cs" />
-    <Compile Include="Migrations\201902281536510_mig.Designer.cs">
-      <DependentUpon>201902281536510_mig.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201902281543005_mig1.cs" />
-    <Compile Include="Migrations\201902281543005_mig1.Designer.cs">
-      <DependentUpon>201902281543005_mig1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ADDB.cs" />
     <Compile Include="Models\EditDBViewModel.cs" />
+    <Compile Include="Models\ErrorDBViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -220,6 +214,8 @@
     <Content Include="Views\EditDB\_DisplayDiseases.cshtml" />
     <Content Include="Views\EditDB\_DisplayAnimals.cshtml" />
     <Content Include="Views\EditDB\_DisplayLikelihoods.cshtml" />
+    <Content Include="Views\EditDB\_DisplaySigns.cshtml" />
+    <Content Include="Views\EditDB\_ErrorDB.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -241,14 +237,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201902281536510_mig.resx">
-      <DependentUpon>201902281536510_mig.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902281543005_mig1.resx">
-      <DependentUpon>201902281543005_mig1.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

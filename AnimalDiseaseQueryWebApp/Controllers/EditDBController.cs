@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net.Sockets;
 using System.Web;
 using System.Web.Mvc;
 
@@ -13,27 +14,41 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         // GET: EditDB
         public ActionResult Index(ADDB context, EditDBViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-               if(TempData["Errors"]!=null)
-                    ModelState.AddModelError("Animal Name","Required Field Was Not Filled");
+                if (TempData["Errors"] != null)
+                    ModelState.AddModelError("Animal Name", "Required Field Was Not Filled");
             }
-            
-            model.animals = context.Animals.ToList();
-            model.diseases = context.Diseases.ToList();
-            model.signs = context.Signs.ToList();
-            model.likelihoods = context.Likelihoods.ToList();
 
-            foreach (Animal n in model.animals)
+            try
             {
-                model.animalNames.Add(n.Name);
+
+
+
+                model.animals = context.Animals.ToList();
+                model.diseases = context.Diseases.ToList();
+                model.signs = context.Signs.ToList();
+                model.likelihoods = context.Likelihoods.ToList();
+
+                foreach (Animal n in model.animals)
+                {
+                    model.animalNames.Add(n.Name);
+                }
+            }
+            catch (Exception ex)
+            {
+                String innerMessage = (ex.InnerException != null)
+                      ? ex.InnerException.Message
+                      : "";
+
+                return PartialView("_ErrorDB", new ErrorDBViewModel(innerMessage));
             }
 
             return View(model);
 
-            
+
         }
-                #region Animals Table
+        #region Animals Table
         [HttpPost]
         public ActionResult InsertNewAnimal(ADDB context, string name, EditDBViewModel model)
         {
@@ -41,7 +56,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             {
                 TempData["Errors"] = "Missing Fields";
             }
-          
+
             else
             {
                 name = name.ToUpper();
@@ -51,7 +66,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 Animal a = new Animal();
                 a.Name = name;
                 context.Animals.Add(a);
-                a.Sex ="M";
+                a.Sex = "M";
                 a.Age = "BABY";
                 context.SaveChanges();
 
@@ -97,11 +112,11 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
 
                 TempData["Errors"] = null;
-               
-                
+
+
             }
 
-            return RedirectToAction("Index", "EditDB",model);
+            return RedirectToAction("Index", "EditDB", model);
 
 
         }
@@ -116,7 +131,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         [HttpPost]
         public ActionResult RemoveAnimal(ADDB context, string name)
         {
-            var animalsToRemove =  context.Animals.Where(m => m.Name == name);
+            var animalsToRemove = context.Animals.Where(m => m.Name == name);
             context.Animals.RemoveRange(animalsToRemove);
             context.SaveChanges();
 
@@ -133,7 +148,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             context.Signs.Add(sign);
             context.SaveChanges();
             //TO DO ADDITIONAL CHECKS 
-            switch(sign.Type_of_Value)
+            switch (sign.Type_of_Value)
             {
                 case SignTypes.NUMERICAL:
                     break;
@@ -148,28 +163,39 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public ActionResult RemoveSign(ADDB context, int id)
         {
+            Sign signToRemove = context.Signs.Find(id);
+
+            foreach (Likelihood l in context.Likelihoods.Where(m => m.SignId == id).ToList())
+                context.Likelihoods.Remove(l);
+
+            context.Signs.Remove(signToRemove);
+
+            context.SaveChanges();
+
+
+
             return RedirectToAction("Index");
         }
 
         #endregion
 
         #region Disease Table
-        public ActionResult InsertNewDisease (ADDB context, Disease disease, string Probability)
+        public ActionResult InsertNewDisease(ADDB context, Disease disease, string Probability)
         {
-        //    if (disease.Name == null)
-        //    {
-        //        TempData["Errors"] = "Missing Fields";
-        //    }
-        //    else
-        //    {
-        //        PriorsDiseases prior = new PriorsDiseases();
-        //        prior.Probability = Probability;
-        //        disease.PriorsDiseas = prior;
+            if (disease.Name == null)
+            {
+                TempData["Errors"] = "Missing Fields";
+            }
+            else
+            {
+                PriorsDiseases prior = new PriorsDiseases();
+                prior.Probability = Probability;
+                disease.PriorsDiseas = prior;
 
-        //        context.Diseases.Add(disease);
-        //        context.PriorsDiseases.Add(prior);
-        //        context.SaveChanges();
-        //    }
+                context.Diseases.Add(disease);
+                context.PriorsDiseases.Add(prior);
+                context.SaveChanges();
+            }
 
 
             return RedirectToAction("Index");
@@ -179,7 +205,10 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         {
             Disease diseaseToRemove = context.Diseases.Find(id);
 
-          //  context.PriorsDiseases.Remove(diseaseToRemove.PriorsDiseas);
+            foreach (var d in context.Likelihoods.Where(m => m.DiseaseId == id))
+                context.Likelihoods.Remove(d);
+
+            context.PriorsDiseases.Remove(diseaseToRemove.PriorsDiseas);
             context.Diseases.Remove(diseaseToRemove);
             context.SaveChanges();
 
@@ -197,8 +226,11 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult RemoveLikelihood(ADDB context, Likelihood likelihood)
+        public ActionResult RemoveLikelihood(ADDB context, int id)
         {
+            Likelihood likelihoodToRemove = context.Likelihoods.Find(id);
+            context.Likelihoods.Remove(likelihoodToRemove);
+
             return RedirectToAction("Index");
         }
 

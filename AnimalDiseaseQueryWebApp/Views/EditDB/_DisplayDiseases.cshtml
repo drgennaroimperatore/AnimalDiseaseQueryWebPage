@@ -18,7 +18,7 @@
 
         </div>
 
-        @using (Html.BeginForm("RemoveDisease", "EditDB", FormMethod.Post, new { @id = "form_remove_animal" }))
+        @using (Html.BeginForm("RemoveDisease", "EditDB", FormMethod.Post, new { @id = "form_remove_disease" }))
         {
             @Html.Hidden("id", currentDisease.Id)
             <div class="col-md-2">
