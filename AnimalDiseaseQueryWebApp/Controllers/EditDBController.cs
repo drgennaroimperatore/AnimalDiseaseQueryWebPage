@@ -17,7 +17,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             if (ModelState.IsValid)
             {
                 if (TempData["Errors"] != null)
-                    ModelState.AddModelError("Animal Name", "Required Field Was Not Filled");
+                    ModelState.AddModelError("Animal Name", (string)TempData["Errors"]);
             }
 
             try
@@ -52,15 +52,23 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         [HttpPost]
         public ActionResult InsertNewAnimal(ADDB context, string name, EditDBViewModel model)
         {
-            if (name == null)
+            if (String.IsNullOrWhiteSpace(name))
             {
                 TempData["Errors"] = "Missing Fields";
+                return RedirectToAction("Index", "EditDB", model);
             }
 
-            else
+            name = name.ToUpper();
+            //insert male
+
+            if (context.Animals.Where(m=> m.Name == name).Count() >0)
             {
-                name = name.ToUpper();
-                //insert male
+                TempData["Errors"] = "This Name Already Exists";
+                return RedirectToAction("Index", "EditDB", model);
+            }
+
+           
+                
 
                 //baby
                 Animal a = new Animal();
@@ -114,9 +122,9 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 TempData["Errors"] = null;
 
 
-            }
-
             return RedirectToAction("Index", "EditDB", model);
+
+
 
 
         }
@@ -145,8 +153,21 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public ActionResult InsertNewSign(ADDB context, Sign sign)
         {
-            context.Signs.Add(sign);
-            context.SaveChanges();
+            if(String.IsNullOrWhiteSpace(sign.Name))
+            {
+                TempData["Errors"] = "Sign Name is missing";
+            }
+
+            sign.Name = sign.Name.ToUpper();
+
+            
+
+            if(context.Signs.Where(s=> s.Name == sign.Name).Count()>0)
+            {
+                TempData["Errors"] = "Sign "+ sign.Name +" already exists!";
+                return RedirectToAction("Index");
+            }
+
             //TO DO ADDITIONAL CHECKS 
             switch (sign.Type_of_Value)
             {
@@ -157,6 +178,12 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
                     break;
             }
+
+            context.Signs.Add(sign);
+            context.SaveChanges();
+
+
+            TempData["Errors"] = null;
 
             return RedirectToAction("Index");
         }
@@ -182,12 +209,20 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         #region Disease Table
         public ActionResult InsertNewDisease(ADDB context, Disease disease, string Probability)
         {
-            if (disease.Name == null)
+            if (String.IsNullOrWhiteSpace(disease.Name))
             {
                 TempData["Errors"] = "Missing Fields";
+                return RedirectToAction("Index");
             }
-            else
+
+            disease.Name = disease.Name.ToUpper();
+
+            if (context.Diseases.Where(d=> d.Name == disease.Name).Count() > 0)
             {
+                TempData["Errors"] = "Disease " + disease.Name + " already exists!";
+                return RedirectToAction("Index");
+            }
+            
                 PriorsDiseases prior = new PriorsDiseases();
                 prior.Probability = Probability;
                 disease.PriorsDiseas = prior;
@@ -195,8 +230,9 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 context.Diseases.Add(disease);
                 context.PriorsDiseases.Add(prior);
                 context.SaveChanges();
-            }
 
+
+            TempData["Errors"] = null;
 
             return RedirectToAction("Index");
         }
