@@ -29,6 +29,11 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 model.diseases = context.Diseases.ToList();
                 model.signs = context.Signs.ToList();
                 model.likelihoods = context.Likelihoods.ToList();
+               foreach(Disease d in model.diseases)
+                {
+                    PriorsDiseases pd = context.PriorsDiseases.Where(p => p.DiseaseID == d.Id).ToList()[0];
+                    model.priorsDiseases.Add(d, pd);
+                }
 
                 foreach (Animal n in model.animals)
                 {

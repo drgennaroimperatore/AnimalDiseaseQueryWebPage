@@ -12,12 +12,16 @@ namespace AnimalDiseaseQueryWebApp.Models
         public List<Disease> diseases;
         public List<Sign> signs;
         public List<Likelihood> likelihoods;
+        public Dictionary<Disease,PriorsDiseases> priorsDiseases;
 
         public HashSet<String> animalNames = new HashSet<string>();
+        
 
         public List<SignTypes> TypesOfValue = Enum.GetValues(typeof(SignTypes)).Cast<SignTypes>().ToList();
         
         //to do other tables
+
+      
     }
 
     public enum Observational_Values {PRESENT, NOT_PRESENT, NOT_OBSERVED};
