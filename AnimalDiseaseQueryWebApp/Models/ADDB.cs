@@ -39,6 +39,8 @@ namespace AnimalDiseaseQueryWebApp.Models
 
         
         public virtual ICollection<Likelihood> Likelihoods { get; set; }
+
+        
     }
 
     public partial class Disease
@@ -62,19 +64,24 @@ namespace AnimalDiseaseQueryWebApp.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Treatment> Treatments { get; set; }
 
-        [ForeignKey("Id")]
-        public virtual PriorsDiseases PriorsDiseas { get; set; }
+        
     }
 
     public partial class PriorsDiseases
     {
         [Key]
         public int Id { get; set; }
+        
+        [ForeignKey("Disease")]
+        public int DiseaseID { get; set; }
+        [ForeignKey("Animal")]
+        public int AnimalID { get; set; } 
        
         
         public string Probability { get; set; }
 
-       
+        public virtual Animal Animal { get; set; }
+        public virtual Disease Disease { get; set; }
     }
 
 

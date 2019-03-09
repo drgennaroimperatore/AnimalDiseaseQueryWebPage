@@ -224,8 +224,9 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             }
             
                 PriorsDiseases prior = new PriorsDiseases();
+                prior.DiseaseID = disease.Id;
                 prior.Probability = Probability;
-                disease.PriorsDiseas = prior;
+                context.PriorsDiseases.Add(prior); 
 
                 context.Diseases.Add(disease);
                 context.PriorsDiseases.Add(prior);
@@ -244,7 +245,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             foreach (var d in context.Likelihoods.Where(m => m.DiseaseId == id))
                 context.Likelihoods.Remove(d);
 
-            context.PriorsDiseases.Remove(diseaseToRemove.PriorsDiseas);
+            //context.PriorsDiseases.Remove(diseaseTo);
             context.Diseases.Remove(diseaseToRemove);
             context.SaveChanges();
 
