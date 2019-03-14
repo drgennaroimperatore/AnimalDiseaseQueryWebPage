@@ -265,11 +265,23 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public ActionResult InsertDiseasePrior(ADDB context, int diseaseID, int animalID, string probability)
         {
-            PriorsDiseases priorsDiseases = new PriorsDiseases();
-            priorsDiseases.AnimalID = animalID;
-            priorsDiseases.DiseaseID = diseaseID;
-            priorsDiseases.Probability = probability;
-            context.PriorsDiseases.Add(priorsDiseases);
+            //deal with duplicate entry
+            var duplicate = context.PriorsDiseases.Where(m => m.DiseaseID == diseaseID && m.AnimalID == animalID).ToList();
+            if (duplicate.Count > 0)
+            {
+                duplicate[0].Probability = probability;
+            }
+            else
+            {
+
+                PriorsDiseases priorsDiseases = new PriorsDiseases();
+                priorsDiseases.AnimalID = animalID;
+                priorsDiseases.DiseaseID = diseaseID;
+                priorsDiseases.Probability = probability;
+                context.PriorsDiseases.Add(priorsDiseases);
+               
+            }
+
             context.SaveChanges();
 
             return RedirectToAction("Index");

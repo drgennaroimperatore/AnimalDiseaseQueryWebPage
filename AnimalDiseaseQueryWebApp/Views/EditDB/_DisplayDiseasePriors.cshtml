@@ -3,34 +3,47 @@
     AnimalDiseaseQueryWebApp.Models.Animal animal = Model.animals[i];
 
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-3">
             <h3>  @animal.Name @animal.Sex @animal.Age </h3>
         </div>
     </div>
 
 
 
-    foreach (var pd in Model.GetAllPriorsForAnimal(animal))
+    foreach (AnimalDiseaseQueryWebApp.Models.PriorsDiseases pd in Model.GetAllPriorsForAnimal(animal))
     {
 
 
-    <div class="row">
-        <div class="col-md-2">
-            @pd.Id
+        <div class="row">
+            <div class="col-md-2">
+                @pd.Id
+            </div>
+
+            <div class="col-md-2">
+                @pd.Disease.Name
+            </div>
+
+            <div class="col-md-2">
+                @Model.GetProbabilityForDisease(pd.Disease, animal)
+
+            </div>
+
+
+
+            @using (Html.BeginForm("RemoveDiseasePrior", "EditDB", FormMethod.Post, new { @id = "form_add_remove_prior" }))
+            {
+                @Html.Hidden("id",pd.Id)
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-danger">Remove Prior </button>
+                </div>
+
+            }
+
+
+
+
         </div>
-
-        <div class="col-md-2">
-            @pd.Disease.Name
-        </div>
-
-        <div class="col-md-2">
-        @Model.GetProbabilityForDisease(pd.Disease, animal)
-            
-        </div>
-
-
-
-    </div>
 
     }
-    }
+
+}
