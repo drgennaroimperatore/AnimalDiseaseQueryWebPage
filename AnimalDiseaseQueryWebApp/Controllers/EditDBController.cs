@@ -147,6 +147,12 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         public ActionResult RemoveAnimal(ADDB context, string name)
         {
             var animalsToRemove = context.Animals.Where(m => m.Name == name);
+
+            //remove foreign key references before removing the animal 
+            foreach (var a in animalsToRemove)
+                foreach (var pd in context.PriorsDiseases.Where(m => m.AnimalID == a.Id))
+                    context.PriorsDiseases.Remove(pd);
+
             context.Animals.RemoveRange(animalsToRemove);
             context.SaveChanges();
 
@@ -243,6 +249,9 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         public ActionResult RemoveDisease(ADDB context, int id)
         {
             Disease diseaseToRemove = context.Diseases.Find(id);
+
+            foreach (var pd in context.PriorsDiseases.Where(m => m.DiseaseID == id))
+                context.PriorsDiseases.Remove(pd);
 
             foreach (var d in context.Likelihoods.Where(m => m.DiseaseId == id))
                 context.Likelihoods.Remove(d);
