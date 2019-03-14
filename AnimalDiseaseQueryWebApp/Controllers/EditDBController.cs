@@ -27,18 +27,20 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
                 model.animals = context.Animals.ToList();
                 model.diseases = context.Diseases.ToList();
+                model.priorsDiseases = context.PriorsDiseases.ToList();
+                
+            
                 model.signs = context.Signs.ToList();
                 model.likelihoods = context.Likelihoods.ToList();
-               foreach(Disease d in model.diseases)
-                {
-                    PriorsDiseases pd = context.PriorsDiseases.Where(p => p.DiseaseID == d.Id).ToList()[0];
-                    model.priorsDiseases.Add(d, pd);
-                }
+              
 
                 foreach (Animal n in model.animals)
                 {
                     model.animalNames.Add(n.Name);
+
                 }
+
+
             }
             catch (Exception ex)
             {
@@ -212,7 +214,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         #endregion
 
         #region Disease Table
-        public ActionResult InsertNewDisease(ADDB context, Disease disease, string Probability)
+        public ActionResult InsertNewDisease(ADDB context, Disease disease )
         {
             if (String.IsNullOrWhiteSpace(disease.Name))
             {
@@ -228,13 +230,8 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 return RedirectToAction("Index");
             }
             
-                PriorsDiseases prior = new PriorsDiseases();
-                prior.DiseaseID = disease.Id;
-                prior.Probability = Probability;
-                context.PriorsDiseases.Add(prior); 
-
                 context.Diseases.Add(disease);
-                context.PriorsDiseases.Add(prior);
+               
                 context.SaveChanges();
 
 
@@ -250,12 +247,36 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             foreach (var d in context.Likelihoods.Where(m => m.DiseaseId == id))
                 context.Likelihoods.Remove(d);
 
-            //context.PriorsDiseases.Remove(diseaseTo);
+            
             context.Diseases.Remove(diseaseToRemove);
             context.SaveChanges();
 
             return RedirectToAction("Index");
         }
+
+        public ActionResult InsertDiseasePrior(ADDB context, int diseaseID, int animalID, string probability)
+        {
+            PriorsDiseases priorsDiseases = new PriorsDiseases();
+            priorsDiseases.AnimalID = animalID;
+            priorsDiseases.DiseaseID = diseaseID;
+            priorsDiseases.Probability = probability;
+            context.PriorsDiseases.Add(priorsDiseases);
+            context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult RemoveDiseasePrior(ADDB context, int id)
+        {
+           PriorsDiseases priorToRemove = context.PriorsDiseases.Find(id);
+            context.PriorsDiseases.Remove(priorToRemove);
+            context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+
+
         #endregion
 
         #region Likelihoods Tables

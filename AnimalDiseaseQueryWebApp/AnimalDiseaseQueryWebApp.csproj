@@ -216,6 +216,7 @@
     <Content Include="Views\EditDB\_DisplayLikelihoods.cshtml" />
     <Content Include="Views\EditDB\_DisplaySigns.cshtml" />
     <Content Include="Views\EditDB\_ErrorDB.cshtml" />
+    <Content Include="Views\EditDB\_DisplayDiseasePriors.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

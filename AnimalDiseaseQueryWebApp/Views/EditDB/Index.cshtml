@@ -83,7 +83,7 @@
     </div>
 
     <div class="col-md-2">
-        Animal
+        Name
     </div>
 
 
@@ -94,13 +94,30 @@
 
 </div>
 
-
-@{
-    Html.RenderPartial("_DisplayDiseases");
-}
+@if (Model.priorsDiseases.Count() > 0 && Model.diseases.Count >0)
+    {
+        Html.RenderPartial("_DisplayDiseases");
+    }
 
 <br />
 
+<div class="row">
+    <div class="col-md-3">
+        <h3> Disease Priors</h3>
+        <hr />
+    </div>
+</div>
+
+@{
+    Html.RenderPartial("_InsertNewDiseasePrior");
+}
+
+
+
+@if (Model.priorsDiseases.Count() > 0)
+{
+    Html.RenderPartial("_DisplayDiseasePriors");
+}
 
 
 <div class="row">

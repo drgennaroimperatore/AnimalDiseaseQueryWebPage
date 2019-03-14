@@ -1,7 +1,7 @@
 ﻿@model AnimalDiseaseQueryWebApp.Models.EditDBViewModel
 <div class="row">
 
-    @using (Html.BeginForm("InsertNewDiseasePrior", "EditDB", FormMethod.Post, new { @id = "form_add_animal" }))
+    @using (Html.BeginForm("InsertDiseasePrior", "EditDB", FormMethod.Post, new { @id = "form_add_disease_prior" }))
     {
         <div class="col-md-2">
             ID
@@ -10,17 +10,35 @@
 
 
         <div class="col-md-2">
-            <select name="diseaseId">
-                <option value=""></option>
+            <select name="diseaseID">
+                @foreach (AnimalDiseaseQueryWebApp.Models.Disease d in Model.diseases)
+                {
+                    <option value="@d.Id"> @d.Name </option>
+                }
             </select>
 
         </div>
 
-
         <div class="col-md-2">
-            <button class="btn btn-info" type="submit"> Add Disease Prior </button>
-        </div>
+            <select name="animalID">
+                
 
-    }
+                    @foreach (AnimalDiseaseQueryWebApp.Models.Animal a in Model.animals)
+                    {
+                    <option value="@a.Id">@a.Name @a.Sex @a.Age</option>
+                }
+                </select>
+
+            </div>
+
+            <div class="col-md-2">
+                <input name="probability" type="number" value="0.01" step="0.01" max="1" min="0.01"/> 
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-info" type="submit"> Add Disease Prior </button>
+            </div>
+
+        }
 
 </div>
