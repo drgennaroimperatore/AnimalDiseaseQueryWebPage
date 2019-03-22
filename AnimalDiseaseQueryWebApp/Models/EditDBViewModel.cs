@@ -15,6 +15,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         public List<PriorsDiseases> priorsDiseases;
 
         public HashSet<String> animalNames = new HashSet<string>();
+        public string logMessage = "";
         
 
         public List<SignTypes> TypesOfValue = Enum.GetValues(typeof(SignTypes)).Cast<SignTypes>().ToList();

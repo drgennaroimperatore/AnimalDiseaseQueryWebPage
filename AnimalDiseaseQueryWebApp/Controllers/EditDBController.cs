@@ -6,6 +6,9 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Web;
 using System.Web.Mvc;
+using System.Text;
+using Excel = Microsoft.Office.Interop.Excel;
+
 
 namespace AnimalDiseaseQueryWebApp.Controllers
 {
@@ -28,16 +31,22 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 model.animals = context.Animals.ToList();
                 model.diseases = context.Diseases.ToList();
                 model.priorsDiseases = context.PriorsDiseases.ToList();
-                
-            
+
+
                 model.signs = context.Signs.ToList();
                 model.likelihoods = context.Likelihoods.ToList();
-              
+
 
                 foreach (Animal n in model.animals)
                 {
                     model.animalNames.Add(n.Name);
 
+                }
+
+                if (TempData["LOG"] != null)
+                {
+                    model.logMessage = (string)TempData["LOG"];
+                    TempData["LOG"] = null;
                 }
 
 
@@ -58,80 +67,78 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         #region Animals Table
         [HttpPost]
         public ActionResult InsertNewAnimal(ADDB context, string name, EditDBViewModel model)
+        {                            
+            CreateNewAnimal(context, name);
+           
+            return RedirectToAction("Index", "EditDB", model);
+        }
+
+        public void CreateNewAnimal(ADDB context, string name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
                 TempData["Errors"] = "Missing Fields";
-                return RedirectToAction("Index", "EditDB", model);
+                return;
             }
 
             name = name.ToUpper();
             //insert male
 
-            if (context.Animals.Where(m=> m.Name == name).Count() >0)
+            if (context.Animals.Where(m => m.Name == name).Count() > 0)
             {
                 TempData["Errors"] = "This Name Already Exists";
-                return RedirectToAction("Index", "EditDB", model);
+                return; 
             }
 
-           
-                
+            //baby
+            Animal a = new Animal();
+            a.Name = name;
+            context.Animals.Add(a);
+            a.Sex = "M";
+            a.Age = "BABY";
+            context.SaveChanges();
 
-                //baby
-                Animal a = new Animal();
-                a.Name = name;
-                context.Animals.Add(a);
-                a.Sex = "M";
-                a.Age = "BABY";
-                context.SaveChanges();
+            //young
+            a = new Animal();
+            a.Name = name;
+            context.Animals.Add(a);
+            a.Sex = "M";
+            a.Age = "YOUNG";
+            context.SaveChanges();
+            //old
+            a = new Animal();
+            a.Name = name;
+            context.Animals.Add(a);
+            a.Sex = "M";
+            a.Age = "OLD";
+            context.SaveChanges();
 
-                //young
-                a = new Animal();
-                a.Name = name;
-                context.Animals.Add(a);
-                a.Sex = "M";
-                a.Age = "YOUNG";
-                context.SaveChanges();
-                //old
-                a = new Animal();
-                a.Name = name;
-                context.Animals.Add(a);
-                a.Sex = "M";
-                a.Age = "OLD";
-                context.SaveChanges();
+            //insert female
 
-                //insert female
+            //baby
+            a = new Animal();
+            a.Name = name;
+            context.Animals.Add(a);
+            a.Sex = "F";
+            a.Age = "BABY";
+            context.SaveChanges();
 
-                //baby
-                a = new Animal();
-                a.Name = name;
-                context.Animals.Add(a);
-                a.Sex = "F";
-                a.Age = "BABY";
-                context.SaveChanges();
+            //young
+            a = new Animal();
+            a.Name = name;
+            context.Animals.Add(a);
+            a.Sex = "F";
+            a.Age = "YOUNG";
+            context.SaveChanges();
+            //old
+            a = new Animal();
+            a.Name = name;
+            context.Animals.Add(a);
+            a.Sex = "F";
+            a.Age = "OLD";
+            context.SaveChanges();
 
-                //young
-                a = new Animal();
-                a.Name = name;
-                context.Animals.Add(a);
-                a.Sex = "F";
-                a.Age = "YOUNG";
-                context.SaveChanges();
-                //old
-                a = new Animal();
-                a.Name = name;
-                context.Animals.Add(a);
-                a.Sex = "F";
-                a.Age = "OLD";
-                context.SaveChanges();
-
-
-                TempData["Errors"] = null;
-
-
-            return RedirectToAction("Index", "EditDB", model);
-
-
+            TempData["Errors"] = null;
 
 
         }
@@ -149,9 +156,9 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             var animalsToRemove = context.Animals.Where(m => m.Name == name);
 
             //remove foreign key references before removing the animal 
-            foreach (var a in animalsToRemove)
-                foreach (var pd in context.PriorsDiseases.Where(m => m.AnimalID == a.Id))
-                    context.PriorsDiseases.Remove(pd);
+            //foreach (var a in animalsToRemove)
+            //    foreach (var pd in context.PriorsDiseases.Where(m => m.AnimalID == a.Id))
+            //        context.PriorsDiseases.Remove(pd);
 
             context.Animals.RemoveRange(animalsToRemove);
             context.SaveChanges();
@@ -166,18 +173,18 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public ActionResult InsertNewSign(ADDB context, Sign sign)
         {
-            if(String.IsNullOrWhiteSpace(sign.Name))
+            if (String.IsNullOrWhiteSpace(sign.Name))
             {
                 TempData["Errors"] = "Sign Name is missing";
             }
 
             sign.Name = sign.Name.ToUpper();
 
-            
 
-            if(context.Signs.Where(s=> s.Name == sign.Name).Count()>0)
+
+            if (context.Signs.Where(s => s.Name == sign.Name).Count() > 0)
             {
-                TempData["Errors"] = "Sign "+ sign.Name +" already exists!";
+                TempData["Errors"] = "Sign " + sign.Name + " already exists!";
                 return RedirectToAction("Index");
             }
 
@@ -220,7 +227,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         #endregion
 
         #region Disease Table
-        public ActionResult InsertNewDisease(ADDB context, Disease disease )
+        public ActionResult InsertNewDisease(ADDB context, Disease disease)
         {
             if (String.IsNullOrWhiteSpace(disease.Name))
             {
@@ -230,15 +237,15 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
             disease.Name = disease.Name.ToUpper();
 
-            if (context.Diseases.Where(d=> d.Name == disease.Name).Count() > 0)
+            if (context.Diseases.Where(d => d.Name == disease.Name).Count() > 0)
             {
                 TempData["Errors"] = "Disease " + disease.Name + " already exists!";
                 return RedirectToAction("Index");
             }
-            
-                context.Diseases.Add(disease);
-               
-                context.SaveChanges();
+
+            context.Diseases.Add(disease);
+
+            context.SaveChanges();
 
 
             TempData["Errors"] = null;
@@ -256,7 +263,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             foreach (var d in context.Likelihoods.Where(m => m.DiseaseId == id))
                 context.Likelihoods.Remove(d);
 
-            
+
             context.Diseases.Remove(diseaseToRemove);
             context.SaveChanges();
 
@@ -279,7 +286,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 priorsDiseases.DiseaseID = diseaseID;
                 priorsDiseases.Probability = probability;
                 context.PriorsDiseases.Add(priorsDiseases);
-               
+
             }
 
             context.SaveChanges();
@@ -289,7 +296,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public ActionResult RemoveDiseasePrior(ADDB context, int id)
         {
-           PriorsDiseases priorToRemove = context.PriorsDiseases.Find(id);
+            PriorsDiseases priorToRemove = context.PriorsDiseases.Find(id);
             context.PriorsDiseases.Remove(priorToRemove);
             context.SaveChanges();
 
@@ -318,6 +325,58 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             return RedirectToAction("Index");
         }
 
+
+        #endregion
+
+        #region LOAD FROM EXCEL
+
+        public ActionResult LoadFromExcel(ADDB context)
+        {
+            string extension = ".xlsx";
+            string filename = "data";
+            string path = Server.MapPath(@"~/Files/" + filename + extension);
+           
+            Excel.Application app = new Excel.Application();
+
+            Excel.Workbook WB = app.Workbooks.Open(path);
+
+            // statement get the workbookname  
+            string ExcelWorkbookname = WB.Name;
+
+            // statement get the worksheet count  
+            int worksheetcount = WB.Worksheets.Count;
+
+
+            StringBuilder logBuilder = new StringBuilder();
+            logBuilder.AppendLine(ExcelWorkbookname + " loaded. <br/>");
+            logBuilder.AppendLine(ExcelWorkbookname + " has " + worksheetcount + "worksheets");
+
+            foreach (Excel.Worksheet w in WB.Worksheets)
+            {
+                string prefix = "Disease-Sign";
+                string animalName = w.Name.Replace(prefix, "");
+                logBuilder.AppendLine(animalName + " <br />");
+                CreateNewAnimal(context, animalName);
+
+            }
+
+
+            TempData["LOG"] = logBuilder.ToString();
+
+
+            try
+            {
+                Excel.Workbook workbook = app.Workbooks.Open(path);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return RedirectToAction("Index");
+
+        }
 
         #endregion
     }
