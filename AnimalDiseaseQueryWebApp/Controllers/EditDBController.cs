@@ -8,7 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Text;
 using Excel = Microsoft.Office.Interop.Excel;
-
+using System.Runtime.InteropServices;
+using Microsoft.Office.Interop.Excel;
 
 namespace AnimalDiseaseQueryWebApp.Controllers
 {
@@ -67,9 +68,9 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         #region Animals Table
         [HttpPost]
         public ActionResult InsertNewAnimal(ADDB context, string name, EditDBViewModel model)
-        {                            
+        {
             CreateNewAnimal(context, name);
-           
+
             return RedirectToAction("Index", "EditDB", model);
         }
 
@@ -87,7 +88,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             if (context.Animals.Where(m => m.Name == name).Count() > 0)
             {
                 TempData["Errors"] = "This Name Already Exists";
-                return; 
+                return;
             }
 
             //baby
@@ -166,6 +167,20 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             return RedirectToAction("Index", "EditDB");
         }
 
+        public List<int> FindAllAnimalsIDsWithName(ADDB context, string name)
+        {
+            List<int> ids = new List<int>();
+
+            var animals = context.Animals.Where(n => n.Name == name).ToList();
+
+            foreach(Animal a in animals)
+            {
+                ids.Add(a.Id);
+            }
+
+            return ids;
+        }
+
 
         #endregion
 
@@ -173,9 +188,18 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public ActionResult InsertNewSign(ADDB context, Sign sign)
         {
+
+            CreateSign(context, sign);
+
+            return RedirectToAction("Index");
+        }
+
+        public void CreateSign(ADDB context, Sign sign)
+        {
             if (String.IsNullOrWhiteSpace(sign.Name))
             {
                 TempData["Errors"] = "Sign Name is missing";
+                return;
             }
 
             sign.Name = sign.Name.ToUpper();
@@ -185,7 +209,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             if (context.Signs.Where(s => s.Name == sign.Name).Count() > 0)
             {
                 TempData["Errors"] = "Sign " + sign.Name + " already exists!";
-                return RedirectToAction("Index");
+                return;
             }
 
             //TO DO ADDITIONAL CHECKS 
@@ -204,8 +228,6 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
 
             TempData["Errors"] = null;
-
-            return RedirectToAction("Index");
         }
 
         public ActionResult RemoveSign(ADDB context, int id)
@@ -229,10 +251,20 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         #region Disease Table
         public ActionResult InsertNewDisease(ADDB context, Disease disease)
         {
+
+            CreateDisease(context, disease);
+
+            TempData["Errors"] = null;
+
+            return RedirectToAction("Index");
+        }
+
+        public void CreateDisease(ADDB context, Disease disease)
+        {
             if (String.IsNullOrWhiteSpace(disease.Name))
             {
                 TempData["Errors"] = "Missing Fields";
-                return RedirectToAction("Index");
+                return;
             }
 
             disease.Name = disease.Name.ToUpper();
@@ -240,18 +272,15 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             if (context.Diseases.Where(d => d.Name == disease.Name).Count() > 0)
             {
                 TempData["Errors"] = "Disease " + disease.Name + " already exists!";
-                return RedirectToAction("Index");
+                return;
             }
 
             context.Diseases.Add(disease);
 
             context.SaveChanges();
 
-
-            TempData["Errors"] = null;
-
-            return RedirectToAction("Index");
         }
+
 
         public ActionResult RemoveDisease(ADDB context, int id)
         {
@@ -330,43 +359,125 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         #region LOAD FROM EXCEL
 
+
+
+
         public ActionResult LoadFromExcel(ADDB context)
         {
             string extension = ".xlsx";
             string filename = "data";
             string path = Server.MapPath(@"~/Files/" + filename + extension);
-           
-            Excel.Application app = new Excel.Application();
-
-            Excel.Workbook WB = app.Workbooks.Open(path);
-
-            // statement get the workbookname  
-            string ExcelWorkbookname = WB.Name;
-
-            // statement get the worksheet count  
-            int worksheetcount = WB.Worksheets.Count;
 
 
-            StringBuilder logBuilder = new StringBuilder();
-            logBuilder.AppendLine(ExcelWorkbookname + " loaded. <br/>");
-            logBuilder.AppendLine(ExcelWorkbookname + " has " + worksheetcount + "worksheets");
-
-            foreach (Excel.Worksheet w in WB.Worksheets)
-            {
-                string prefix = "Disease-Sign";
-                string animalName = w.Name.Replace(prefix, "");
-                logBuilder.AppendLine(animalName + " <br />");
-                CreateNewAnimal(context, animalName);
-
-            }
 
 
-            TempData["LOG"] = logBuilder.ToString();
 
 
             try
             {
-                Excel.Workbook workbook = app.Workbooks.Open(path);
+                Excel.Application app = new Excel.Application();
+
+                Excel.Workbook WB = app.Workbooks.Open(path);
+
+                // statement get the workbookname  
+                string ExcelWorkbookname = WB.Name;
+
+                // statement get the worksheet count  
+                int worksheetcount = WB.Worksheets.Count;
+
+
+                StringBuilder logBuilder = new StringBuilder();
+                logBuilder.AppendLine(ExcelWorkbookname + " loaded. <br/>");
+                logBuilder.AppendLine(ExcelWorkbookname + " has " + worksheetcount + "worksheets");
+
+
+
+                foreach (Excel.Worksheet w in WB.Worksheets)
+                {
+                    Excel.Range usedCells = w.UsedRange;
+                    object[,] valueArray = (object[,])usedCells.get_Value(
+                                            XlRangeValueDataType.xlRangeValueDefault);
+                    int rowsLength = valueArray.GetLength(0);
+                    int columnsLength = valueArray.GetLength(1);
+
+                    //we need to deal with the signs first so we can know what the abbrivieations mean once we get the likelihoods from the data
+
+                    if (w.Name.Equals("Abbr"))
+                    {
+                        //deal with abbreviations
+
+
+
+                        Dictionary<String, String> abbrSigns = new Dictionary<string, string>();
+                        //THIS IS NOT 0 INDEXED!!!
+                        for (int r = 2; r < rowsLength - 1; r++)
+                        {
+                            string abbrivieatedName = (string)valueArray[r, 2];
+                            string fullName = (string)valueArray[r, 1];
+                            abbrSigns.Add(abbrivieatedName, fullName);
+
+                            Sign sign = new Sign();
+                            sign.Name = fullName;
+                            sign.Type_of_Value = SignTypes.OBSERVATIONAL;
+
+                            CreateSign(context, sign);
+                        }
+
+
+                    }
+
+
+                    if (w.Name.Contains("Disease"))
+                    {
+                        string prefix = "Disease-Sign";
+                        string animalName = w.Name.Replace(prefix, "");
+                        logBuilder.AppendLine(animalName + " <br />");
+
+                        //Save  animal names
+
+                        //CreateNewAnimal(context, animalName);
+
+                        for (int r = 2; r < rowsLength - 1; r++)
+                        {
+                            Disease d = new Disease();
+                            d.Name = (string)valueArray[r, 1]; 
+                            //Save disease Name
+
+                            CreateDisease(context, d);
+                            int diseaseID = context.Diseases.Last().Id;
+
+                            //calculate disease priors for current disease
+                            foreach(int id in FindAllAnimalsIDsWithName(context, animalName))
+                            {
+                                PriorsDiseases pd = new PriorsDiseases();
+                                pd.DiseaseID = diseaseID;
+                                pd.AnimalID = id;
+                                pd.Probability = (rowsLength / 100).ToString();   /*we don't do -1 because we add +1 in the end anyway*/
+
+                                //Grab Likelihoods from the spreadsheet 
+                            }
+
+                           
+                        }
+
+
+
+                    }
+
+
+
+                    
+
+
+                }
+
+                TempData["LOG"] = logBuilder.ToString();
+
+                WB.Close();
+
+                Marshal.ReleaseComObject(WB);
+                Marshal.ReleaseComObject(app);
+
 
             }
             catch (Exception e)
