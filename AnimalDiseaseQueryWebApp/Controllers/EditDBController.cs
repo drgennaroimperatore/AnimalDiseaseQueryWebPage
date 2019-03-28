@@ -169,6 +169,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public List<int> FindAllAnimalsIDsWithName(ADDB context, string name)
         {
+            name = name.ToUpper(); // upcase just in case....
             List<int> ids = new List<int>();
 
             var animals = context.Animals.Where(n => n.Name == name).ToList();
@@ -228,6 +229,12 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
 
             TempData["Errors"] = null;
+        }
+
+        public int FindSignIDWithName(ADDB context, string signName)
+        {
+            signName = signName.ToUpper(); // safety
+            return context.Signs.Where(m => m.Name == signName).First().Id;
         }
 
         public ActionResult RemoveSign(ADDB context, int id)
@@ -390,43 +397,44 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 logBuilder.AppendLine(ExcelWorkbookname + " loaded. <br/>");
                 logBuilder.AppendLine(ExcelWorkbookname + " has " + worksheetcount + "worksheets");
 
+                Excel.Worksheet abbrWorkSheet =WB.Worksheets["Abbr"];
+
+
+                //deal with abbreviations
+                Excel.Range usedCells = abbrWorkSheet.UsedRange;
+                object[,] valueArray = (object[,])usedCells.get_Value(
+                                        XlRangeValueDataType.xlRangeValueDefault);
+                int rowsLength = valueArray.GetLength(0);
+                int columnsLength = valueArray.GetLength(1);
+
+
+                Dictionary<String, String> abbrSigns = new Dictionary<string, string>();
+                //THIS IS NOT 0 INDEXED!!!
+                for (int r = 2; r < rowsLength - 1; r++)
+                {
+                    string abbrivieatedName = (string)valueArray[r, 2];
+                    string fullName = (string)valueArray[r, 1];
+                    abbrSigns.Add(abbrivieatedName, fullName);
+
+                    Sign sign = new Sign();
+                    sign.Name = fullName;
+                    sign.Type_of_Value = SignTypes.OBSERVATIONAL;
+
+                    CreateSign(context, sign);
+                }
 
 
                 foreach (Excel.Worksheet w in WB.Worksheets)
                 {
-                    Excel.Range usedCells = w.UsedRange;
-                    object[,] valueArray = (object[,])usedCells.get_Value(
+                     usedCells = w.UsedRange;
+                     valueArray = (object[,])usedCells.get_Value(
                                             XlRangeValueDataType.xlRangeValueDefault);
-                    int rowsLength = valueArray.GetLength(0);
-                    int columnsLength = valueArray.GetLength(1);
+                    rowsLength = valueArray.GetLength(0);
+                    columnsLength = valueArray.GetLength(1);
 
                     //we need to deal with the signs first so we can know what the abbrivieations mean once we get the likelihoods from the data
 
-                    if (w.Name.Equals("Abbr"))
-                    {
-                        //deal with abbreviations
-
-
-
-                        Dictionary<String, String> abbrSigns = new Dictionary<string, string>();
-                        //THIS IS NOT 0 INDEXED!!!
-                        for (int r = 2; r < rowsLength - 1; r++)
-                        {
-                            string abbrivieatedName = (string)valueArray[r, 2];
-                            string fullName = (string)valueArray[r, 1];
-                            abbrSigns.Add(abbrivieatedName, fullName);
-
-                            Sign sign = new Sign();
-                            sign.Name = fullName;
-                            sign.Type_of_Value = SignTypes.OBSERVATIONAL;
-
-                            CreateSign(context, sign);
-                        }
-
-
-                    }
-
-
+                   
                     if (w.Name.Contains("Disease"))
                     {
                         string prefix = "Disease-Sign";
@@ -444,7 +452,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                             //Save disease Name
 
                             CreateDisease(context, d);
-                            int diseaseID = context.Diseases.Last().Id;
+                            int diseaseID = context.Diseases.Last().Id; //WRONG!!
 
                             //calculate disease priors for current disease
                             foreach(int id in FindAllAnimalsIDsWithName(context, animalName))
@@ -454,7 +462,18 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                                 pd.AnimalID = id;
                                 pd.Probability = (rowsLength / 100).ToString();   /*we don't do -1 because we add +1 in the end anyway*/
 
-                                //Grab Likelihoods from the spreadsheet 
+                                for (int c = 2; c < columnsLength - 1; c++)
+                                {
+
+                                    //Grab Likelihoods from the spreadsheet 
+                                    Likelihood likelihood = new Likelihood();
+                                    likelihood.AnimalId = id;
+                                    likelihood.DiseaseId = diseaseID;
+                                    likelihood.SignId = FindSignIDWithName(context, abbrSigns[(string)valueArray[1, c]]); // find the id using the abbr dictionary
+                               }
+
+                          
+
                             }
 
                            
