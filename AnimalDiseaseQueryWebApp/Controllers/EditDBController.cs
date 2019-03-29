@@ -234,7 +234,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         public int FindSignIDWithName(ADDB context, string signName)
         {
             signName = signName.ToUpper(); // safety
-            return context.Signs.Where(m => m.Name == signName).First().Id;
+            return context.Signs.Where(m => m.Name.Equals(signName)).First().Id;
         }
 
         public ActionResult RemoveSign(ADDB context, int id)
@@ -276,7 +276,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
             disease.Name = disease.Name.ToUpper();
 
-            if (context.Diseases.Where(d => d.Name == disease.Name).Count() > 0)
+            if (context.Diseases.Where(d => d.Name.Equals (disease.Name)).Count() > 0)
             {
                 TempData["Errors"] = "Disease " + disease.Name + " already exists!";
                 return;
@@ -286,6 +286,11 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
             context.SaveChanges();
 
+        }
+
+        public int FindDiseaseIDWithName(ADDB context, string name)
+        {
+            return context.Diseases.Where(m => m.Name.Equals(name)).First().Id;
         }
 
 
@@ -347,10 +352,15 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public ActionResult InsertNewLikelihood(ADDB context, Likelihood likelihood)
         {
-            context.Likelihoods.Add(likelihood);
-            context.SaveChanges();
+            CreateLikelihood(context, likelihood);
 
             return RedirectToAction("Index");
+        }
+
+        public void CreateLikelihood(ADDB context, Likelihood likelihood)
+        {
+            context.Likelihoods.Add(likelihood);
+            context.SaveChanges();
         }
 
         public ActionResult RemoveLikelihood(ADDB context, int id)
@@ -374,11 +384,6 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             string extension = ".xlsx";
             string filename = "data";
             string path = Server.MapPath(@"~/Files/" + filename + extension);
-
-
-
-
-
 
             try
             {
@@ -410,7 +415,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
                 Dictionary<String, String> abbrSigns = new Dictionary<string, string>();
                 //THIS IS NOT 0 INDEXED!!!
-                for (int r = 2; r < rowsLength - 1; r++)
+                for (int r = 2; r <= rowsLength; r++)
                 {
                     string abbrivieatedName = (string)valueArray[r, 2];
                     string fullName = (string)valueArray[r, 1];
@@ -445,14 +450,14 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
                         //CreateNewAnimal(context, animalName);
 
-                        for (int r = 2; r < rowsLength - 1; r++)
+                        for (int r = 2; r <= rowsLength; r++)
                         {
                             Disease d = new Disease();
                             d.Name = (string)valueArray[r, 1]; 
                             //Save disease Name
 
                             CreateDisease(context, d);
-                            int diseaseID = context.Diseases.Last().Id; //WRONG!!
+                            int diseaseID = FindDiseaseIDWithName(context, d.Name);
 
                             //calculate disease priors for current disease
                             foreach(int id in FindAllAnimalsIDsWithName(context, animalName))
@@ -462,33 +467,26 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                                 pd.AnimalID = id;
                                 pd.Probability = (rowsLength / 100).ToString();   /*we don't do -1 because we add +1 in the end anyway*/
 
-                                for (int c = 2; c < columnsLength - 1; c++)
+                                for (int c = 2; c <= columnsLength; c++)
                                 {
-
                                     //Grab Likelihoods from the spreadsheet 
                                     Likelihood likelihood = new Likelihood();
                                     likelihood.AnimalId = id;
                                     likelihood.DiseaseId = diseaseID;
                                     likelihood.SignId = FindSignIDWithName(context, abbrSigns[(string)valueArray[1, c]]); // find the id using the abbr dictionary
+                                    likelihood.Value = valueArray[r, c].ToString();
+                                    CreateLikelihood(context, likelihood);
                                }
 
                           
-
                             }
-
                            
                         }
 
-
-
                     }
 
-
-
                     
-
-
-                }
+               }
 
                 TempData["LOG"] = logBuilder.ToString();
 
