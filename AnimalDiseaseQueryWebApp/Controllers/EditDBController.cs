@@ -313,11 +313,18 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public ActionResult InsertDiseasePrior(ADDB context, int diseaseID, int animalID, string probability)
         {
-            //deal with duplicate entry
+            CreateDiseasePrior(context, diseaseID, animalID, probability);
+           
+
+            return RedirectToAction("Index");
+        }
+
+        public void CreateDiseasePrior(ADDB context, int diseaseID, int animalID, string probability)
+        {
             var duplicate = context.PriorsDiseases.Where(m => m.DiseaseID == diseaseID && m.AnimalID == animalID).ToList();
             if (duplicate.Count > 0)
             {
-                duplicate[0].Probability = probability;
+                duplicate[0].Probability = probability; // if we do this the prior gets updated rather than added again 
             }
             else
             {
@@ -331,8 +338,6 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             }
 
             context.SaveChanges();
-
-            return RedirectToAction("Index");
         }
 
         public ActionResult RemoveDiseasePrior(ADDB context, int id)
@@ -359,6 +364,12 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public void CreateLikelihood(ADDB context, Likelihood likelihood)
         {
+            //deal with duplicate entries
+            var duplicates = context.Likelihoods.Where(m => m.AnimalId == likelihood.AnimalId && m.DiseaseId == likelihood.DiseaseId && m.SignId == likelihood.SignId);
+            if (duplicates.Count() > 0)
+                return; // do not add anything if we already have a likelihood for the same animal, disease and sign 
+           
+
             context.Likelihoods.Add(likelihood);
             context.SaveChanges();
         }
@@ -419,6 +430,10 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 {
                     string abbrivieatedName = (string)valueArray[r, 2];
                     string fullName = (string)valueArray[r, 1];
+                    if (abbrivieatedName == null || fullName == null)
+                        continue;
+                    if (abbrSigns.ContainsKey(abbrivieatedName))
+                        continue;// skip to the next sign if we've seen this sign before
                     abbrSigns.Add(abbrivieatedName, fullName);
 
                     Sign sign = new Sign();
@@ -431,6 +446,8 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
                 foreach (Excel.Worksheet w in WB.Worksheets)
                 {
+                    if (w.Name.Equals("Abbr"))
+                        continue;
                      usedCells = w.UsedRange;
                      valueArray = (object[,])usedCells.get_Value(
                                             XlRangeValueDataType.xlRangeValueDefault);
@@ -452,7 +469,10 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
                         for (int r = 2; r <= rowsLength; r++)
                         {
+                            if (valueArray[r, 1] == null)
+                                continue;
                             Disease d = new Disease();
+
                             d.Name = (string)valueArray[r, 1]; 
                             //Save disease Name
 
@@ -466,9 +486,12 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                                 pd.DiseaseID = diseaseID;
                                 pd.AnimalID = id;
                                 pd.Probability = (rowsLength / 100).ToString();   /*we don't do -1 because we add +1 in the end anyway*/
+                                CreateDiseasePrior(context, diseaseID, id, pd.Probability);
 
                                 for (int c = 2; c <= columnsLength; c++)
                                 {
+                                    if (valueArray[r, c] == null || valueArray[1, c] == null)
+                                        continue;
                                     //Grab Likelihoods from the spreadsheet 
                                     Likelihood likelihood = new Likelihood();
                                     likelihood.AnimalId = id;
