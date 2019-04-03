@@ -485,21 +485,21 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                                 PriorsDiseases pd = new PriorsDiseases();
                                 pd.DiseaseID = diseaseID;
                                 pd.AnimalID = id;
-                                pd.Probability = (rowsLength / 100).ToString();   /*we don't do -1 because we add +1 in the end anyway*/
+                                pd.Probability = ((rowsLength / 100.0f)).ToString();   /*we don't do -1 because we add +1 in the end anyway*/
                                 CreateDiseasePrior(context, diseaseID, id, pd.Probability);
 
-                                for (int c = 2; c <= columnsLength; c++)
-                                {
-                                    if (valueArray[r, c] == null || valueArray[1, c] == null)
-                                        continue;
-                                    //Grab Likelihoods from the spreadsheet 
-                                    Likelihood likelihood = new Likelihood();
-                                    likelihood.AnimalId = id;
-                                    likelihood.DiseaseId = diseaseID;
-                                    likelihood.SignId = FindSignIDWithName(context, abbrSigns[(string)valueArray[1, c]]); // find the id using the abbr dictionary
-                                    likelihood.Value = valueArray[r, c].ToString();
-                                    CreateLikelihood(context, likelihood);
-                               }
+                               // for (int c = 2; c <= columnsLength; c++)
+                               // {
+                               //     if (valueArray[r, c] == null || valueArray[1, c] == null)
+                               //         continue;
+                               //     //Grab Likelihoods from the spreadsheet 
+                               //     Likelihood likelihood = new Likelihood();
+                               //     likelihood.AnimalId = id;
+                               //     likelihood.DiseaseId = diseaseID;
+                               //     likelihood.SignId = FindSignIDWithName(context, abbrSigns[(string)valueArray[1, c]]); // find the id using the abbr dictionary
+                               //     likelihood.Value = valueArray[r, c].ToString();
+                               //     CreateLikelihood(context, likelihood);
+                               //}
 
                           
                             }
