@@ -7,7 +7,7 @@ namespace AnimalDiseaseQueryWebApp.Models
 {
     public class DiagnoseViewModel
     {
-        List<Animal> animals;
+       public List<Animal> animals;
 
     }
 }
