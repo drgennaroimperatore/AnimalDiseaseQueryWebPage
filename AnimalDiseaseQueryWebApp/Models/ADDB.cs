@@ -22,6 +22,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         public virtual DbSet<PriorsDiseases> PriorsDiseases { get; set; }
         public virtual DbSet<Likelihood> Likelihoods { get; set; }
         public virtual DbSet<Treatment> Treatments { get; set; }
+        public virtual DbSet<SignCore> SignCore { get; set; }
     }
 
     public partial class Animal
@@ -135,6 +136,23 @@ namespace AnimalDiseaseQueryWebApp.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Disease> Diseases { get; set; }
+    }
+
+    public class SignCore
+    {
+        public SignCore(int aid, int sid)
+        {
+            SignID = sid;
+            AnimalID = aid;
+        }
+
+        [Key]
+        public int ID { get; set; }
+        public int SignID { get; set; }
+        public int AnimalID { get; set; }
+
+        public virtual Sign Sign { get; set; }
+        public virtual Animal Animal { get; set; }
     }
 
 

@@ -20,7 +20,8 @@ namespace AnimalDiseaseQueryWebApp.Controllers
            
             model.animals = context.Animals.ToList();
 
-            LoadSignsMasterList(context); // the idea is that everytime the page is refreshed the master list for signs is loaded
+            if(context.SignCore.Count()==0)
+                LoadSignsMasterList(context); //load the signcore table if the signcore table is empty
 
             return View(model);
         }
@@ -49,7 +50,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 {
 
                     string name = (string)valueArray[1, c];
-                    if (name == null)
+                    if (name == null || name.Equals("Comment"))
                         continue;
                     name = name.ToUpper(); // name needs to be uppercase
                     List<int> ids = new List<int>();
@@ -58,7 +59,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
                     foreach (Animal a in animals)
                     {
-                        List<Sign> signList = new List<Sign>();
+                       
 
                         for (int r = 2; r <= rowsLength; r++)
                         {
@@ -66,18 +67,23 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                             if (signName == null)
                                 continue;
                             string columnValue = (string)valueArray[r, c];
-                            if (columnValue == null)
+                            if (columnValue == null )
                                 continue;
                             if (columnValue.Equals("X"))
                             {
 
-                                Sign sign = context.Signs.Where(s => s.Name.Contains(signName.ToUpper())).ToList()[0];
-                                signList.Add(sign);
+                               
+                                var signList = context.Signs.Where(s => s.Name.Contains(signName.ToUpper())).ToList();
+                                if (signList.Count() > 0)
+                                {
+                                    Sign sign = signList[0];
+
+                                    context.SignCore.Add(new SignCore(a.Id, sign.Id));
+                                }
+
                             }
-
-
                         }
-                        signsForAnimal.Add(a, signList);
+                        
                     }
                 }
 
@@ -86,7 +92,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
                 Marshal.ReleaseComObject(WB);
                 Marshal.ReleaseComObject(app);
-
+                context.SaveChanges();
             }
             catch (Exception e)
             {
