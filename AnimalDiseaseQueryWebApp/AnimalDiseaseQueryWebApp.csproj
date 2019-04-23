@@ -224,6 +224,7 @@
     <Content Include="Views\EditDB\_ErrorDB.cshtml" />
     <Content Include="Views\EditDB\_DisplayDiseasePriors.cshtml" />
     <Content Include="Views\Diagnose\Index.cshtml" />
+    <Content Include="Views\Diagnose\_SignsList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -100,9 +100,16 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             }
         }
 
-        public ActionResult RenderSignsPartial (List <Sign> model)
+        [HttpPost]
+        public ActionResult RenderSignsPartial (ADDB context, int animalID)
         {
-            return PartialView("", model);
+            var signcore = context.SignCore.Where(sc => sc.AnimalID == animalID);
+
+            List<Sign> model = new List<Sign>();
+            foreach (SignCore sc in signcore)
+                model.Add(context.Signs.Find(sc.SignID));
+
+            return PartialView("_SignsList", model);
         }
 
     }
