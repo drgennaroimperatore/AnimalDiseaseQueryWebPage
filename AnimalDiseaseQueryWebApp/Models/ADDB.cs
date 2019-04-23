@@ -140,6 +140,8 @@ namespace AnimalDiseaseQueryWebApp.Models
 
     public class SignCore
     {
+        public SignCore() { }
+
         public SignCore(int aid, int sid)
         {
             SignID = sid;

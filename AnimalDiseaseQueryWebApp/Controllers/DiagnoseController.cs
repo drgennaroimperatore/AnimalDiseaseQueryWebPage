@@ -103,7 +103,8 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         [HttpPost]
         public ActionResult RenderSignsPartial (ADDB context, int animalID)
         {
-            var signcore = context.SignCore.Where(sc => sc.AnimalID == animalID);
+            var signcore = context.SignCore.Where(sc => sc.AnimalID == animalID).ToList();
+            
 
             List<Sign> model = new List<Sign>();
             foreach (SignCore sc in signcore)

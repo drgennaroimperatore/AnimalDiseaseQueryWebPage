@@ -15,14 +15,17 @@
                     url: '@Url.Action("RenderSignsPartial", "Diagnose")',
                     contentType: 'application/json; charset=utf-8',
                     type: 'post',
-                    data: '{animalID: "' + animalId + '" }'
-                })
-                    .done(function (result) {
+                    data: '{animalID: "' + animalId + '" }',
+                    success: (function (result) {
                         $('#div_select_signs').html(result);
-                    })
-                    .error(function (xhr, status) {
+                    }),
+                    error: (function (xhr, status) {
                         alert(status);
                     })
+
+                })
+                    
+                    
             }
         });
 
@@ -60,6 +63,10 @@
     <div id="div_select_signs">
         @Html.Partial("_SignsList", new List<AnimalDiseaseQueryWebApp.Models.Sign>())
 
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-info">Diagnose Animal</button>
     </div>
 
 }

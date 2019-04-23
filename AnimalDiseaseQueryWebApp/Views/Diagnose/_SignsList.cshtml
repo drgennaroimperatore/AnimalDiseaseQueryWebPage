@@ -1,11 +1,13 @@
 ﻿@model List<AnimalDiseaseQueryWebApp.Models.Sign>
 
 <div>
-    <h3> the list </h3>
+    <h4> Select Signs </h4>
     @foreach (AnimalDiseaseQueryWebApp.Models.Sign s in Model)
     {
+        @s.Name
         <input type="radio" value="@s.Id+_0" />@Html.Label("Present")
         <input type="radio" value="@s.Id+_1" />@Html.Label("Not Present")
         <input type="radio" value="@s.Id+_2" />@Html.Label("Not Observed")
+        <br />
     }
 </div>
