@@ -129,8 +129,59 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         }
 
         public ActionResult DiagnoseAnimal(ADDB context, int animalID, string[] signs)
+
         {
+            if( context.Diseases.Count()==0 ||
+                context.Likelihoods.Count()==0 || 
+                context.PriorsDiseases.Count()==0 || 
+                animalID==-1 ||
+                signs== null)
+                return RedirectToAction("Index");
+
+            var diseases = context.Diseases.ToList();
+
+            foreach(Disease d in diseases)
+            {
+                foreach (string s in signs)
+                {
+                    string[] value = s.Split(new string[] { "+_" }, StringSplitOptions.None);
+                    float likelihoodValue = 1.0f;
+                    try
+                    {
+                        int signID = Convert.ToInt32(value[0]);
+                        string signPresence = Convert.ToString(value[1]);
+
+
+                        if (signPresence.Equals("P"))
+                        {
+                            likelihoodValue = GetLikelihoodValue(context, animalID, signID, d.Id);
+                        }
+                        else if (signPresence.Equals("NP"))
+                        {
+                            likelihoodValue = 1.0f - GetLikelihoodValue(context, animalID, signID, d.Id);
+                        }
+
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                }
+
+            }
+
             return RedirectToAction("Index");
+        }
+
+        private float GetLikelihoodValue(ADDB context, int animalID, int signID, int diseaseID)
+        {
+            float likelihoodValue = 1.0f;
+
+            var likelihood = context.Likelihoods.Where(m => m.AnimalId == animalID && m.SignId == signID && m.DiseaseId == diseaseID).First();
+            float.TryParse(likelihood.Value, out likelihoodValue);
+
+            
+            return likelihoodValue;
         }
 
     }   
