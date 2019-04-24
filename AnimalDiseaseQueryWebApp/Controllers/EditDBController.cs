@@ -476,7 +476,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                             d.Name = (string)valueArray[r, 1]; 
                             //Save disease Name
 
-                            CreateDisease(context, d);
+                           // CreateDisease(context, d);
                             int diseaseID = FindDiseaseIDWithName(context, d.Name);
 
                             //calculate disease priors for current disease

@@ -138,36 +138,49 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 signs== null)
                 return RedirectToAction("Index");
 
+            
+
             var diseases = context.Diseases.ToList();
 
             foreach(Disease d in diseases)
             {
+                if (!CheckIfDiseaseAffectsAnimal(context, animalID, d.Id))
+                    return RedirectToAction("Index");
+
+                float chainProbability = 1.0f;
                 foreach (string s in signs)
                 {
                     string[] value = s.Split(new string[] { "+_" }, StringSplitOptions.None);
-                    float likelihoodValue = 1.0f;
+                    float likelihoodValue = 1.0f; // sign is not observed
                     try
                     {
                         int signID = Convert.ToInt32(value[0]);
                         string signPresence = Convert.ToString(value[1]);
 
-
+                        //sign is present
                         if (signPresence.Equals("P"))
                         {
                             likelihoodValue = GetLikelihoodValue(context, animalID, signID, d.Id);
                         }
+                        //sign is not present
                         else if (signPresence.Equals("NP"))
                         {
                             likelihoodValue = 1.0f - GetLikelihoodValue(context, animalID, signID, d.Id);
                         }
+
+                        //calculate the chain probability 
+                        likelihoodValue = likelihoodValue / signs.Length;
+                        chainProbability *= likelihoodValue;
 
                     }
                     catch (Exception)
                     {
 
                     }
+
                 }
 
+                float posterior = chainProbability * GetPriorForDisease(context, animalID, d.Id);
             }
 
             return RedirectToAction("Index");
@@ -182,6 +195,20 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
             
             return likelihoodValue;
+        }
+
+        private float GetPriorForDisease(ADDB context, int animalID, int diseaseID)
+        {
+            float priorValue = 0.0f;
+            var prior = context.PriorsDiseases.Where(m => m.AnimalID == animalID && m.DiseaseID == diseaseID).First();
+            float.TryParse(prior.Probability, out priorValue);
+
+            return priorValue;
+        }
+
+        public bool CheckIfDiseaseAffectsAnimal(ADDB context, int animalID, int diseaseID)
+        {
+            return context.PriorsDiseases.Where(m => m.AnimalID == animalID && m.DiseaseID == diseaseID).Count() == 0;
         }
 
     }   
