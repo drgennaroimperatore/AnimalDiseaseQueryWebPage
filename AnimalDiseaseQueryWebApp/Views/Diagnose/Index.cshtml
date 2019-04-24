@@ -1,7 +1,10 @@
 ﻿@model AnimalDiseaseQueryWebApp.Models.DiagnoseViewModel
 
 
-<script type="text/javascript" src="~/scripts/jquery-3.3.1.js"></script>
+
+
+
+
 <script type="text/javascript">
 
 
@@ -24,8 +27,8 @@
                     })
 
                 })
-                    
-                    
+
+
             }
         });
 
@@ -61,6 +64,11 @@
     </div>
 
     <div id="div_select_signs">
+
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+
         @Html.Partial("_SignsList", new List<AnimalDiseaseQueryWebApp.Models.Sign>())
 
     </div>

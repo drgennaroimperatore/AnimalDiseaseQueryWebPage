@@ -121,7 +121,6 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         {
             var signcore = context.SignCore.Where(sc => sc.AnimalID == animalID).ToList();
             
-
             List<Sign> model = new List<Sign>();
             foreach (SignCore sc in signcore)
                 model.Add(context.Signs.Find(sc.SignID));
@@ -129,7 +128,5 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             return PartialView("_SignsList", model);
         }
 
-    }
-
-   
+    }   
 }
