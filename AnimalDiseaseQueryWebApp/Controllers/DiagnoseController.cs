@@ -53,38 +53,23 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                     if (name == null || name.Equals("Comment"))
                         continue;
                     name = name.ToUpper(); // name needs to be uppercase
-                    List<int> ids = new List<int>();
 
-                    var animals = context.Animals.Where(n => n.Name.Contains(name)).ToList();
-
-                    foreach (Animal a in animals)
+                    if(name.Equals("Sheep".ToUpper()))
                     {
-                       
-
-                        for (int r = 2; r <= rowsLength; r++)
-                        {
-                            string signName = (string)valueArray[r, 1];
-                            if (signName == null)
-                                continue;
-                            string columnValue = (string)valueArray[r, c];
-                            if (columnValue == null )
-                                continue;
-                            if (columnValue.Equals("X"))
-                            {
-
-                               
-                                var signList = context.Signs.Where(s => s.Name.Contains(signName.ToUpper())).ToList();
-                                if (signList.Count() > 0)
-                                {
-                                    Sign sign = signList[0];
-
-                                    context.SignCore.Add(new SignCore(a.Id, sign.Id));
-                                }
-
-                            }
-                        }
-                        
+                        CreateSignCoresForAnimal(context, "SHEEP", c, rowsLength, valueArray);
+                        CreateSignCoresForAnimal(context, "GOAT", c, rowsLength, valueArray);
                     }
+                    else if (name.Equals("Equid".ToUpper()))
+                    {
+                        CreateSignCoresForAnimal(context, "HORSE_MULE", c, rowsLength, valueArray);
+                    }
+                    else
+                    {
+                        CreateSignCoresForAnimal(context, name, c, rowsLength, valueArray);
+                    }
+
+
+
                 }
 
                 //close the workbook and the app 
@@ -97,6 +82,37 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             catch (Exception e)
             {
                 Console.Write(e.Message);
+            }
+        }
+
+        private void CreateSignCoresForAnimal(ADDB context, string name, int c, int rowsLength,  object[,] valueArray)
+        {
+             List<int> ids = new List<int>();
+
+            var animals = context.Animals.Where(n => n.Name.Contains(name)).ToList();
+
+            foreach (Animal a in animals)
+            {
+                for (int r = 2; r <= rowsLength; r++)
+                {
+                    string signName = (string)valueArray[r, 1];
+                    if (signName == null)
+                        continue;
+                    string columnValue = (string)valueArray[r, c];
+                    if (columnValue == null)
+                        continue;
+                    if (columnValue.Equals("X"))
+                    {
+                        var signList = context.Signs.Where(s => s.Name.Contains(signName.ToUpper())).ToList();
+                        if (signList.Count() > 0)
+                        {
+                            Sign sign = signList[0];
+
+                            context.SignCore.Add(new SignCore(a.Id, sign.Id));
+                        }
+
+                    }
+                }
             }
         }
 
