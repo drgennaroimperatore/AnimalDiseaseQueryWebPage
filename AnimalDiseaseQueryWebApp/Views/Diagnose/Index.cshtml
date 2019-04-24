@@ -68,6 +68,7 @@
             {
 
                 <select id="select_diagnose_animal" name="animalID">
+                    <option value="-1"> PLEASE SELECT AN ANIMAL</option>
                     @foreach (AnimalDiseaseQueryWebApp.Models.Animal a in Model.animals)
                     {
                         <option value="@a.Id">@a.Name @a.Sex @a.Age</option>

@@ -2,12 +2,14 @@
 
 <div>
     <h4> Select Signs </h4>
+    @{int i = 0; }
     @foreach (AnimalDiseaseQueryWebApp.Models.Sign s in Model)
-    {
+    {       
         @s.Name
-        <input type="radio" value="@s.Id+_0" />@Html.Label("Present")
-        <input type="radio" value="@s.Id+_1" />@Html.Label("Not Present")
-        <input type="radio" value="@s.Id+_2" />@Html.Label("Not Observed")
+        <input type="radio" name="signs[@i]" value="@s.Id+_P" />@Html.Label("Present")
+        <input type="radio" name="signs[@i]" value="@s.Id+_NP" />@Html.Label("Not Present")
+        <input type="radio" name="signs[@i]" value="@s.Id+_NO" checked="checked" />@Html.Label("Not Observed")
         <br />
+        i++;
     }
 </div>

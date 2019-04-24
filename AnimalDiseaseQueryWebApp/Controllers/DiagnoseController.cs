@@ -128,5 +128,10 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             return PartialView("_SignsList", model);
         }
 
+        public ActionResult DiagnoseAnimal(ADDB context, int animalID, string[] signs)
+        {
+            return RedirectToAction("Index");
+        }
+
     }   
 }
