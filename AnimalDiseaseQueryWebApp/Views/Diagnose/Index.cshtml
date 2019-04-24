@@ -1,17 +1,29 @@
 ﻿@model AnimalDiseaseQueryWebApp.Models.DiagnoseViewModel
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 
 
+<html>
+
+<body>
 
 
-<script type="text/javascript">
+    <script type="text/javascript">
+
+        $(document).ready(function () { $('#div_diagnose_loading_signs').hide(); });
 
 
     $(function () {
         $('#select_diagnose_animal').change(function () {
             var animalId = $(this).val();
             console.log(animalId);
+            $('#div_diagnose_loading_signs').show();
+
             if (animalId && animalId != '') {
 
                 $.ajax({
@@ -21,6 +33,8 @@
                     data: '{animalID: "' + animalId + '" }',
                     success: (function (result) {
                         $('#div_select_signs').html(result);
+                        $('#div_diagnose_loading_signs').hide();
+
                     }),
                     error: (function (xhr, status) {
                         alert(status);
@@ -36,48 +50,48 @@
 
 
 
-</script>
+    </script>
 
-<h3>Diagnose An Animal</h3>
-<hr />
+    <h3>Diagnose An Animal</h3>
+    <hr />
 
-@using (Html.BeginForm("DiagnoseAnimal", "Diagnose", FormMethod.Post, new { @id = "form_diagnose_animal" }))
-{
+    @using (Html.BeginForm("DiagnoseAnimal", "Diagnose", FormMethod.Post, new { @id = "form_diagnose_animal" }))
+    {
 
-    <div>
+        <div>
 
-        @if (Model.animals.Count == 0)
-        {
-            <h4>There are no Animals in the Database</h4>
-        }
-        else
-        {
+            @if (Model.animals.Count == 0)
+            {
+                <h4>There are no Animals in the Database</h4>
+            }
+            else
+            {
 
-            <select id="select_diagnose_animal" name="animalID">
-                @foreach (AnimalDiseaseQueryWebApp.Models.Animal a in Model.animals)
-                {
-                    <option value="@a.Id">@a.Name @a.Sex @a.Age</option>
-                }
-            </select>
-        }
+                <select id="select_diagnose_animal" name="animalID">
+                    @foreach (AnimalDiseaseQueryWebApp.Models.Animal a in Model.animals)
+                    {
+                        <option value="@a.Id">@a.Name @a.Sex @a.Age</option>
+                    }
+                </select>
+            }
 
-    </div>
-
-    <div id="div_select_signs">
-
-        <div class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
         </div>
 
-        @Html.Partial("_SignsList", new List<AnimalDiseaseQueryWebApp.Models.Sign>())
+        <div id="div_select_signs">
 
-    </div>
+            <div id="div_diagnose_loading_signs" class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
 
-    <div>
-        <button type="submit" class="btn btn-info">Diagnose Animal</button>
-    </div>
+            @Html.Partial("_SignsList", new List<AnimalDiseaseQueryWebApp.Models.Sign>())
 
-}
+        </div>
 
+        <div>
+            <button type="submit" class="btn btn-info">Diagnose Animal</button>
+        </div>
 
+    }
 
+</body>
+</html>
