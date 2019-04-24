@@ -208,7 +208,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public bool CheckIfDiseaseAffectsAnimal(ADDB context, int animalID, int diseaseID)
         {
-            return context.PriorsDiseases.Where(m => m.AnimalID == animalID && m.DiseaseID == diseaseID).Count() == 0;
+            return context.PriorsDiseases.Where(m => m.AnimalID == animalID && m.DiseaseID == diseaseID).Count() > 0;
         }
 
     }   
