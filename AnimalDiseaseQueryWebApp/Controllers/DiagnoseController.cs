@@ -145,7 +145,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             foreach(Disease d in diseases)
             {
                 if (!CheckIfDiseaseAffectsAnimal(context, animalID, d.Id))
-                    return RedirectToAction("Index");
+                    continue;
 
                 float chainProbability = 1.0f;
                 foreach (string s in signs)
