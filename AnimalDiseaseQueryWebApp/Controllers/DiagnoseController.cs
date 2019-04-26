@@ -128,7 +128,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             return PartialView("_SignsList", model);
         }
 
-        public ActionResult DiagnoseAnimal(ADDB context, int animalID, string[] signs)
+        public JsonResult DiagnoseAnimal(ADDB context, int animalID, string[] signs)
 
         {
             if( context.Diseases.Count()==0 ||
@@ -136,10 +136,10 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 context.PriorsDiseases.Count()==0 || 
                 animalID==-1 ||
                 signs== null)
-                return RedirectToAction("Index");
+                return Json("Error");
 
-            
 
+            Dictionary<string, string> results = new Dictionary<string, string>();
             var diseases = context.Diseases.ToList();
 
             foreach(Disease d in diseases)
@@ -181,14 +181,15 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 }
 
                 float posterior = chainProbability * GetPriorForDisease(context, animalID, d.Id);
-                if(posterior>0.001f)
-                {
-                    Console.Write(posterior);
-                    float post100 = posterior * 100;
-                }
+
+                results.Add(d.Name, (posterior*100).ToString());
             }
 
-            return RedirectToAction("Index");
+            var myList = results.ToList();
+
+            myList.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+
+            return Json(myList);
         }
 
         private float GetLikelihoodValue(ADDB context, int animalID, int signID, int diseaseID)
