@@ -54,12 +54,13 @@
 
     <script type="text/javascript">
 
-
+        $(document).ready(function () { $('#div_diagnose_loading').hide(); });
         
         function DiagnoseAnimal() {
             var animalID = $('#select_diagnose_animal').val();
             var s = []
             var signs = $('.signs:checked').each(function () { s.push($(this).val()); });
+            $(document).ready(function () { $('#div_diagnose_loading').show(); });
             console.log(s);
                 $.ajax({
                     url: '@Url.Action("DiagnoseAnimal", "Diagnose")',
@@ -70,6 +71,7 @@
                     success: (function (data) {
                         console.log(animalID);
                         console.log(signs);
+                        $(document).ready(function () { $('#div_diagnose_loading').hide(); });
 
                     }),
                     error: (function (xhr, status) {
@@ -79,9 +81,7 @@
                 })         
     };
 
-
     </script>
-
     <h3>Diagnose An Animal</h3>
     <hr />
 
@@ -118,6 +118,9 @@
         </div>
 
         <div>
+            <div id="div_diagnose_loading" class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
             <button type="submit" class="btn btn-info" onclick="DiagnoseAnimal()">Diagnose Animal</button>
         </div>
 
