@@ -50,13 +50,42 @@
 
 
 
+    </script >
+
+    <script type="text/javascript">
+
+
+        
+        function DiagnoseAnimal() {
+            var animalID = $('#select_diagnose_animal').val();
+            var s = []
+            var signs = $('.signs:checked').each(function () { s.push($(this).val()); });
+            console.log(s);
+                $.ajax({
+                    url: '@Url.Action("DiagnoseAnimal", "Diagnose")',
+                    contentType: 'application/json; charset=utf-8',
+                    type: 'post',
+                    //data: '{animalID: "' + animalID +'", signs: "'+ s+'" }',
+                    data: JSON.stringify({ "animalID": animalID, "signs": s }),
+                    success: (function (data) {
+                        console.log(animalID);
+                        console.log(signs);
+
+                    }),
+                    error: (function (xhr, status) {
+                        alert(status);
+                    })
+
+                })         
+    };
+
+
     </script>
 
     <h3>Diagnose An Animal</h3>
     <hr />
 
-    @using (Html.BeginForm("DiagnoseAnimal", "Diagnose", FormMethod.Post, new { @id = "form_diagnose_animal" }))
-    {
+  
 
         <div>
 
@@ -89,10 +118,10 @@
         </div>
 
         <div>
-            <button type="submit" class="btn btn-info">Diagnose Animal</button>
+            <button type="submit" class="btn btn-info" onclick="DiagnoseAnimal()">Diagnose Animal</button>
         </div>
 
-    }
+    
 
 </body>
 </html>

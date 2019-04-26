@@ -169,7 +169,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                         }
 
                         //calculate the chain probability 
-                        likelihoodValue = likelihoodValue / signs.Length;
+                        likelihoodValue = likelihoodValue;
                         chainProbability *= likelihoodValue;
 
                     }
@@ -181,6 +181,11 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 }
 
                 float posterior = chainProbability * GetPriorForDisease(context, animalID, d.Id);
+                if(posterior>0.001f)
+                {
+                    Console.Write(posterior);
+                    float post100 = posterior * 100;
+                }
             }
 
             return RedirectToAction("Index");
@@ -192,6 +197,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
             var likelihood = context.Likelihoods.Where(m => m.AnimalId == animalID && m.SignId == signID && m.DiseaseId == diseaseID).First();
             float.TryParse(likelihood.Value, out likelihoodValue);
+            likelihoodValue /= 100.0f;
 
             
             return likelihoodValue;

@@ -6,9 +6,9 @@
     @foreach (AnimalDiseaseQueryWebApp.Models.Sign s in Model)
     {       
         @s.Name
-        <input type="radio" name="signs[@i]" value="@s.Id+_P" />@Html.Label("Present")
-        <input type="radio" name="signs[@i]" value="@s.Id+_NP" />@Html.Label("Not Present")
-        <input type="radio" name="signs[@i]" value="@s.Id+_NO" checked="checked" />@Html.Label("Not Observed")
+        <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_P" />@Html.Label("Present")
+        <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NP" />@Html.Label("Not Present")
+        <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NO" checked="checked" />@Html.Label("Not Observed")
         <br />
         i++;
     }
