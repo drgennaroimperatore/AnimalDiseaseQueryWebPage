@@ -6,6 +6,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
+<style>
+
+    #results {
+        font-size: 15px;
+    }
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-size: 15px;
+    }
+
+</style>
+
 
 
 <html>
@@ -54,6 +67,12 @@
 
     <script type="text/javascript">
 
+        String.prototype.replaceAll = function (search, replacement) {
+            var target = this;
+            return target.split(search).join(replacement);
+        };
+
+
         $(document).ready(function () { $('#div_diagnose_loading').hide(); });
         
         function DiagnoseAnimal() {
@@ -70,10 +89,23 @@
                     data: JSON.stringify({ "animalID": animalID, "signs": s }),
                     success: (function (data) {
                         console.log(animalID);
-                        console.log(signs);
+                        //console.log(signs);
                         $(document).ready(function () { $('#div_diagnose_loading').hide(); });
-                        console.log(data);
-                        $('#results').append(JSON.stringify(data));
+                        console.log();
+                        var strResult = JSON.stringify(data).toString();
+                        var result = strResult.replaceAll("{", "");
+                        result = result.replaceAll("}", "%<br/>");
+                        result = result.replaceAll("[", "");
+                        result = result.replaceAll("]", "");
+                        result = result.replaceAll('"Key"', "");
+                        result = result.replaceAll('"Value"', "");
+                        result = result.replaceAll(":", "");
+                        result = result.replaceAll('"', "");
+                        result = result.replaceAll(",", " ");
+                        console.log(result);
+                        $('#results').append(result);
+                           
+                                                                    
                     }),
                     error: (function (xhr, status) {
                         alert(status);
