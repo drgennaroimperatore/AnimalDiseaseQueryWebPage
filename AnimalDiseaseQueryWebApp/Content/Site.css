@@ -1,4 +1,15 @@
-﻿body {
+﻿html body{
+    background-color:black;
+}
+
+header{
+    margin-bottom:100px;
+    
+    text-align:center
+    
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -21,4 +32,52 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+/*Spacing and sizes*/
+
+.page_content{
+    padding-bottom:200px;
+}
+
+/*Text styling*/
+
+h2 {
+    font-family: Arial;
+    font-weight: bold;
+    color: black;
+}
+
+h3 {
+    font-family: Arial;
+    font-weight:bold;
+    color:black;
+}
+
+
+
+@media screen and (min-device-width: 500px) {
+    h3 {
+        color: white;
+    }
+}
+
+/*Button styling*/
+
+button {
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    
+}
+
+.confirmation_button {
+    
+   
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    border:none;
+    color: black;
+    font-weight:bolder;
+    font-size:25px;
 }

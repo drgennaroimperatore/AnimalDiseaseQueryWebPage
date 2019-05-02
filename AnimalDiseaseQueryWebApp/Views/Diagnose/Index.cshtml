@@ -1,26 +1,5 @@
 ﻿@model AnimalDiseaseQueryWebApp.Models.DiagnoseViewModel
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-<style>
-
-    #results {
-        font-size: 15px;
-    }
-    body, html {
-        margin: 0;
-        padding: 0;
-        font-size: 15px;
-    }
-
-</style>
-
-
-
 <html>
 
 <body>
@@ -73,9 +52,15 @@
         };
 
 
-        $(document).ready(function () { $('#div_diagnose_loading').hide(); });
+        $(document).ready(function ()
+        {
+            $('#div_diagnose_loading').hide();
+            $('#results').hide();
+        });
         
         function DiagnoseAnimal() {
+
+            $('#results').html("");
             var animalID = $('#select_diagnose_animal').val();
             var s = []
             var signs = $('.signs:checked').each(function () { s.push($(this).val()); });
@@ -104,6 +89,7 @@
                         result = result.replaceAll(",", " ");
                         console.log(result);
                         $('#results').append(result);
+                        $('#results').show();
                            
                                                                     
                     }),
@@ -117,10 +103,7 @@
     </script>
     <h3>Diagnose An Animal</h3>
     <hr />
-
-  
-
-        <div>
+       <div>
 
             @if (Model.animals.Count == 0)
             {
@@ -128,8 +111,7 @@
             }
             else
             {
-
-                <select id="select_diagnose_animal" name="animalID">
+                <select id="select_diagnose_animal" class="custom-select" name="animalID">
                     <option value="-1"> PLEASE SELECT AN ANIMAL</option>
                     @foreach (AnimalDiseaseQueryWebApp.Models.Animal a in Model.animals)
                     {
@@ -157,7 +139,7 @@
             <button type="submit" class="btn btn-info" onclick="DiagnoseAnimal()">Diagnose Animal</button>
         </div>
 
-    <div id="results">
+    <div id="results" class="w3-amber w3-panel w3-padding-64">
 
         </div>
 

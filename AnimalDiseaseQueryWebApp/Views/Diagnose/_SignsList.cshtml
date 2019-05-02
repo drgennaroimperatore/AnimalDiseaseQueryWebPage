@@ -4,12 +4,14 @@
     <h4> Select Signs </h4>
     @{int i = 0; }
     @foreach (AnimalDiseaseQueryWebApp.Models.Sign s in Model)
-    {       
-        @s.Name
-        <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_P" />@Html.Label("Present")
-        <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NP" />@Html.Label("Not Present")
-        <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NO" checked="checked" />@Html.Label("Not Observed")
+    {
+    <div class="w3-amber w3-panel w3-padding-64"> 
+        <label class="container"> @s.Name </label>
+        <label class="container"> Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_P" />  <span class="checkmark"></span> </label>
+        <label class="container"> Not Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NP" />  <span class="checkmark"></span> </label>
+        <label class="container"> Not Observed  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NO" checked="checked" />  <span class="checkmark"></span> </label>
         <br />
+    </div>
         i++;
     }
 </div>
