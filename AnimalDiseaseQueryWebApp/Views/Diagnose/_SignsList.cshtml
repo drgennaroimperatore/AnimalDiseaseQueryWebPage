@@ -1,17 +1,23 @@
 ﻿@model List<AnimalDiseaseQueryWebApp.Models.Sign>
 
+
+
 <div>
-    <h4> Select Signs </h4>
+
+    <div class="w3-panel w3-amber" id="select_signs_title">
+        <h4> Select Signs </h4>
+    </div>
+    
     @{int i = 0; }
     @foreach (AnimalDiseaseQueryWebApp.Models.Sign s in Model)
     {
-    <div class="w3-amber w3-panel w3-padding-64"> 
-        <label class="container"> @s.Name </label>
-        <label class="container"> Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_P" />  <span class="checkmark"></span> </label>
-        <label class="container"> Not Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NP" />  <span class="checkmark"></span> </label>
-        <label class="container"> Not Observed  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NO" checked="checked" />  <span class="checkmark"></span> </label>
-        <br />
-    </div>
+        <div class="w3-amber w3-panel w3-padding-64">
+            <label class="container"> @s.Name </label>
+            <label class="container"> Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_P" />  <span class="checkmark"></span> </label>
+            <label class="container"> Not Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NP" />  <span class="checkmark"></span> </label>
+            <label class="container"> Not Observed  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NO" checked="checked" />  <span class="checkmark"></span> </label>
+            <br />
+        </div>
         i++;
     }
 </div>

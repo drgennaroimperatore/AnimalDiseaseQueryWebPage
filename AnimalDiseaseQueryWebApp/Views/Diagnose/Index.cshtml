@@ -16,6 +16,7 @@
             console.log(animalId);
             $('#div_diagnose_loading_signs').show();
 
+
             if (animalId && animalId != '') {
 
                 $.ajax({
@@ -26,6 +27,8 @@
                     success: (function (result) {
                         $('#div_select_signs').html(result);
                         $('#div_diagnose_loading_signs').hide();
+                        $('#select_signs_title').show();
+                        $('#button_diagnose').show();
 
                     }),
                     error: (function (xhr, status) {
@@ -42,7 +45,7 @@
 
 
 
-    </script >
+    </script>
 
     <script type="text/javascript">
 
@@ -56,8 +59,10 @@
         {
             $('#div_diagnose_loading').hide();
             $('#results').hide();
+            $('#select_signs_title').hide();
+            $('#button_diagnose').hide();
         });
-        
+
         function DiagnoseAnimal() {
 
             $('#results').html("");
@@ -90,58 +95,68 @@
                         console.log(result);
                         $('#results').append(result);
                         $('#results').show();
-                           
-                                                                    
+                        
+
+
                     }),
                     error: (function (xhr, status) {
                         alert(status);
                     })
 
-                })         
+                })
     };
 
     </script>
-    <h3>Diagnose An Animal</h3>
+
+    <script type="text/javascript" src="~/Scripts/customselect.js"></script>
+
+    <div class="w3-panel w3-amber">
+
+        <h2>Diagnose An Animal</h2>
+
+    </div>
     <hr />
-       <div>
 
-            @if (Model.animals.Count == 0)
-            {
-                <h4>There are no Animals in the Database</h4>
-            }
-            else
-            {
-                <select id="select_diagnose_animal" class="custom-select" name="animalID">
-                    <option value="-1"> PLEASE SELECT AN ANIMAL</option>
-                    @foreach (AnimalDiseaseQueryWebApp.Models.Animal a in Model.animals)
-                    {
-                        <option value="@a.Id">@a.Name @a.Sex @a.Age</option>
-                    }
-                </select>
-            }
 
+    <div>
+
+        @if (Model.animals.Count == 0)
+        {
+            <h4>There are no Animals in the Database</h4>
+        }
+        else
+        {
+            <select id="select_diagnose_animal" class="custom-select" name="animalID">
+                <option value="-1"> PLEASE SELECT AN ANIMAL</option>
+                @foreach (AnimalDiseaseQueryWebApp.Models.Animal a in Model.animals)
+                {
+                    <option value="@a.Id">@a.Name @a.Sex @a.Age</option>
+                }
+            </select>
+        }
+
+    </div>
+
+    <div id="div_select_signs">
+
+        <div id="div_diagnose_loading_signs" class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
         </div>
 
-        <div id="div_select_signs">
+        @Html.Partial("_SignsList", new List<AnimalDiseaseQueryWebApp.Models.Sign>())
 
-            <div id="div_diagnose_loading_signs" class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
+    </div>
 
-            @Html.Partial("_SignsList", new List<AnimalDiseaseQueryWebApp.Models.Sign>())
-
+    <div>
+        <div id="div_diagnose_loading" class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
         </div>
-
-        <div>
-            <div id="div_diagnose_loading" class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-            <button type="submit" class="btn btn-info" onclick="DiagnoseAnimal()">Diagnose Animal</button>
-        </div>
+        <button id="button_diagnose" type="submit" class="w3-block w3-amber w3-button w3-large w3-hover-black" onclick="DiagnoseAnimal()">Diagnose Animal</button>
+    </div>
 
     <div id="results" class="w3-amber w3-panel w3-padding-64">
 
-        </div>
+    </div>
 
 </body>
 </html>
