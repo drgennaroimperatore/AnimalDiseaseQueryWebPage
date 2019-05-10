@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimalDiseaseQueryWebApp", "AnimalDiseaseQueryWebApp\AnimalDiseaseQueryWebApp.csproj", "{79AAC1F2-5BAD-45A0-A820-D75C37E0CDBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiagnosticDataVisualiser", "DiagnosticDataVisualiser\DiagnosticDataVisualiser.csproj", "{4C39440F-8768-4526-9641-9675194B8A09}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +20,12 @@ Global
 		{79AAC1F2-5BAD-45A0-A820-D75C37E0CDBF}.PublishToDevWeb|Any CPU.Build.0 = PublishToDevWeb|Any CPU
 		{79AAC1F2-5BAD-45A0-A820-D75C37E0CDBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79AAC1F2-5BAD-45A0-A820-D75C37E0CDBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C39440F-8768-4526-9641-9675194B8A09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C39440F-8768-4526-9641-9675194B8A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C39440F-8768-4526-9641-9675194B8A09}.PublishToDevWeb|Any CPU.ActiveCfg = Release|Any CPU
+		{4C39440F-8768-4526-9641-9675194B8A09}.PublishToDevWeb|Any CPU.Build.0 = Release|Any CPU
+		{4C39440F-8768-4526-9641-9675194B8A09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C39440F-8768-4526-9641-9675194B8A09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

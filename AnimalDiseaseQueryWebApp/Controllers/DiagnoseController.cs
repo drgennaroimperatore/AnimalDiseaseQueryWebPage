@@ -138,15 +138,15 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 signs== null)
                 return Json("Error");
 
-
-            Dictionary<string, string> results = new Dictionary<string, string>();
+            
+            Dictionary<string, float> results = new Dictionary<string, float>();
             var diseases = context.Diseases.ToList();
 
             foreach(Disease d in diseases)
             {
                 if (!CheckIfDiseaseAffectsAnimal(context, animalID, d.Id))
                     continue;
-
+                
                 float chainProbability = 1.0f;
                 foreach (string s in signs)
                 {
@@ -169,8 +169,9 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                         }
 
                         //calculate the chain probability 
-                        likelihoodValue = likelihoodValue;
+                        
                         chainProbability *= likelihoodValue;
+                       
 
                     }
                     catch (Exception)
@@ -181,14 +182,16 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 }
 
                 float posterior = chainProbability * GetPriorForDisease(context, animalID, d.Id);
-
-                results.Add(d.Name, (posterior*100).ToString());
+               
+               
+                results.Add(d.Name, (posterior*100.0f));
             }
 
-            var myList = results.ToList();
+            var myList = NormaliseResults(results).ToList();
 
             myList.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
-
+            
+            
             return Json(myList);
         }
 
@@ -217,6 +220,30 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         {
             return context.PriorsDiseases.Where(m => m.AnimalID == animalID && m.DiseaseID == diseaseID).Count() > 0;
         }
+
+        public Dictionary<string, float> NormaliseResults(Dictionary<string, float> originalList)
+        {
+            Dictionary<string, float> normalisedList = new Dictionary<string, float>();
+
+
+            float sumValue = originalList.Values.Sum();
+
+            var keys = originalList.Keys;
+
+            foreach(string k in keys)
+            {
+                float value = originalList[k];
+                float norm = value / sumValue;
+                normalisedList.Add(k, norm*100);
+            }
+
+            var test = normalisedList.Values.Sum();
+
+
+            return normalisedList;
+        }
+
+
 
     }   
 }
