@@ -17,29 +17,59 @@
     // draws it.
     function drawChart() {
 
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Topping');
-        data.addColumn('number', 'Slices');
-        data.addRows([
-            ['Mushrooms', 3],
-            ['Onions', 1],
-            ['Olives', 1],
-            ['Zucchini', 1],
-            ['Pepperoni', 2]
-        ]);
+        $.ajax({
+                    url: '@Url.Action("DrawTestGraph", "Home")',
+                    contentType: 'application/json; charset=utf-8',
+                    type: 'post',
+                   // data: '{animalID: "' + animalId + '" }',
+                    success: (function (result) {
+                       
+                        var rows = [];
+                        for (var r in result)
+                        {
+                            data = result[r];
+                            var row = [];
+                            row.push(data.Name);
+                            row.push(data.Count);
+                            rows.push(row);
+                        }
 
-        // Set chart options
-        var options = {
-            'title': 'How Much Pizza I Ate Last Night',
-            'width': 400,
-            'height': 300
-        };
+                        console.log(rows);
+                        
+                         //Create the data table.
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'Name');
+                        data.addColumn('number', 'Count');
+                        data.addRows(rows);
+                      
+                        
 
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
+                        // Set chart options
+                        var options = {
+                            'title': 'Animals In Eddie',
+                            'width': 400,
+                            'height': 300
+                        };
+
+                        // Instantiate and draw our chart, passing in some options.
+                        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+                        chart.draw(data, options);
+                    }),
+                    error: (function (xhr, status) {
+                        alert(status);
+                    })
+
+                })
+
+
+
+       
+
+
+
     }
+
+    
 </script>
 
 

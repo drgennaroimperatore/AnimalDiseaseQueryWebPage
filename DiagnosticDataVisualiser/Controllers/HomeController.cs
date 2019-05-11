@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiagnosticDataVisualiser.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,23 +9,35 @@ namespace DiagnosticDataVisualiser.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+
+        /*REFERENCE JSON FORMAT
+         "cols": [
+        {"id":"","label":"Topping","pattern":"","type":"string"},
+        {"id":"","label":"Slices","pattern":"","type":"number"}
+      ],
+  "rows": [
+        {"c":[{"v":"Mushrooms","f":null},{"v":3,"f":null}]},
+        {"c":[{"v":"Onions","f":null},{"v":1,"f":null}]},
+        {"c":[{"v":"Olives","f":null},{"v":1,"f":null}]},
+        {"c":[{"v":"Zucchini","f":null},{"v":1,"f":null}]},
+        {"c":[{"v":"Pepperoni","f":null},{"v":2,"f":null}]}
+      ]
+}*/
+
+        public ActionResult Index(Eddie context)
         {
+           
             return View();
         }
 
-        public ActionResult About()
+        public JsonResult DrawTestGraph(Eddie context)
         {
-            ViewBag.Message = "Your application description page.";
+            var breeds = context.setCases.GroupBy(m=>m.species).Select(m => new { Name = m.Key, Count = m.Distinct().Count() });
+                       
 
-            return View();
+            return Json(breeds);
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+      
     }
 }

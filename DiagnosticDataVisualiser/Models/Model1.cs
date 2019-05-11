@@ -5,9 +5,9 @@ namespace DiagnosticDataVisualiser.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
-    public partial class Model1 : DbContext
+    public partial class Eddie : DbContext
     {
-        public Model1()
+        public Eddie()
             : base("name=Model1")
         {
         }
