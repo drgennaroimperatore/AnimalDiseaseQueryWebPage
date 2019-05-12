@@ -29,32 +29,42 @@ namespace DiagnosticDataVisualiser.Controllers
         {
             HomeViewModel model = new HomeViewModel();
             model.SpeciesInEddie = context.species.Select(s => s.speciesName).ToList();
-           
+
             return View(model);
         }
 
         public JsonResult DrawTestGraph(Eddie context)
         {
-            var breeds = context.setCases.GroupBy(m=>m.species).Select(m => new { Name = m.Key, Count = m.Distinct().Count() });
-                       
+            var union = context.setCases.Select(m => new {m.species, m.userCHdisease }).Union(context.caseInfoes.Select(m => new { m.species, m.userCHdisease })).ToList();
+            var breeds = union.GroupBy(m => m.species).Select(m => new { Name = m.Key, Count = m.Distinct().Count() }).ToList();
+
 
             return Json(breeds);
         }
 
         public class AnimalDisease
         {
-           public string species { get; set; }
-           public string userCHDisease { get; set; }
-           public int Expr1 { get; set; }
+            public string species { get; set; }
+            public string userCHDisease { get; set; }
+            public int Expr1 { get; set; }
 
         }
 
         public JsonResult DrawDiseaseByAnimal(Eddie context, string animalName)
         {
             string an = animalName;
-           var query = context.Database.SqlQuery<AnimalDisease>(@"SELECT species, userCHdisease, COUNT(userCHdisease) AS Expr1 FROM caseInfo WHERE(species = @p0) GROUP BY userCHdisease",an).ToList();
+            //const string rawSql = @"SELECT species, userCHdisease, COUNT(userCHdisease) AS Expr1 FROM caseInfo WHERE(species = @p0) GROUP BY userCHdisease";
+            const string rawSql = @"SELECT        species, userCHdisease, COUNT(userCHdisease) AS Expr1
+                                FROM            (SELECT        species, userCHdisease
+                                FROM            setCase
+                               UNION ALL
+                                SELECT        species, userCHdisease
+                                FROM            caseInfo) derivedtbl_1
+                                WHERE        (species = @p0)
+                                GROUP BY userCHdisease";
+            var query = context.Database.SqlQuery<AnimalDisease>(rawSql, an).ToList();
 
-            foreach(var q in query)
+            foreach (var q in query)
             {
                 Regex rgx = new Regex(":(.*)"); q.userCHDisease = rgx.Replace(q.userCHDisease, "");
             }
@@ -63,8 +73,8 @@ namespace DiagnosticDataVisualiser.Controllers
             string currentDisease = "";
             List<AnimalDisease> ad = new List<AnimalDisease>();
             int index = -1;
-            
-            foreach (var q in query )
+
+            foreach (var q in query)
             {
                 AnimalDisease cad = new AnimalDisease();
                 if (q.userCHDisease != currentDisease)
@@ -74,7 +84,7 @@ namespace DiagnosticDataVisualiser.Controllers
                     cad.species = q.species;
                     ad.Add(cad);
                     currentDisease = q.userCHDisease;
-                    
+
                     index++;
                 }
                 else
@@ -84,10 +94,25 @@ namespace DiagnosticDataVisualiser.Controllers
 
             }
 
-            
+
             return Json(ad);
         }
 
-      
+        public JsonResult DrawDiseaseByAnimalAndDate (Eddie context, string species)
+        {
+            string an = species;
+            const string rawSql = "SELECT date,species,userchdisease, COUNT(userChDisease) AS DiseaseCount FROM caseInfo " +
+                "WHERE species = 'Cattle'" +
+                "GROUP by userchdisease" +
+                "ORDER BY userchdisease";
+
+            var query = context.Database.SqlQuery<AnimalDisease>(rawSql, an).ToList();
+
+            return Json(query);
+        }
+
+
     }
+
+    
 }
