@@ -1,10 +1,24 @@
-﻿@{
+﻿@model DiagnosticDataVisualiser.Models.HomeViewModel
+
+@{
     ViewBag.Title = "Home Page";
 }
 
 <!--Load the AJAX API-->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
 <script type="text/javascript">
+
+
+        $(function () {
+            $("#select_animal_diseasebyAnimalBarChart").change(
+                function ()
+
+                {
+                    console.log($(this).val());
+                    drawDiseaseByAnimalChart($(this).val())
+                })
+        });
 
     // Load the Visualization API and the corechart package.
     google.charts.load('current', { 'packages': ['corechart'] });
@@ -22,9 +36,9 @@
                     url: '@Url.Action("DrawTestGraph", "Home")',
                     contentType: 'application/json; charset=utf-8',
                     type: 'post',
-                   // data: '{animalID: "' + animalId + '" }',
+                    //data: '{animalName: "' + species + '" }',
                     success: (function (result) {
-                       
+
                         var rows = [];
                         for (var r in result)
                         {
@@ -36,20 +50,20 @@
                         }
 
                         console.log(rows);
-                        
+
                          //Create the data table.
                         var data = new google.visualization.DataTable();
                         data.addColumn('string', 'Name');
                         data.addColumn('number', 'Count');
                         data.addRows(rows);
-                      
-                        
+
+
 
                         // Set chart options
                         var options = {
                             'title': 'Animals In Eddie',
                             'width': 400,
-                            'height': 300
+                            'height': 500
                         };
 
                         // Instantiate and draw our chart, passing in some options.
@@ -59,7 +73,7 @@
                     error: (function (xhr, status) {
                         alert(status);
                     })
-                })       
+                })
     }
 
     function getRandomColor() {
@@ -72,13 +86,13 @@
     }
 
 
-    function drawDiseaseByAnimalChart() {
+    function drawDiseaseByAnimalChart(species ='Cattle') {
 
         $.ajax({
                     url: '@Url.Action("DrawDiseasebyAnimal", "Home")',
                     contentType: 'application/json; charset=utf-8',
                     type: 'post',
-                   // data: '{animalID: "' + animalId + '" }',
+                    data: '{animalName: "' + species + '" }',
                     success: (function (result) {
                         console.log(result);
                         var tempArray = [];
@@ -93,10 +107,10 @@
 
                         }
 
-                        var data = google.visualization.arrayToDataTable(tempArray);
-                        
+                        var dataTable = google.visualization.arrayToDataTable(tempArray);
+
                         //Create the data table.
-                        var view = new google.visualization.DataView(data);
+                        var view = new google.visualization.DataView(dataTable);
                         view.setColumns([0, 1,
                             {
                                 calc: "stringify",
@@ -105,12 +119,12 @@
                                 role: "annotation"
                             },
                             2]);
-                      
-                        
+
+
 
                         // Set chart options
                         var options = {
-                            'title': 'Animals In Eddie',
+                            'title': 'Occurences of Diseases in Eddie',
                             'width': 800,
                             'height': 300,
                             'legend': {position:"none"},
@@ -123,11 +137,11 @@
                     error: (function (xhr, status) {
                         alert(status);
                     })
-                })       
+                })
     }
 
 
-    
+
 </script>
 
 
@@ -137,19 +151,24 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
 
 
-    </div>
-    <div class="col-md-4">
-
-    </div>
     <div id="chart_div" class="col-md-4">
 
     </div>
 
-    <div id="barchart_div" class="col-md-4">
+    <div class="col-md-4">
+        <div>
+            <select id="select_animal_diseasebyAnimalBarChart">
+                @foreach (string animal in Model.SpeciesInEddie)
+                {
+                    <option value="@animal">@animal</option>
+                }
+            </select>
+        </div>
 
+        <div id="barchart_div">
+
+        </div>
     </div>
 </div>

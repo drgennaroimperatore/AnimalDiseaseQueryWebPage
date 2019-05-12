@@ -163,6 +163,7 @@
     <Compile Include="Models\diseaseRankN.cs" />
     <Compile Include="Models\dis_spec.cs" />
     <Compile Include="Models\drug.cs" />
+    <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\IEMI.cs" />
     <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\ot_disease.cs" />

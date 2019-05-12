@@ -27,8 +27,10 @@ namespace DiagnosticDataVisualiser.Controllers
 
         public ActionResult Index(Eddie context)
         {
+            HomeViewModel model = new HomeViewModel();
+            model.SpeciesInEddie = context.species.Select(s => s.speciesName).ToList();
            
-            return View();
+            return View(model);
         }
 
         public JsonResult DrawTestGraph(Eddie context)
@@ -49,7 +51,7 @@ namespace DiagnosticDataVisualiser.Controllers
 
         public JsonResult DrawDiseaseByAnimal(Eddie context, string animalName)
         {
-           string an = "Cattle";
+            string an = animalName;
            var query = context.Database.SqlQuery<AnimalDisease>(@"SELECT species, userCHdisease, COUNT(userCHdisease) AS Expr1 FROM caseInfo WHERE(species = @p0) GROUP BY userCHdisease",an).ToList();
 
             foreach(var q in query)
