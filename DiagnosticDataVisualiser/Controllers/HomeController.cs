@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -36,6 +37,53 @@ namespace DiagnosticDataVisualiser.Controllers
                        
 
             return Json(breeds);
+        }
+
+        public class AnimalDisease
+        {
+           public string species { get; set; }
+           public string userCHDisease { get; set; }
+           public int Expr1 { get; set; }
+
+        }
+
+        public JsonResult DrawDiseaseByAnimal(Eddie context, string animalName)
+        {
+           string an = "Cattle";
+           var query = context.Database.SqlQuery<AnimalDisease>(@"SELECT species, userCHdisease, COUNT(userCHdisease) AS Expr1 FROM caseInfo WHERE(species = @p0) GROUP BY userCHdisease",an).ToList();
+
+            foreach(var q in query)
+            {
+                Regex rgx = new Regex(":(.*)"); q.userCHDisease = rgx.Replace(q.userCHDisease, "");
+            }
+
+
+            string currentDisease = "";
+            List<AnimalDisease> ad = new List<AnimalDisease>();
+            int index = -1;
+            
+            foreach (var q in query )
+            {
+                AnimalDisease cad = new AnimalDisease();
+                if (q.userCHDisease != currentDisease)
+                {
+                    cad.Expr1 = q.Expr1;
+                    cad.userCHDisease = q.userCHDisease;
+                    cad.species = q.species;
+                    ad.Add(cad);
+                    currentDisease = q.userCHDisease;
+                    
+                    index++;
+                }
+                else
+                {
+                    ad[index].Expr1 += q.Expr1;
+                }
+
+            }
+
+            
+            return Json(ad);
         }
 
       
