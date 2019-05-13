@@ -33,13 +33,24 @@ namespace DiagnosticDataVisualiser.Controllers
             return View(model);
         }
 
+        public class AnimalCount
+        {
+            public string species { get; set; }
+            public int Expr1 { get; set; }
+        }
+
         public JsonResult DrawTestGraph(Eddie context)
         {
-            var union = context.setCases.Select(m => new {m.species, m.userCHdisease }).Union(context.caseInfoes.Select(m => new { m.species, m.userCHdisease })).ToList();
-            var breeds = union.GroupBy(m => m.species).Select(m => new { Name = m.Key, Count = m.Distinct().Count() }).ToList();
+            const string rawSql = "SELECT        species, COUNT(species) AS Expr1 " +
+                "FROM(SELECT species  " +
+                "FROM setCase UNION ALL SELECT species FROM caseInfo) " +
+                "derivedtbl_1 " +
+                "GROUP BY species";
+
+            var query = context.Database.SqlQuery<AnimalCount>(rawSql).ToList();
 
 
-            return Json(breeds);
+            return Json(query);
         }
 
         public class AnimalDisease

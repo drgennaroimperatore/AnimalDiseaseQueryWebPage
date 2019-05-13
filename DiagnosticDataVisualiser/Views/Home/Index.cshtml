@@ -40,12 +40,13 @@
                     success: (function (result) {
 
                         var rows = [];
+                        console.log(result);
                         for (var r in result)
                         {
                             data = result[r];
                             var row = [];
-                            row.push(data.Name);
-                            row.push(data.Count);
+                            row.push(data.species);
+                            row.push(data.Expr1);
                             rows.push(row);
                         }
 
