@@ -183,7 +183,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 }
 
                 float posterior = chainProbability * GetPriorForDisease(context, animalID, d.Id);
-                posterior = (float)Math.Round((double)posterior, 2);
+              //  posterior = (float)Math.Round((double)posterior, 2);
                
                
                 results.Add(d.Name, (posterior*100.0f));
@@ -235,7 +235,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             foreach(string k in keys)
             {
                 float value = originalList[k];
-                float norm = value / sumValue;
+                float norm = (float)Math.Round(value / sumValue,3);
                 normalisedList.Add(k, norm*100);
             }
 
