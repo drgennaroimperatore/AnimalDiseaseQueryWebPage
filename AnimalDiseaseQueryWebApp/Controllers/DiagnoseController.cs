@@ -182,6 +182,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 }
 
                 float posterior = chainProbability * GetPriorForDisease(context, animalID, d.Id);
+                posterior = (float)Math.Round((double)posterior, 2);
                
                
                 results.Add(d.Name, (posterior*100.0f));
