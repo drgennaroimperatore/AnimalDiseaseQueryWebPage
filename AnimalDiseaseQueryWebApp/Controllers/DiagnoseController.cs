@@ -62,6 +62,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                     else if (name.Equals("Equid".ToUpper()))
                     {
                         CreateSignCoresForAnimal(context, "HORSE_MULE", c, rowsLength, valueArray);
+                        CreateSignCoresForAnimal(context, "DONKEY", c, rowsLength, valueArray);
                     }
                     else
                     {
