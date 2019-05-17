@@ -183,18 +183,15 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 }
 
                 float posterior = chainProbability * GetPriorForDisease(context, animalID, d.Id);
-              //  posterior = (float)Math.Round((double)posterior, 2);
+             
                
                
                 results.Add(d.Name, (posterior*100.0f));
             }
 
-            var myList = NormaliseResults(results).ToList();
-
-            myList.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
-            
-            
-            return Json(myList);
+                
+                 
+            return Json(NormaliseResults(results));
         }
 
         private float GetLikelihoodValue(ADDB context, int animalID, int signID, int diseaseID)
@@ -223,10 +220,10 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             return context.PriorsDiseases.Where(m => m.AnimalID == animalID && m.DiseaseID == diseaseID).Count() > 0;
         }
 
-        public Dictionary<string, float> NormaliseResults(Dictionary<string, float> originalList)
+        public Dictionary<string,string> NormaliseResults(Dictionary<string, float> originalList)
         {
-            Dictionary<string, float> normalisedList = new Dictionary<string, float>();
-
+            List<KeyValuePair<string, float>> normalisedList = new List<KeyValuePair<string, float>>();
+            Dictionary<string, string> result = new Dictionary<string, string>();
 
             float sumValue = originalList.Values.Sum();
 
@@ -235,14 +232,16 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             foreach(string k in keys)
             {
                 float value = originalList[k];
-                float norm = (float)Math.Round(value / sumValue,3);
-                normalisedList.Add(k, norm*100);
+                float norm = (value / sumValue);
+                normalisedList.Add(new KeyValuePair<string, float>(k,(norm*100)));
             }
 
-            var test = normalisedList.Values.Sum();
+        
+            normalisedList.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
 
+            normalisedList.ForEach(x => result.Add(x.Key, " "+ x.Value.ToString("f2")+"</br>")); 
 
-            return normalisedList;
+            return result;
         }
 
 

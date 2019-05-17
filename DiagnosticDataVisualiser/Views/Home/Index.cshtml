@@ -26,6 +26,7 @@
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(drawChart);
     google.charts.setOnLoadCallback(drawDiseaseByAnimalChart);
+    google.charts.setOnLoadCallback(drawDiseaseHistogramByAnimalandMonth);
 
     // Callback that creates and populates a data table,
     // instantiates the pie chart, passes in the data and
@@ -139,6 +140,89 @@
                         alert(status);
                     })
                 })
+    }
+
+
+     function drawDiseaseHistogramByAnimalandMonth(species ='Cattle') {
+         
+       @*$.ajax({
+                   url: '@Url.Action("DrawDiseasebyAnimal", "Home")',
+                    contentType: 'application/json; charset=utf-8',
+                    type: 'post',
+                    data: '{animalName: "' + species + '" }',
+                    success: (function (result) {
+                        console.log(result);
+                        var tempArray = [];
+                        var labelArray = ["Disease", "Occurences", { role: "style" }];
+                        tempArray.push(labelArray);
+                        for (var r in result)
+                        {
+                            var dataRow = [result[r].userCHDisease, result[r].Expr1, getRandomColor()];
+                            tempArray.push(dataRow);
+                            console.log(result[r].userCHDisease);
+
+
+                        }
+
+                        var dataTable = google.visualization.arrayToDataTable(tempArray);
+
+                        //Create the data table.
+                        var view = new google.visualization.DataView(dataTable);
+                        view.setColumns([0, 1,
+                            {
+                                calc: "stringify",
+                                sourceColumn: 1,
+                                type: "string",
+                                role: "annotation"
+                            },
+                            2]);
+
+
+
+                        // Set chart options
+                        var options = {
+                            'title': 'Occurences of Diseases in Eddie',
+                            'width': 800,
+                            'height': 300,
+                            'legend': {position:"none"},
+                        };
+
+                        // Instantiate and draw our chart, passing in some options.
+                        var chart = new google.visualization.ColumnChart(document.getElementById('barchart_div'));
+                        chart.draw(view, options);
+                    }),
+                    error: (function (xhr, status) {
+                        alert(status);
+                    })
+                })*@
+
+         var data = google.visualization.arrayToDataTable([
+             ['Disease', 'Occurences', 'Month'],
+             ['Disease 1','12', 'May'],
+             ['Disease 2','12', 'May'],
+             ['Disease 3', '1', 'May'],
+             ['Disease 1', '1', 'June'],
+             ['Disease 2', '1', 'June'],
+             ['Disease 3', '1', 'June'],
+            /* ['Apatosaurus (deceptive lizard)', 22.9],
+             ['Archaeopteryx (ancient wing)', 0.9],
+             ['Argentinosaurus (Argentina lizard)', 36.6],
+             ['Baryonyx (heavy claws)', 9.1],
+             ['Brachiosaurus (arm lizard)', 30.5],
+             ['Ceratosaurus (horned lizard)', 6.1],
+             ['Coelophysis (hollow form)', 2.7],
+             ['Compsognathus (elegant jaw)', 0.9],
+             ['Deinonychus (terrible claw)', 2.7],
+             ['Diplodocus (double beam)', 27.1],*/
+         ]);
+
+         var options = {
+             title: 'Temporary Mock',
+             legend: { position: 'none' },
+         };
+
+         var chart = new google.visualization.Histogram(document.getElementById('histogram_month_disease_div'));
+         chart.draw(data, options);
     }
 
 
