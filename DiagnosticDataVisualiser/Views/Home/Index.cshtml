@@ -143,86 +143,66 @@
     }
 
 
-     function drawDiseaseHistogramByAnimalandMonth(species ='Cattle') {
-         
-       @*$.ajax({
-                   url: '@Url.Action("DrawDiseasebyAnimal", "Home")',
-                    contentType: 'application/json; charset=utf-8',
-                    type: 'post',
-                    data: '{animalName: "' + species + '" }',
+
+
+     function drawDiseaseHistogramByAnimalandMonth(species ='Cattle', queryYear = '2019') {
+
+       $.ajax({
+                   url: '@Url.Action("DrawDiseaseByAnimalAndDate", "Home")',
+
+           type: 'POST',
+           contentType: 'application/json; charset=utf-8',
+           data: '{animalName: "' + species + '", year: "' + queryYear +'" }',
+
+                    dataType:"json",
                     success: (function (result) {
-                        console.log(result);
+                        //console.log(result);
                         var tempArray = [];
-                        var labelArray = ["Disease", "Occurences", { role: "style" }];
-                        tempArray.push(labelArray);
+                        var annotationRow = result.Annotations;
+                        annotationRow.push({ role: 'annotation' });
+                       // tempArray.push(annotationRow);
+                        console.log(annotationRow);
+
+
                         for (var r in result)
                         {
-                            var dataRow = [result[r].userCHDisease, result[r].Expr1, getRandomColor()];
-                            tempArray.push(dataRow);
-                            console.log(result[r].userCHDisease);
+
+
+                           //console.log(result[r]);
 
 
                         }
 
-                        var dataTable = google.visualization.arrayToDataTable(tempArray);
+                        //console.log(tempArray);
 
-                        //Create the data table.
-                        var view = new google.visualization.DataView(dataTable);
-                        view.setColumns([0, 1,
-                            {
-                                calc: "stringify",
-                                sourceColumn: 1,
-                                type: "string",
-                                role: "annotation"
-                            },
-                            2]);
+                        var data = google.visualization.arrayToDataTable([
+                            ['Disease', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
+                                'Western', 'Literature', { role: 'annotation' }],
+                            ['May', 10, 24, 20, 32, 18, 5, ''],
+                            ['2020', 16, 22, 23, 30, 16, 9, ''],
+                            ['2030', 28, 19, 29, 30, 12, 13, '']
+                        ]);
 
-
-
-                        // Set chart options
                         var options = {
-                            'title': 'Occurences of Diseases in Eddie',
-                            'width': 800,
-                            'height': 300,
-                            'legend': {position:"none"},
+                            width: 600,
+                            height: 400,
+                            legend: { position: 'top', maxLines: 3 },
+                            bar: { groupWidth: '75%' },
+                            isStacked: true
                         };
 
-                        // Instantiate and draw our chart, passing in some options.
-                        var chart = new google.visualization.ColumnChart(document.getElementById('barchart_div'));
-                        chart.draw(view, options);
+
+                        var chart = new google.visualization.BarChart(document.getElementById('histogram_month_disease_div'));
+                        chart.draw(data, options);
+
+
                     }),
                     error: (function (xhr, status) {
                         alert(status);
                     })
-                })*@
+                })
 
-         var data = google.visualization.arrayToDataTable([
-             ['Disease', 'Occurences', 'Month'],
-             ['Disease 1','12', 'May'],
-             ['Disease 2','12', 'May'],
-             ['Disease 3', '1', 'May'],
-             ['Disease 1', '1', 'June'],
-             ['Disease 2', '1', 'June'],
-             ['Disease 3', '1', 'June'],
-            /* ['Apatosaurus (deceptive lizard)', 22.9],
-             ['Archaeopteryx (ancient wing)', 0.9],
-             ['Argentinosaurus (Argentina lizard)', 36.6],
-             ['Baryonyx (heavy claws)', 9.1],
-             ['Brachiosaurus (arm lizard)', 30.5],
-             ['Ceratosaurus (horned lizard)', 6.1],
-             ['Coelophysis (hollow form)', 2.7],
-             ['Compsognathus (elegant jaw)', 0.9],
-             ['Deinonychus (terrible claw)', 2.7],
-             ['Diplodocus (double beam)', 27.1],*/
-         ]);
 
-         var options = {
-             title: 'Temporary Mock',
-             legend: { position: 'none' },
-         };
-
-         var chart = new google.visualization.Histogram(document.getElementById('histogram_month_disease_div'));
-         chart.draw(data, options);
     }
 
 

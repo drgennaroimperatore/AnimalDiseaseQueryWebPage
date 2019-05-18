@@ -33,6 +33,13 @@ namespace DiagnosticDataVisualiser.Controllers
             return View(model);
         }
 
+        public List<string> GetDiseaseNames(Eddie context)
+        {
+           return context.diseases.OrderBy(x=>x.diseaseName).Select(x => x.diseaseName).ToList();
+
+           
+        }
+
         public class AnimalCount
         {
             public string species { get; set; }
@@ -109,17 +116,81 @@ namespace DiagnosticDataVisualiser.Controllers
             return Json(ad);
         }
 
-        public JsonResult DrawDiseaseByAnimalAndDate (Eddie context, string species)
+        public class DiseaseByDate
         {
-            string an = species;
-            const string rawSql = "SELECT date,species,userchdisease, COUNT(userChDisease) AS DiseaseCount FROM caseInfo " +
-                "WHERE species = 'Cattle'" +
-                "GROUP by userchdisease" +
-                "ORDER BY userchdisease";
+            public string Species { get; set; }
+            public string userChDisease { get; set; }
+            public int DCount { get; set; }
+            public string Date { get; set; }
+        }
 
-            var query = context.Database.SqlQuery<AnimalDisease>(rawSql, an).ToList();
+        public class HistogramData
+        {
+            public List<string> Annotations { get; set; }
+            public Dictionary<string, List<DiseaseByDate>> Info {get; set;}
+            
+        }
 
-            return Json(query);
+        [HttpPost]
+        public JsonResult DrawDiseaseByAnimalAndDate (Eddie context, string animalName, string year)
+        {
+            string an = animalName;
+            HistogramData histogramData = new HistogramData();
+
+            string[] months = { "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec" };
+            Dictionary<string, List<DiseaseByDate>> result = new Dictionary<string, List<DiseaseByDate>>();
+
+            for (int i = 0; i < months.Length; i++)
+            {
+
+                const string rawSql =
+                    @"SELECT  species, userChdisease, COUNT(*) AS dcount FROM caseInfo " +
+                    "WHERE species = @p0 AND date LIKE CONCAT('%',@p1,'/',@p2)" +
+                    "group by userChdisease "+
+                    "ORDER BY userChdisease";
+
+
+                object[] p = { an, i+1, year };
+                var query = context.Database.SqlQuery<DiseaseByDate>(rawSql, p).ToList();
+
+                foreach (var q in query)
+                {
+                    Regex rgx = new Regex(":(.*)"); q.userChDisease = rgx.Replace(q.userChDisease, "");
+                }
+
+                string currentDisease = "";
+                List<DiseaseByDate> ad = new List<DiseaseByDate>();
+                int index = -1;
+
+                foreach (var q in query)
+                {
+                    DiseaseByDate cad = new DiseaseByDate();
+                    if (q.userChDisease != currentDisease)
+                    {
+                        cad.Date = q.Date;
+                        cad.DCount = q.DCount;
+                        cad.userChDisease = q.userChDisease;
+                        cad.Species = q.Species;
+                        ad.Add(cad);
+                        currentDisease = q.userChDisease;
+
+                        index++;
+                    }
+                    else
+                    {
+                        ad[index].DCount += q.DCount;
+                    }
+
+                }
+                result.Add(months[i], ad);
+
+            }
+
+            histogramData.Annotations = GetDiseaseNames(context);
+            histogramData.Annotations.Insert(0, "Diseases");
+            histogramData.Info = result;
+
+            return Json(histogramData);
         }
 
 
