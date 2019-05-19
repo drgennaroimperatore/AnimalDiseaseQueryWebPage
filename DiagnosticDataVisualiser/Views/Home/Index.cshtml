@@ -7,6 +7,7 @@
 <!--Load the AJAX API-->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
 <script type="text/javascript">
 
 
@@ -49,6 +50,7 @@
     // draws it.
     function drawChart() {
 
+      
         $.ajax({
                     url: '@Url.Action("DrawTestGraph", "Home")',
                     contentType: 'application/json; charset=utf-8',
@@ -104,8 +106,8 @@
     }
 
 
-    function drawDiseaseByAnimalChart(species ='Cattle') {
-
+    function drawDiseaseByAnimalChart(species = 'Cattle') {
+        $("#barchart_div").html('<div id="spinner_disease_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem; " role="status"> < span class="sr-only" > Loading...</span > </div > ');
         $.ajax({
                     url: '@Url.Action("DrawDiseasebyAnimal", "Home")',
                     contentType: 'application/json; charset=utf-8',
@@ -163,7 +165,9 @@
 
      function drawDiseaseHistogramByAnimalandMonth(species ='Cattle', queryYear = '2019') {
 
-       $.ajax({
+         $("#histogram_month_disease_div").html('<div id="spinner_disease_animal_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem; " role="status"> < span class="sr-only" > Loading...</span > </div > ');
+
+         $.ajax({
                    url: '@Url.Action("DrawDiseaseByAnimalAndDate", "Home")',
 
            type: 'POST',
@@ -247,6 +251,9 @@
 
 
     <div id="chart_div" class="col-md-6">
+        <div id="spinner_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
 
     </div>
 
@@ -261,7 +268,9 @@
         </div>
 
         <div id="barchart_div">
-
+            <div id="spinner_disease_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
     </div>
 </div>
@@ -286,7 +295,9 @@
         </div>
 
         <div id="histogram_month_disease_div">
-
+            <div id="spinner_disease_animal_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
     </div>
 </div>
