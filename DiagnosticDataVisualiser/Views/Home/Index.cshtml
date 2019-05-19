@@ -80,8 +80,8 @@
                         // Set chart options
                         var options = {
                             'title': 'Animals In Eddie',
-                            'width': 400,
-                            'height': 500
+                            'width': 700,
+                            'height': 900
                         };
 
                         // Instantiate and draw our chart, passing in some options.
@@ -212,8 +212,8 @@
                         ]);*/
 
                         var options = {
-                            width: 800,
-                            height: 400,
+                            width: 1600,
+                            height: 600,
                             legend: { position: 'top', maxLines: 3 },
                             bar: { groupWidth: '85%' },
                             isStacked: true
@@ -246,11 +246,11 @@
 <div class="row">
 
 
-    <div id="chart_div" class="col-md-4">
+    <div id="chart_div" class="col-md-6">
 
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div>
             <select id="select_animal_diseasebyAnimalBarChart">
                 @foreach (string animal in Model.SpeciesInEddie)
@@ -267,7 +267,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-10">
 
         <div>
             <select id="select_animal_diseasebyMonthHistogram">
