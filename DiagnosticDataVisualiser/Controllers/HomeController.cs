@@ -161,7 +161,7 @@ namespace DiagnosticDataVisualiser.Controllers
                   "ORDER BY userChdisease";
 
                 string month = "";
-                if (i < 10)
+                if (i < 9)
                 {
                     month = "0" + (i + 1).ToString();
                 }
