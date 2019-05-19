@@ -157,31 +157,45 @@
                     dataType:"json",
                     success: (function (result) {
                         //console.log(result);
-                        var tempArray = [];
                         var annotationRow = result.Annotations;
+                        var nOfDiseases = annotationRow.length - 1;
                         annotationRow.push({ role: 'annotation' });
-                       // tempArray.push(annotationRow);
-                        console.log(annotationRow);
+                       
+                     
+                        var chartData = [];
+                        chartData.push(annotationRow);
 
-
-                        for (var r in result)
+                        for (var i = 0; i < result.Arr.length; i++)
                         {
 
+                            console.log("Parsing" + result.Arr[i]);
+                            var currentMonth = [];
+                            for (var j = 0; j < result.Arr[i].length; j++)
+                            {
+                                console.log("j=" + j);
+                                if (j === 0 || j === result.Arr[i].length - 1) {
+                                    currentMonth.push(result.Arr[i][j]);
+                                }
+                                else {
+                                    currentMonth.push(parseInt(result.Arr[i][j]));
+                                }
+                                    
+                                console.log(result.Arr[i][j]);
+                            }
 
-                           //console.log(result[r]);
-
-
+                            chartData.push(currentMonth);
                         }
 
-                        //console.log(tempArray);
+                        console.log(chartData);
 
-                        var data = google.visualization.arrayToDataTable([
-                            ['Disease', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
+                        var data = google.visualization.arrayToDataTable(chartData);
+                            /*[
+                            ['Disea', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
                                 'Western', 'Literature', { role: 'annotation' }],
                             ['May', 10, 24, 20, 32, 18, 5, ''],
                             ['2020', 16, 22, 23, 30, 16, 9, ''],
                             ['2030', 28, 19, 29, 30, 12, 13, '']
-                        ]);
+                        ]);*/
 
                         var options = {
                             width: 600,

@@ -128,6 +128,7 @@ namespace DiagnosticDataVisualiser.Controllers
         {
             public List<string> Annotations { get; set; }
             public Dictionary<string, List<DiseaseByDate>> Info {get; set;}
+            public List<List<string>> Arr { get; set; }
             
         }
 
@@ -183,9 +184,48 @@ namespace DiagnosticDataVisualiser.Controllers
 
                 }
                 result.Add(months[i], ad);
-
             }
 
+            histogramData.Arr = new List<List<string>>();
+            foreach (var m in months)
+            {
+                List<string> dataList = new List<string>();
+                dataList.Add(m);
+                var diseasesForMonth = result[m];
+                var diseaseNamesForMonth = diseasesForMonth.Select(diseasebyDate => diseasebyDate.userChDisease.TrimEnd()).ToList();
+
+                if (result[m].Count == 0) // if we have no results for that month just add 0 values
+                {
+                    foreach (var dn in GetDiseaseNames(context))
+                    {
+                        dataList.Add("0");
+                    }
+                }
+                else // if we do add the results for the disease we have
+                {
+
+                    foreach (var dn in GetDiseaseNames(context))
+                    {
+                        if (diseaseNamesForMonth.Contains(dn))
+                        {
+                            string valueToAdd = diseasesForMonth.Where(x => x.userChDisease.TrimEnd().Equals(dn)).First().DCount.ToString();
+                            dataList.Add(valueToAdd);
+                        }
+                        else
+                        {
+                            dataList.Add("0");
+                        }
+
+                    }
+
+                   
+                   
+                    //add the data list to the bdimensional
+                };
+                dataList.Add(" ");//annotation padding
+                histogramData.Arr.Add(dataList);
+            }
+            
             histogramData.Annotations = GetDiseaseNames(context);
             histogramData.Annotations.Insert(0, "Diseases");
             histogramData.Info = result;
