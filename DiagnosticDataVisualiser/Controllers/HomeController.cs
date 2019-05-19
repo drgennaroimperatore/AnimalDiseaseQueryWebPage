@@ -127,7 +127,6 @@ namespace DiagnosticDataVisualiser.Controllers
         public class HistogramData
         {
             public List<string> Annotations { get; set; }
-            public Dictionary<string, List<DiseaseByDate>> Info {get; set;}
             public List<List<string>> Arr { get; set; }
             
         }
@@ -150,8 +149,15 @@ namespace DiagnosticDataVisualiser.Controllers
                     "group by userChdisease "+
                     "ORDER BY userChdisease";
 
+                string month = "";
+                if (i < 10)
+                {
+                    month = "0" + (i + 1).ToString();
+                }
+                else
+                    month = (i + 1).ToString();
 
-                object[] p = { an, i+1, year };
+                object[] p = { an, month, year };
                 var query = context.Database.SqlQuery<DiseaseByDate>(rawSql, p).ToList();
 
                 foreach (var q in query)
@@ -228,7 +234,7 @@ namespace DiagnosticDataVisualiser.Controllers
             
             histogramData.Annotations = GetDiseaseNames(context);
             histogramData.Annotations.Insert(0, "Diseases");
-            histogramData.Info = result;
+          
 
             return Json(histogramData);
         }

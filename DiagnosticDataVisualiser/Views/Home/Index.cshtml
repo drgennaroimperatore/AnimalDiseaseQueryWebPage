@@ -18,7 +18,23 @@
                     console.log($(this).val());
                     drawDiseaseByAnimalChart($(this).val())
                 })
-        });
+    });
+
+    $(function () {
+        $("#select_animal_diseasebyMonthHistogram").change(
+            function () {
+                console.log($(this).val());
+                drawDiseaseHistogramByAnimalandMonth($(this).val(), $("#select_year_diseasebyMonthHistogram").val());
+            })
+    });
+
+    $(function () {
+        $("#select_year_diseasebyMonthHistogram").change(
+            function () {
+                console.log($(this).val());
+                drawDiseaseHistogramByAnimalandMonth($("#select_animal_diseasebyMonthHistogram").val(), $(this).val());
+            })
+    });
 
     // Load the Visualization API and the corechart package.
     google.charts.load('current', { 'packages': ['corechart'] });
@@ -168,7 +184,6 @@
                         for (var i = 0; i < result.Arr.length; i++)
                         {
 
-                            console.log("Parsing" + result.Arr[i]);
                             var currentMonth = [];
                             for (var j = 0; j < result.Arr[i].length; j++)
                             {
@@ -180,7 +195,6 @@
                                     currentMonth.push(parseInt(result.Arr[i][j]));
                                 }
                                     
-                                console.log(result.Arr[i][j]);
                             }
 
                             chartData.push(currentMonth);
@@ -198,10 +212,10 @@
                         ]);*/
 
                         var options = {
-                            width: 600,
+                            width: 800,
                             height: 400,
                             legend: { position: 'top', maxLines: 3 },
-                            bar: { groupWidth: '75%' },
+                            bar: { groupWidth: '85%' },
                             isStacked: true
                         };
 
@@ -253,7 +267,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
 
         <div>
             <select id="select_animal_diseasebyMonthHistogram">
@@ -262,6 +276,13 @@
                     <option value="@animal">@animal</option>
                 }
             </select>
+
+            <select id="select_year_diseasebyMonthHistogram">
+                <option value="2019">2019</option>
+                <option value="2018">2018</option>
+                
+            </select>
+
         </div>
 
         <div id="histogram_month_disease_div">
