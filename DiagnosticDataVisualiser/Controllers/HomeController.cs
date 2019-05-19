@@ -143,11 +143,22 @@ namespace DiagnosticDataVisualiser.Controllers
             for (int i = 0; i < months.Length; i++)
             {
 
-                const string rawSql =
+                /*const string rawSql =
                     @"SELECT  species, userChdisease, COUNT(*) AS dcount FROM caseInfo " +
                     "WHERE species = @p0 AND date LIKE CONCAT('%',@p1,'/',@p2)" +
                     "group by userChdisease "+
-                    "ORDER BY userChdisease";
+                    "ORDER BY userChdisease";*/
+
+                const string rawSql =
+                  @"SELECT  species, userChdisease, COUNT(*) AS dcount FROM 
+                                (SELECT        species, userCHdisease, date
+                                FROM            setCase
+                               UNION ALL
+                                SELECT        species, userCHdisease, date
+                                FROM            caseInfo) derivedtbl_1 " +
+                  "WHERE species = @p0 AND date LIKE CONCAT('%',@p1,'/',@p2)" +
+                  "group by userChdisease " +
+                  "ORDER BY userChdisease";
 
                 string month = "";
                 if (i < 10)
