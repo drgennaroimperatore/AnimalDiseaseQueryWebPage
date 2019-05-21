@@ -7,6 +7,7 @@ namespace DiagnosticDataVisualiser.Models
 {
     public class HomeViewModel
     {
-        public List<string> SpeciesInEddie { get; set; }  
+        public List<string> SpeciesInEddie { get; set; } 
+        public string BuildVersion { get; set; }
     }
 }

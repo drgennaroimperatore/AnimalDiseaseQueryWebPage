@@ -44,13 +44,14 @@
     google.charts.setOnLoadCallback(drawChart);
     google.charts.setOnLoadCallback(drawDiseaseByAnimalChart);
     google.charts.setOnLoadCallback(drawDiseaseHistogramByAnimalandMonth);
+    google.charts.setOnLoadCallback(drawCasesBySpeciesAndYear);
 
     // Callback that creates and populates a data table,
     // instantiates the pie chart, passes in the data and
     // draws it.
     function drawChart() {
 
-      
+
         $.ajax({
                     url: '@Url.Action("DrawTestGraph", "Home")',
                     contentType: 'application/json; charset=utf-8',
@@ -180,8 +181,8 @@
                         var annotationRow = result.Annotations;
                         var nOfDiseases = annotationRow.length - 1;
                         annotationRow.push({ role: 'annotation' });
-                       
-                     
+
+
                         var chartData = [];
                         chartData.push(annotationRow);
 
@@ -198,7 +199,7 @@
                                 else {
                                     currentMonth.push(parseInt(result.Arr[i][j]));
                                 }
-                                    
+
                             }
 
                             chartData.push(currentMonth);
@@ -224,7 +225,81 @@
                         };
 
 
-                        var chart = new google.visualization.BarChart(document.getElementById('histogram_month_disease_div'));
+                        var chart = new google.visualization.ColumnChart(document.getElementById('histogram_month_disease_div'));
+                        chart.draw(data, options);
+
+
+                    }),
+                    error: (function (xhr, status) {
+                        alert(status);
+                    })
+                })
+
+
+    }
+
+    function drawCasesBySpeciesAndYear(queryYear = '2019') {
+
+        $("#histogram_cases_year_div").html('<div id="histogram_cases_year_div"> < div id = "spinner_cases_year_chart" class= "spinner-grow text-primary" style = "width: 6rem; height: 6rem;" role = "status" ><span class="sr-only">Loading...</span> </div ></div >');
+
+         $.ajax({
+                   url: '@Url.Action("DrawCasesBySpeciesAndYear", "Home")',
+
+           type: 'POST',
+           contentType: 'application/json; charset=utf-8',
+           data: '{year: "' + queryYear +'" }',
+
+                    dataType:"json",
+                    success: (function (result) {
+                        //console.log(result);
+                        var annotationRow = result.Annotations;
+                        var nOfDiseases = annotationRow.length - 1;
+                        annotationRow.push({ role: 'annotation' });
+
+
+                        var chartData = [];
+                        chartData.push(annotationRow);
+
+                        for (var i = 0; i < result.Arr.length; i++)
+                        {
+
+                            var currentMonth = [];
+                            for (var j = 0; j < result.Arr[i].length; j++)
+                            {
+                                console.log("j=" + j);
+                                if (j === 0 || j === result.Arr[i].length - 1) {
+                                    currentMonth.push(result.Arr[i][j]);
+                                }
+                                else {
+                                    currentMonth.push(parseInt(result.Arr[i][j]));
+                                }
+
+                            }
+
+                            chartData.push(currentMonth);
+                        }
+
+                        console.log(chartData);
+
+                        var data = google.visualization.arrayToDataTable(chartData);
+                            /*[
+                            ['Disea', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
+                                'Western', 'Literature', { role: 'annotation' }],
+                            ['May', 10, 24, 20, 32, 18, 5, ''],
+                            ['2020', 16, 22, 23, 30, 16, 9, ''],
+                            ['2030', 28, 19, 29, 30, 12, 13, '']
+                        ]);*/
+
+                        var options = {
+                            width: 900,
+                            height: 700,
+                            legend: { position: 'top', maxLines: 3 },
+                            bar: { groupWidth: '95%' },
+                            isStacked: true
+                        };
+
+
+                        var chart = new google.visualization.ColumnChart(document.getElementById('histogram_cases_year_div'));
                         chart.draw(data, options);
 
 
@@ -244,6 +319,7 @@
 
 <div class="jumbotron">
     <h1>Diagnostic Data Visualiser</h1>
+    <h6>@Model.BuildVersion</h6>
 
 </div>
 
@@ -276,6 +352,28 @@
 </div>
 
 <div class="row">
+
+    <div class="col-md-10">
+
+        <div>
+            <select id="select_year_diseasebyMonthHistogram">
+                <option value="2019">2019</option>
+                <option value="2018">2018</option>
+
+            </select>
+
+        </div>
+
+        <div id="histogram_cases_year_div">
+            <div id="spinner_cases_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
     <div class="col-md-10">
 
         <div>
@@ -289,7 +387,7 @@
             <select id="select_year_diseasebyMonthHistogram">
                 <option value="2019">2019</option>
                 <option value="2018">2018</option>
-                
+
             </select>
 
         </div>

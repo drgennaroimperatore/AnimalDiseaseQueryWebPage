@@ -27,17 +27,20 @@ namespace DiagnosticDataVisualiser.Controllers
 
         public ActionResult Index(Eddie context)
         {
+            //comment
             HomeViewModel model = new HomeViewModel();
             model.SpeciesInEddie = context.species.Select(s => s.speciesName).ToList();
+            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            model.BuildVersion = version.ToString();
 
             return View(model);
         }
 
         public List<string> GetDiseaseNames(Eddie context)
         {
-           return context.diseases.OrderBy(x=>x.diseaseName).Select(x => x.diseaseName).ToList();
+            return context.diseases.OrderBy(x => x.diseaseName).Select(x => x.diseaseName).ToList();
 
-           
+
         }
 
         public class AnimalCount
@@ -128,11 +131,102 @@ namespace DiagnosticDataVisualiser.Controllers
         {
             public List<string> Annotations { get; set; }
             public List<List<string>> Arr { get; set; }
-            
+
+        }
+
+        public class CasesByMonth
+        {
+            public string Name { get; set; }
+            public string DCount { get; set; }
+        }
+        [HttpPost]
+        public JsonResult DrawCasesBySpeciesAndYear(Eddie context, string year)
+        {
+
+            HistogramData histogramData = new HistogramData();
+
+            string[] months = { "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec" };
+            List<string> annotations = new List<string>();
+            histogramData.Arr = new List<List<string>>();
+            annotations.Add("Species");
+            List<string> species = context.species.OrderBy(x => x.speciesName).Select(x => x.speciesName).ToList(); // very important that the order matches in both queries
+            annotations.AddRange(species);
+
+
+
+            for (int i = 0; i < months.Length; i++)
+            {
+                List<string> dataRow = new List<string>();
+                dataRow.Add(months[i]);
+                const string rawSql =
+                     @"SELECT
+	species.speciesName as Name ,
+	COUNT(species) AS Dcount
+FROM
+	(
+	SELECT
+		setCase.species,
+		DATE
+	FROM
+		setCase
+		WHERE
+	date LIKE CONCAT('%', @p0, '/', @p1)
+	UNION ALL
+SELECT
+	caseInfo.species,
+	DATE
+FROM
+	caseInfo
+	   WHERE
+	date LIKE CONCAT('%', @p0, '/', @p1)
+) der
+RIGHT JOIN species
+ON
+	der.species = species.speciesName
+
+GROUP BY
+	species.speciesName
+ORDER BY
+	species.speciesName";
+
+                string month = "";
+                if (i < 9)
+                {
+                    month = "0" + (i + 1).ToString();
+                }
+                else
+                    month = (i + 1).ToString();
+
+                object[] p = { month, year };
+                var query = context.Database.SqlQuery<CasesByMonth>(rawSql, p).ToList();
+
+                if (query.Count == 0)
+                {
+                    foreach (var s in species) // if we have no results for this month set all results to 0
+                    {
+                        dataRow.Add("0");
+                    }
+                }
+                else
+                {
+
+                    foreach (CasesByMonth cbm in query) // if we have results for the month populate with real data
+                    {
+                        dataRow.Add(cbm.DCount.ToString());
+                    }
+                }
+
+
+                dataRow.Add(" "); //add the annotations padding
+                histogramData.Arr.Add(dataRow);
+            } // for loop
+            histogramData.Annotations = annotations;
+
+            return Json(histogramData);
         }
 
         [HttpPost]
-        public JsonResult DrawDiseaseByAnimalAndDate (Eddie context, string animalName, string year)
+        public JsonResult DrawDiseaseByAnimalAndDate(Eddie context, string animalName, string year)
         {
             string an = animalName;
             HistogramData histogramData = new HistogramData();
@@ -235,17 +329,17 @@ namespace DiagnosticDataVisualiser.Controllers
 
                     }
 
-                   
-                   
+
+
                     //add the data list to the bdimensional
                 };
                 dataList.Add(" ");//annotation padding
                 histogramData.Arr.Add(dataList);
             }
-            
+
             histogramData.Annotations = GetDiseaseNames(context);
             histogramData.Annotations.Insert(0, "Diseases");
-          
+
 
             return Json(histogramData);
         }
@@ -253,5 +347,5 @@ namespace DiagnosticDataVisualiser.Controllers
 
     }
 
-    
+
 }
