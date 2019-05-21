@@ -37,6 +37,14 @@
             })
     });
 
+    $(function () {
+        $("#select_year_casesbyMonthHistogram").change(
+            function () {
+                console.log($(this).val());
+                drawCasesBySpeciesAndYear($(this).val());
+            })
+    });
+
     // Load the Visualization API and the corechart package.
     google.charts.load('current', { 'packages': ['corechart'] });
 
@@ -60,7 +68,7 @@
                     success: (function (result) {
 
                         var rows = [];
-                        console.log(result);
+                        //console.log(result);
                         for (var r in result)
                         {
                             data = result[r];
@@ -123,7 +131,7 @@
                         {
                             var dataRow = [result[r].userCHDisease, result[r].Expr1, getRandomColor()];
                             tempArray.push(dataRow);
-                            console.log(result[r].userCHDisease);
+                          //  console.log(result[r].userCHDisease);
 
 
                         }
@@ -192,7 +200,7 @@
                             var currentMonth = [];
                             for (var j = 0; j < result.Arr[i].length; j++)
                             {
-                                console.log("j=" + j);
+                               // console.log("j=" + j);
                                 if (j === 0 || j === result.Arr[i].length - 1) {
                                     currentMonth.push(result.Arr[i][j]);
                                 }
@@ -240,7 +248,7 @@
 
     function drawCasesBySpeciesAndYear(queryYear = '2019') {
 
-        $("#histogram_cases_year_div").html('<div id="histogram_cases_year_div"> < div id = "spinner_cases_year_chart" class= "spinner-grow text-primary" style = "width: 6rem; height: 6rem;" role = "status" ><span class="sr-only">Loading...</span> </div ></div >');
+        $("#histogram_cases_year_div").html('<div id= "spinner_cases_year_chart" class= "spinner-grow text-primary" style = "width: 6rem; height: 6rem;" role = "status" ><span class="sr-only">Loading...</span> </div >');
 
          $.ajax({
                    url: '@Url.Action("DrawCasesBySpeciesAndYear", "Home")',
@@ -266,7 +274,7 @@
                             var currentMonth = [];
                             for (var j = 0; j < result.Arr[i].length; j++)
                             {
-                                console.log("j=" + j);
+                              //  console.log("j=" + j);
                                 if (j === 0 || j === result.Arr[i].length - 1) {
                                     currentMonth.push(result.Arr[i][j]);
                                 }
@@ -356,7 +364,7 @@
     <div class="col-md-10">
 
         <div>
-            <select id="select_year_diseasebyMonthHistogram">
+            <select id="select_year_casesbyMonthHistogram">
                 <option value="2019">2019</option>
                 <option value="2018">2018</option>
 
