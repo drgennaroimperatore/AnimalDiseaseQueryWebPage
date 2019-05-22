@@ -43,6 +43,42 @@ namespace DiagnosticDataVisualiser.Controllers
 
         }
 
+        public class DiseaseName
+        {
+            public string userCHDisease { get; set; }
+        }
+
+        public List<string> GetDiseaseNames (Eddie context, string species)
+        {
+            string rawsql = "SELECT userCHdisease " +
+                "FROM " +
+                "(SELECT species,userCHdisease  " +
+                "FROM setCase " +
+                "UNION ALL " +
+                "SELECT species,userCHdisease " +
+                "FROM caseInfo) " +
+                "derivedtbl_1 " + 
+                "WHERE(species = @p0) " +
+                "GROUP BY userCHdisease " +
+                "ORDER BY userCHdisease";
+
+            var query = context.Database.SqlQuery<DiseaseName>(rawsql, species);
+
+            HashSet<string> temp = new HashSet<string>();
+            
+
+            foreach (var q in query)
+            {
+                Regex rgx = new Regex(":(.*)");
+                temp.Add (rgx.Replace(q.userCHDisease, "").TrimEnd());
+            }
+
+            
+
+            return (temp.ToList());
+
+        }
+
         public class AnimalCount
         {
             public string species { get; set; }
@@ -307,7 +343,7 @@ ORDER BY
 
                 if (result[m].Count == 0) // if we have no results for that month just add 0 values
                 {
-                    foreach (var dn in GetDiseaseNames(context))
+                    foreach (var dn in GetDiseaseNames(context,an))
                     {
                         dataList.Add("0");
                     }
@@ -315,7 +351,7 @@ ORDER BY
                 else // if we do add the results for the disease we have
                 {
 
-                    foreach (var dn in GetDiseaseNames(context))
+                    foreach (var dn in GetDiseaseNames(context,an))
                     {
                         if (diseaseNamesForMonth.Contains(dn))
                         {
@@ -337,7 +373,7 @@ ORDER BY
                 histogramData.Arr.Add(dataList);
             }
 
-            histogramData.Annotations = GetDiseaseNames(context);
+            histogramData.Annotations = GetDiseaseNames(context,an);
             histogramData.Annotations.Insert(0, "Diseases");
 
 
