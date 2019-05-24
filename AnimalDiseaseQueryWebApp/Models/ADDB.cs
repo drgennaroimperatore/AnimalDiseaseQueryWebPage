@@ -15,7 +15,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         {
         }
 
-       
+
         public virtual DbSet<Animal> Animals { get; set; }
         public virtual DbSet<Disease> Diseases { get; set; }
         public virtual DbSet<Sign> Signs { get; set; }
@@ -23,6 +23,15 @@ namespace AnimalDiseaseQueryWebApp.Models
         public virtual DbSet<Likelihood> Likelihoods { get; set; }
         public virtual DbSet<Treatment> Treatments { get; set; }
         public virtual DbSet<SignCore> SignCore { get; set; }
+
+        /*cases data extensions*/
+        public virtual DbSet<Owner> Owners { get; set; }
+        public virtual DbSet<Patient> Patients { get; set; }
+        public virtual DbSet<Case> Cases { get; set; }
+        public virtual DbSet<SignForCase> SignsForCases {get; set;}
+        public virtual DbSet<ResultForCase> ResultForCases { get; set; }
+
+        public virtual DbSet<SuspectCase> SuspectCases { get; set; }
     }
 
     public partial class Animal
@@ -213,6 +222,37 @@ namespace AnimalDiseaseQueryWebApp.Models
 
     }
 
+    public class SuspectCase
+    {
+        [Key]
+        public int ID { get; set; }
+        public int PatientID { get; set; }
+        public DateTime DateOfCaseObserved { get; set; }
+        public DateTime DateOfCaseLogged { get; set; }
+        public string Location { get; set; }
+        public int DiseaseChosenByUserID { get; set; }
+        public int RankOfDiseaseChosenByUser { get; set; }
+        public float LikelihoodOfDiseaseChosenByUser { get; set; }
+        public int DiseasePredictedByAppID { get; set; }
+        public float LikelihoodOfDiseasePredictedByApp { get; set; }
+        public int TreatmentChosenByUserID { get; set; }
+        public string Comments { get; set; }
+
+        //info relevant to copying old cases
+        public string OriginDBName { get; set; }
+        public string OriginTableName { get; set; }
+        public int OriginID { get; set; }
+
+        //version info so we can trace which app was used
+        public string ApplicationVersion { get; set; }
+
+        public virtual Patient Patient { get; set; }
+        public virtual Disease DiseaseChosenByUser { get; set; }
+        public virtual Disease DiseasePredictedByApp { get; set; }
+        public virtual Treatment TreatmentChosenByUser { get; set; }
+
+    }
+
     public class SignForCase
     {
         [Key]
@@ -224,6 +264,13 @@ namespace AnimalDiseaseQueryWebApp.Models
 
     public class ResultForCase
     {
+        [Key]
+        public int ID { get; set; }
+        public int DiseaseID { get; set; }
+        public float PredictedLikelihoodOfDisease { get; set; }
+
+        public virtual Disease Disease { get; set; }
+
         //Do we include this??
     }
 
