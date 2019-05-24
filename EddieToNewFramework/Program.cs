@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EddieToNewFrameworkMethods
+namespace EddieToNewFramework
 {
     class Program
     {
