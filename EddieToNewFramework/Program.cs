@@ -6,7 +6,10 @@ namespace EddieToNewFramework
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Bridge b = new Bridge();
+            b.Initialise();
+
+            Console.ReadLine();
         }
     }
 }
