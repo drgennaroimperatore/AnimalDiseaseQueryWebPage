@@ -157,6 +157,76 @@ namespace AnimalDiseaseQueryWebApp.Models
         public virtual Animal Animal { get; set; }
     }
 
+    /*Tables required for the logging/importing of cases*/
+
+    public class Owner
+    {
+        [Key]
+        public int ID { get; set; }
+        public string FirstName { get; set; }
+        public string SetCase { get; set; }
+        public string Profession { get; set; }
+        public string Address { get; set; }
+        public string TelephoneNumber { get; set; }
+    }
+
+    public class Patient
+    {
+        [Key]
+        public int ID { get; set; }
+        public int AnimalID { get; set; }
+        public int OwnerID { get; set; }
+
+        public virtual Animal Animal { get; set; }
+        public virtual Owner Owner { get; set; }
+    }
+
+
+    public class Case
+    {
+        [Key]
+        public int ID { get; set; }
+        public int PatientID { get; set; }
+        public DateTime DateOfCaseObserved { get; set;}
+        public DateTime DateOfCaseLogged { get; set;}
+        public string Location { get; set; }
+        public int DiseaseChosenByUserID { get; set; }
+        public int RankOfDiseaseChosenByUser { get; set;}
+        public float LikelihoodOfDiseaseChosenByUser { get; set;}
+        public int DiseasePredictedByAppID { get; set; }
+        public float LikelihoodOfDiseasePredictedByApp { get; set;}
+        public int TreatmentChosenByUserID { get; set; }
+        public string Comments { get; set; }
+
+        //info relevant to copying old cases
+        public string OriginDBName { get; set; }
+        public string OriginTableName { get; set; }
+        public int OriginID { get; set; }
+
+        //version info so we can trace which app was used
+        public string ApplicationVersion { get; set; }
+
+        public virtual Patient Patient { get; set; }
+        public virtual Disease DiseaseChosenByUser { get; set; }
+        public virtual Disease DiseasePredictedByApp { get; set; }
+        public virtual Treatment TreatmentChosenByUser { get; set; }
+
+    }
+
+    public class SignForCase
+    {
+        [Key]
+        public int ID { get; set; }
+        public int SignID { get; set; }
+
+        public virtual Sign Sign { get; set; }
+    }
+
+    public class ResultForCase
+    {
+        //Do we include this??
+    }
+
 
 }
 
