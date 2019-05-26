@@ -7,6 +7,7 @@ namespace EddieToNewFramework
     {
         public int Id { get; set; }
         public int SignId { get; set; }
+        public int SignPresence { get; set; }
 
         public virtual Signs Sign { get; set; }
     }

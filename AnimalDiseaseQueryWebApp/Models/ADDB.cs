@@ -8,6 +8,8 @@ using System.Web;
 
 namespace AnimalDiseaseQueryWebApp.Models
 {
+    public enum SignPresence {PRESENT = 0, NOT_PRESENT = 1 };
+
     public partial class ADDB : DbContext
     {
         public ADDB()
@@ -29,9 +31,9 @@ namespace AnimalDiseaseQueryWebApp.Models
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<Case> Cases { get; set; }
         public virtual DbSet<SignForCase> SignsForCases {get; set;}
-        public virtual DbSet<ResultForCase> ResultForCases { get; set; }
+        public virtual DbSet<ResultForCase> ResultsForCases { get; set; }
 
-        public virtual DbSet<SuspectCase> SuspectCases { get; set; }
+        public virtual DbSet<SuspectCase> SuspectCases { get; set; } // there is no difference between a suspect case entity and a case entity. EF6 forced me to create separate entities for the tables
     }
 
     public partial class Animal
@@ -258,7 +260,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         [Key]
         public int ID { get; set; }
         public int SignID { get; set; }
-
+        public SignPresence SignPresence { get; set; }
         public virtual Sign Sign { get; set; }
     }
 

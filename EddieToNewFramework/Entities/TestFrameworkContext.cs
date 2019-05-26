@@ -322,6 +322,8 @@ namespace EddieToNewFramework
                     .HasColumnName("SignID")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.SignPresence).HasColumnType("int(11)");
+
                 entity.HasOne(d => d.Sign)
                     .WithMany(p => p.SignForCases)
                     .HasForeignKey(d => d.SignId);
