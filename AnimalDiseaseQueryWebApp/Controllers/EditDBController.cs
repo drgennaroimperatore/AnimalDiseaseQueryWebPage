@@ -76,6 +76,8 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         public void CreateNewAnimal(ADDB context, string name)
         {
+            //data from the excel file needs to be trimmed
+
             if (String.IsNullOrWhiteSpace(name))
             {
                 TempData["Errors"] = "Missing Fields";

@@ -94,11 +94,13 @@ namespace EddieToNewFramework
                 {
                     Console.WriteLine("Adding Case From " + SET_CASE_TABLE + " ID: " + c.CaseId);
 
+                    #region GENERAL CASE INFORMATION
                     Cases newCase = new Cases();
                     newCase.ApplicationVersion = appVersion;
                     newCase.DateOfCaseLogged = currentDate;
 
-                    DateTime caseDate;  DateTime.TryParse(c.Date,  out caseDate);
+                    DateTime caseDate;
+                    DateTime.TryParse(c.Date,  out caseDate);
 
                     newCase.DateOfCaseObserved = caseDate;
 
@@ -108,20 +110,29 @@ namespace EddieToNewFramework
 
                     newCase.Location = c.Location+","+c.Region;
                     newCase.Comments = c.Comment;
+                    #endregion
 
+                    #region ANIMAL/OWNER INFO
                     int animalID = GetAnimalIDBasedOnCaseInfo(c.Species, c.Sex, c.Age);
+
                     int ownerID = IdentifyOrCreateOwnerOfCase(c.Owner, c.Region, c.Location);
-
+                    
                     newCase.PatientId = IdentifyOrCreateNewPatient(animalID, ownerID);
+                    #endregion
 
+                    #region INFO ON DISEASE CHOSEN BY USER
                     string[] diseaseInfo = GetInfoOnDiseaseChosenByUser(c.UserChdisease);
                     newCase.DiseaseChosenByUserId = GetDiseaseID(diseaseInfo[0]);
                     float likelihoodOfDiseaseChosenByUser; float.TryParse(diseaseInfo[1], out likelihoodOfDiseaseChosenByUser);
                     newCase.LikelihoodOfDiseaseChosenByUser = likelihoodOfDiseaseChosenByUser;
+                    #endregion
 
-                   
+                    newCase.DiseasePredictedByAppId = 3; // a dummy id as we need a join to get the disease and the likelihood of disease from disease rank
+                    
 
-                  
+
+
+
                     ADDB.Add(newCase);
                     ADDB.SaveChanges();
 
@@ -133,16 +144,9 @@ namespace EddieToNewFramework
             {
                 List<CaseInfo> caseInfoTableRows = eddie.CaseInfo.ToList();
             }
-
-
-           
-            
-           
-
-
+          
 
         }
-
 
 
         private int IdentifyOrCreateOwnerOfCase(string name, string region, string location)
@@ -155,8 +159,8 @@ namespace EddieToNewFramework
             owner.Name = name;
             owner.Profession = "Eddie User";
 
-            if (ADDB.Owners.Select(x => x.Name).Contains(name))
-               return ADDB.Owners.Where(x => x.Equals(name)).First().Id;
+           /* if (ADDB.Owners.Select(x => x.Name).Contains(name))
+               return ADDB.Owners.Where(x => x.Equals(name)).First().Id;*/
 
             ADDB.Owners.Add(owner);
             ADDB.SaveChanges();
@@ -210,23 +214,34 @@ namespace EddieToNewFramework
             }
 
             /*TODO TRANSLATE EDDIE AGE FORMAT INTO ADDB AGE FORMAT*/
-            int animalID = ADDB.Animals.Where(x => x.Name.Equals(animalNameInEddie) && x.Sex.Equals(sexInEddie)).First().Id;
-
             
-            return 0;
+            int animalID = ADDB.Animals.Where(x => x.Name.Trim().Equals(animalNameInEddie) && x.Sex==sexInEddie).ToList().First().Id;
+
+            return animalID;
         }
 
         private int IdentifyOrCreateNewPatient(int animalID, int ownerID)
         {
             //this method tries to identify the patient to see if two cases are the same
             //for the moment we'll treat each case as dealing with one patient
-            return 0;
+
+            Patients newPatient = new Patients();
+            newPatient.AnimalId = animalID;
+            newPatient.OwnerId = ownerID;
+            ADDB.Patients.Add(newPatient);
+            ADDB.SaveChanges();
+            int newPatientID= ADDB.Patients.Last().Id;
+
+            return newPatientID;
         }
 
         private string[] GetInfoOnDiseaseChosenByUser(string userChDisease)
         {
             //this method parses the userchdisease to extract data on a disease
-            return userChDisease.Split(':');
+            string preprocessedString = userChDisease.Replace('%',' ').Trim();
+            string[] result = preprocessedString.Split(':');
+            result[0] = result[0].Trim().ToUpper();
+            return result;
         }
 
         private int GetDiseaseID(string diseaseName)
@@ -234,8 +249,11 @@ namespace EddieToNewFramework
            return ADDB.Diseases.Where(x => x.Name.Equals(diseaseName.ToUpper())).First().Id;
         }
 
+        
+
         private void GetSymptomsForCaseAndPopulateTable(int caseId, string tableName)
-        {
+        { 
+
         }
 
         private int GetInfOnTreatmentChosenByUserOrCreateNewOneIfNotFound (string userChTreatment)
