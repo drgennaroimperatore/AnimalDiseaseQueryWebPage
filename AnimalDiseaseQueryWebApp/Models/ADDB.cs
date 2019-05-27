@@ -174,11 +174,9 @@ namespace AnimalDiseaseQueryWebApp.Models
     {
         [Key]
         public int ID { get; set; }
-        public string FirstName { get; set; }
-        public string SetCase { get; set; }
+        public string Name { get; set; }
         public string Profession { get; set; }
-        public string Address { get; set; }
-        public string TelephoneNumber { get; set; }
+       
     }
 
     public class Patient
@@ -260,8 +258,11 @@ namespace AnimalDiseaseQueryWebApp.Models
         [Key]
         public int ID { get; set; }
         public int SignID { get; set; }
+        public int CaseID { get; set; }
         public SignPresence SignPresence { get; set; }
-        public virtual Sign Sign { get; set; }
+
+        public virtual Sign Sign { get; set;}
+        public virtual Case Case { get; set; }
     }
 
     public class ResultForCase
@@ -269,10 +270,11 @@ namespace AnimalDiseaseQueryWebApp.Models
         [Key]
         public int ID { get; set; }
         public int DiseaseID { get; set; }
+        public int CaseID { get; set; }
         public float PredictedLikelihoodOfDisease { get; set; }
 
         public virtual Disease Disease { get; set; }
-
+        public virtual Case Case { get; set; }
         //Do we include this??
     }
 

@@ -11,11 +11,8 @@ namespace EddieToNewFramework
         }
 
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string SetCase { get; set; }
+        public string Name { get; set; }
         public string Profession { get; set; }
-        public string Address { get; set; }
-        public string TelephoneNumber { get; set; }
 
         public virtual ICollection<Patients> Patients { get; set; }
     }

@@ -193,15 +193,9 @@ namespace EddieToNewFramework
                     .HasColumnName("ID")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Address).HasColumnType("longtext");
-
-                entity.Property(e => e.FirstName).HasColumnType("longtext");
+                entity.Property(e => e.Name).HasColumnType("longtext");
 
                 entity.Property(e => e.Profession).HasColumnType("longtext");
-
-                entity.Property(e => e.SetCase).HasColumnType("longtext");
-
-                entity.Property(e => e.TelephoneNumber).HasColumnType("longtext");
             });
 
             modelBuilder.Entity<Patients>(entity =>
@@ -264,6 +258,9 @@ namespace EddieToNewFramework
 
             modelBuilder.Entity<ResultForCases>(entity =>
             {
+                entity.HasIndex(e => e.CaseId)
+                    .HasName("IX_CaseID");
+
                 entity.HasIndex(e => e.DiseaseId)
                     .HasName("IX_DiseaseID");
 
@@ -271,9 +268,17 @@ namespace EddieToNewFramework
                     .HasColumnName("ID")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.CaseId)
+                    .HasColumnName("CaseID")
+                    .HasColumnType("int(11)");
+
                 entity.Property(e => e.DiseaseId)
                     .HasColumnName("DiseaseID")
                     .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.Case)
+                    .WithMany(p => p.ResultForCases)
+                    .HasForeignKey(d => d.CaseId);
 
                 entity.HasOne(d => d.Disease)
                     .WithMany(p => p.ResultForCases)
@@ -311,6 +316,9 @@ namespace EddieToNewFramework
 
             modelBuilder.Entity<SignForCases>(entity =>
             {
+                entity.HasIndex(e => e.CaseId)
+                    .HasName("IX_CaseID");
+
                 entity.HasIndex(e => e.SignId)
                     .HasName("IX_SignID");
 
@@ -318,11 +326,19 @@ namespace EddieToNewFramework
                     .HasColumnName("ID")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.CaseId)
+                    .HasColumnName("CaseID")
+                    .HasColumnType("int(11)");
+
                 entity.Property(e => e.SignId)
                     .HasColumnName("SignID")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.SignPresence).HasColumnType("int(11)");
+
+                entity.HasOne(d => d.Case)
+                    .WithMany(p => p.SignForCases)
+                    .HasForeignKey(d => d.CaseId);
 
                 entity.HasOne(d => d.Sign)
                     .WithMany(p => p.SignForCases)

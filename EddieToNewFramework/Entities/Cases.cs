@@ -5,6 +5,12 @@ namespace EddieToNewFramework
 {
     public partial class Cases
     {
+        public Cases()
+        {
+            ResultForCases = new HashSet<ResultForCases>();
+            SignForCases = new HashSet<SignForCases>();
+        }
+
         public int Id { get; set; }
         public int PatientId { get; set; }
         public DateTime DateOfCaseObserved { get; set; }
@@ -26,5 +32,7 @@ namespace EddieToNewFramework
         public virtual Diseases DiseasePredictedByApp { get; set; }
         public virtual Patients Patient { get; set; }
         public virtual Treatments TreatmentChosenByUser { get; set; }
+        public virtual ICollection<ResultForCases> ResultForCases { get; set; }
+        public virtual ICollection<SignForCases> SignForCases { get; set; }
     }
 }
