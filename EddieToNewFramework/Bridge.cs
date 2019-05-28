@@ -80,71 +80,110 @@ namespace EddieToNewFramework
              * comments on treatment
              */
 
-            
+            List<EddieCase> caseData = new List<EddieCase>();
 
             if (tableName.Equals(SET_CASE_TABLE))
             {
                 Console.WriteLine("Copying Cases From " + SET_CASE_TABLE);
-               
-                
-                List<SetCase> setCaseTableRows =  eddie.SetCase.ToList();
-                Console.WriteLine("Total Cases: " + setCaseTableRows.Count);
 
-               foreach (SetCase c in setCaseTableRows)
-                {
-                    Console.WriteLine("Adding Case From " + SET_CASE_TABLE + " ID: " + c.CaseId);
+                caseData = eddie.SetCase.Select
+                      (c => new EddieCase()
+                      {
+                          Age = c.Age,
+                          AnimalId = c.AnimalId,
+                          Date = c.Date,
+                          Breed = c.Breed,
+                          CaseId = c.CaseId,
+                          Comment = c.Comment,
+                          CommentTreatment = c.CommentTreatment,
+                          Location = c.Location,
+                          Owner = c.Owner,
+                          Region = c.Region,
+                          Sex = c.Sex,
+                          Species = c.Species,
+                          UserChdisease = c.UserChdisease,
+                          UserChTreatment = c.UserChtreatment
 
-                    #region GENERAL CASE INFORMATION
-                    Cases newCase = new Cases();
-                    newCase.ApplicationVersion = appVersion;
-                    newCase.DateOfCaseLogged = currentDate;
-
-                    DateTime caseDate;
-                    DateTime.TryParse(c.Date,  out caseDate);
-
-                    newCase.DateOfCaseObserved = caseDate;
-
-                    newCase.OriginDbname = "Eddie";
-                    newCase.OriginTableName = SET_CASE_TABLE;
-                    newCase.OriginId = c.CaseId;
-
-                    newCase.Location = c.Location+","+c.Region;
-                    newCase.Comments = c.Comment;
-                    #endregion
-
-                    #region ANIMAL/OWNER INFO
-                    int animalID = GetAnimalIDBasedOnCaseInfo(c.Species, c.Sex, c.Age);
-
-                    int ownerID = IdentifyOrCreateOwnerOfCase(c.Owner, c.Region, c.Location);
-                    
-                    newCase.PatientId = IdentifyOrCreateNewPatient(animalID, ownerID);
-                    #endregion
-
-                    #region INFO ON DISEASE CHOSEN BY USER
-                    string[] diseaseInfo = GetInfoOnDiseaseChosenByUser(c.UserChdisease);
-                    newCase.DiseaseChosenByUserId = GetDiseaseID(diseaseInfo[0]);
-                    float likelihoodOfDiseaseChosenByUser; float.TryParse(diseaseInfo[1], out likelihoodOfDiseaseChosenByUser);
-                    newCase.LikelihoodOfDiseaseChosenByUser = likelihoodOfDiseaseChosenByUser;
-                    #endregion
-
-                    newCase.DiseasePredictedByAppId = 3; // a dummy id as we need a join to get the disease and the likelihood of disease from disease rank
-                    
-
-
-
-
-                    ADDB.Add(newCase);
-                    ADDB.SaveChanges();
-
-                    Console.WriteLine("Added Case Succesfully");
-                }
+                      }).ToList();
 
             }
-            else if (tableName.Equals (CASE_INFO_TABLE))
+            else if (tableName.Equals(CASE_INFO_TABLE))
             {
-                List<CaseInfo> caseInfoTableRows = eddie.CaseInfo.ToList();
+                caseData = eddie.CaseInfo.Select
+                 (c => new EddieCase()
+                 {
+                     Age = c.Age,
+                     AnimalId = c.AnimalId,
+                     Date = c.Date,
+                     Breed = c.Breed,
+                     CaseId = c.CaseId,
+                     Comment = c.Comment,
+                     CommentTreatment = c.CommentTreatment,
+                     Location = c.Location,
+                     Owner = c.Owner,
+                     Region = c.Region,
+                     Sex = c.Sex,
+                     Species = c.Species,
+                     UserChdisease = c.UserChdisease,
+                     UserChTreatment = c.UserChtreatment
+
+                 }).ToList();
+
+
             }
-          
+            Console.WriteLine("Total Cases: " + caseData.Count);
+
+            foreach (EddieCase c in caseData)
+            {
+
+                Console.WriteLine("Adding Case From " + SET_CASE_TABLE + " ID: " + c.CaseId);
+
+                #region GENERAL CASE INFORMATION
+                Cases newCase = new Cases();
+                newCase.ApplicationVersion = appVersion;
+                newCase.DateOfCaseLogged = currentDate;
+
+                DateTime caseDate;
+                DateTime.TryParse(c.Date, out caseDate);
+
+                newCase.DateOfCaseObserved = caseDate;
+
+                newCase.OriginDbname = "Eddie";
+                newCase.OriginTableName = SET_CASE_TABLE;
+                newCase.OriginId = c.CaseId;
+
+                newCase.Location = c.Location + "," + c.Region;
+                newCase.Comments = c.Comment;
+                #endregion
+
+                #region ANIMAL/OWNER INFO
+                int animalID = GetAnimalIDBasedOnCaseInfo(c.Species, c.Sex, c.Age);
+
+                int ownerID = IdentifyOrCreateOwnerOfCase(c.Owner, c.Region, c.Location);
+
+                newCase.PatientId = IdentifyOrCreateNewPatient(animalID, ownerID);
+                #endregion
+
+                #region INFO ON DISEASE CHOSEN BY USER
+                string[] diseaseInfo = GetInfoOnDiseaseChosenByUser(c.UserChdisease);
+                newCase.DiseaseChosenByUserId = GetDiseaseID(diseaseInfo[0]);
+                float likelihoodOfDiseaseChosenByUser; float.TryParse(diseaseInfo[1], out likelihoodOfDiseaseChosenByUser);
+                newCase.LikelihoodOfDiseaseChosenByUser = likelihoodOfDiseaseChosenByUser;
+                #endregion
+
+                newCase.DiseasePredictedByAppId = 3; // a dummy id as we need a join to get the disease and the likelihood of disease from disease rank
+
+
+
+
+
+                ADDB.Add(newCase);
+                ADDB.SaveChanges();
+
+                Console.WriteLine("Added Case Succesfully");
+            }
+
+
 
         }
 
@@ -249,11 +288,29 @@ namespace EddieToNewFramework
            return ADDB.Diseases.Where(x => x.Name.Equals(diseaseName.ToUpper())).First().Id;
         }
 
+
+
         
 
         private void GetSymptomsForCaseAndPopulateTable(int caseId, string tableName)
-        { 
+        {
+            if (tableName.Equals(SET_CASE_TABLE))
+            {
+                //selected symptoms n
+                //get the symptoms for the specific case
+                
+            }
+            else if (tableName.Equals(CASE_INFO_TABLE))
+            {
+                //selected symptoms
+               var syptoms = eddie.SelectedSymptoms.Where(x => x.CaseId == caseId).ToList();
 
+                foreach(var s in syptoms)
+                {
+                    
+                }
+
+            }
         }
 
         private int GetInfOnTreatmentChosenByUserOrCreateNewOneIfNotFound (string userChTreatment)
