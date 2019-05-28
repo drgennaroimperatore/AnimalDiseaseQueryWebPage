@@ -1,0 +1,47 @@
+Abscess /Pus,PUS / ABCESS
+AHS,AHS
+Anthrax,ANTHRAX
+Ascaris_foals,ASCARIS_FOALS
+Babesiosis,BABESIOSIS
+Blackleg,BLACKLEG
+Brucellosis,BRUCELLOSIS
+Camel calf diarrhoea,CAMEL CALF DIARRHOEA
+CBPP,CBPP
+CCPP,CCPP
+Coenurosis,COENUROSIS
+Colibacillosis,COLIBACILLOSIS
+Contagious ecthyma /ORF/,CONTAGIOUS ECTHYMA (ORF)
+Cowdriosis,COWDRIOSIS
+Epizootic lymphangitis,LYMPHA_EPI
+Fasciolosis,FASCIOLOSIS
+FMD,FMD
+GI parasites,GI_PARASITE
+GI_non-infectious_colic,GI_NON-INFECTIOUS_COLIC
+Habronemiasis,HABRONEMIASIS
+Haemochosis,HAEMONCHOSIS
+Heat_stress,HEAT_STRESS
+Hemorrhagic septicemia,HEMORRHAGIC SEPTICEMIA
+Hypocalcemia / Pregnancy toxemia,HYPOCALCEMIA / PREGNANCY TOX.
+LSD,LSD
+Lungworm,LUNGWORM
+Mange mite,MANGE MITE
+Mastitis,MASTITIS
+Nasal bot,NASAL BOT
+Pasteurollosis,PASTEUROLLOSIS
+Plant poisoning,PLANT POISONING
+Pox,POX
+PPR,PPR
+Rabies,RABIES
+Respiratory infections,RESPIRATORY INFECTIONS
+Resp_asth_lungworm,RESP_ASTH_LUNGW
+Resp_lower_bact,RESP_LOW_BACT
+Resp_upper_bact,RESP_UP_BACT
+Resp_viral,RESP_VIRAL
+Strangles,STRANGLES
+Sudden death/UnkownDis,SDS / UNKNOWN CAMEL DISEASE
+Tetanus,TETANUS
+Trichostrongylosis,TRICHOSTRONGIULOSIS
+Trypanosomosis,TRYPANOSOMOSIS
+Tuberculosis,TUBERCULOSIS
+Ulcerative lymphangitis,LYMPHA_ULCER
+zz_Other,ZZ_OTHER

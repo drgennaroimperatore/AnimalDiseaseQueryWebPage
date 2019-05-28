@@ -1,0 +1,33 @@
+Abdominal pain /Rolling/Kicking stomach,ABDOMINAL PAIN / ROLLING / KICKING STOMACH
+Abnormal breathing,BREATHING ABNORMAL
+Abortion_v2,ABORTION
+Anaemia/Pallor,ANAEMIA / PALLOR (PALE MEMBRANES)
+Anoroxia/Loss of apetite,ANOREXIA / (LOSS OF APPETITE)
+Ataxia/ Incoordination of movement,ATAIXA / INCORDINATION OF MOVEMENT
+Congested mucous membrane,CONGESTED MM
+Constipation,CONSTIPATION
+Coughing (including owner reported),COUGHING (INCL. OWNER REPORTED)
+Dehydration,DEHYDRATION
+Depression / Apathy,APATHY / DEPRESSION
+Diarrhoea,DIARRHOEA
+Dysentery/Bloody diarrhoea,DYSENTERY (BLOOD IN FAECES)
+Dyspnoea/ Coughing,DYSPNOEA / COUGHING (DIFFICULTY BREATHING)
+Dyspnoea/Difficulty breathing,DYSPNOEA / COUGHING (DIFFICULTY BREATHING)
+Fecal output (absence of),FECAL OUTPUT (ABSENSE OF)
+Hair loss / Alopecia,HAIR LOSS (ALOPECIA)
+Icterus/ Yellowsh mucous membrane,ICTERUS (YELLOWING OF MEMBRANES)
+Lameness,LAMENESS
+Lymphnode enlargment,LYMPH NODE ENLARGEMENT
+Nasal discharge (mucoprullent),NASAL DISCHARGE (MUCOPURULENT)
+Nasal discharge (serous),NASAL DISCHARGE (SEROUS)
+Nodular lesions,NODULAR LESSION
+Occular discharge/Invol. eyelid closure,OCCULAR DISCHARGE / INVOLUNATARY CLOSURE OF EYELID
+Occular/ Nasal discharge,OCCULAR / NASAL DISCHARGE
+Pyrexia / Fever,PYREXIA / FEVER
+Staring/Rough coat,STARING COAT (STANDING HAIR / ROUGH COAT)
+Stunted growth,STUNTED GROWTH
+Submandibular/ Ventral oedema,SUBMANDIBULAR / VENTRAL OEDEMA
+Sudden death,SUDDEN DEATH
+Swelling (neck),SWELLING (NECK)
+Weakness,WEAKNESS
+Weight loss/ Emaciation,WEIGHT LOSS / EMACIATION (LOSS OF BODY CONDITION)

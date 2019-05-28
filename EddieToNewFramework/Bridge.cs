@@ -4,6 +4,8 @@ using System.Text;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Reflection;
+using System.IO;
 
 namespace EddieToNewFramework
 {
@@ -13,6 +15,9 @@ namespace EddieToNewFramework
         TestFrameworkContext ADDB = new TestFrameworkContext();
         const string SET_CASE_TABLE = "setCase";
         const string CASE_INFO_TABLE = "caseInfo";
+
+        Dictionary<string, string> symptomLookupDictionary = new Dictionary<string, string>();
+        Dictionary<string, string> diseaseLookupDictionary = new Dictionary<string, string>();
 
         DateTime currentDate = DateTime.Now.Date;
         string appVersion = "";
@@ -27,6 +32,39 @@ namespace EddieToNewFramework
 
         public void Initialise()
         {
+            string symptomLookupath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Files\SYMP_LOOKUP.txt");
+            string diseaseLookupath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Files\DIS_LOOKUP.txt");
+
+            try
+            {   // Open the text file using a stream reader.
+                using (StreamReader sr = new StreamReader(symptomLookupath))
+                {
+                    string line = "";
+                    // Read the stream to a string, and write the string to the console.
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string[] lineContent = line.Split(',');
+                        symptomLookupDictionary.Add(lineContent[0], lineContent[1]);
+                    }
+                }
+
+
+                using (StreamReader sr = new StreamReader(diseaseLookupath))
+                {
+                    string line = "";
+                    // Read the stream to a string, and write the string to the console.
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string[] lineContent = line.Split(',');
+                        diseaseLookupDictionary.Add(lineContent[0], lineContent[1]);
+                    }
+                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine("The file could not be read:");
+                Console.WriteLine(e.Message);
+            }
 
         }
 
@@ -40,14 +78,14 @@ namespace EddieToNewFramework
             /* 1 start with caseInfo table and work in column wise fashion*/
 
 
-         /*   Treatments dummyTreatment = new Treatments();
-            dummyTreatment.Info = "dummy info";
-            ADDB.Treatments.Add(dummyTreatment);
-            ADDB.SaveChanges();*/
+            /*   Treatments dummyTreatment = new Treatments();
+               dummyTreatment.Info = "dummy info";
+               ADDB.Treatments.Add(dummyTreatment);
+               ADDB.SaveChanges();*/
 
 
             CopyCaseData(CASE_INFO_TABLE);
-           // CopyCaseData(SET_CASE_TABLE);
+            // CopyCaseData(SET_CASE_TABLE);
 
 
 
@@ -195,22 +233,11 @@ namespace EddieToNewFramework
 
                 #region POPULATE THE SIGNS FOR CASE TABLE
                 int currentCaseID = ADDB.Cases.Last().Id; // get the id of the latest case
-                GetSymptomsForCaseAndPopulateTable(c.CaseId,currentCaseID, tableName);
-                #endregion  
-
-
-
-
-
-
-
-
-               
+                GetSymptomsForCaseAndPopulateTable(c.CaseId, currentCaseID, tableName);
+                #endregion
 
                 Console.WriteLine("Added Case Succesfully");
             }
-
-
 
         }
 
@@ -306,13 +333,13 @@ namespace EddieToNewFramework
             //this method parses the userchdisease to extract data on a disease
             string preprocessedString = userChDisease.Replace('%', ' ').Trim();
             string[] result = preprocessedString.Split(':');
-            result[0] = result[0].Trim().ToUpper();
+            result[0] = result[0].Trim();
             return result;
         }
 
         private int GetDiseaseID(string diseaseName)
         {
-            return ADDB.Diseases.Where(x => x.Name.Equals(diseaseName.ToUpper())).First().Id;
+            return ADDB.Diseases.Where(x => x.Name.Equals(diseaseLookupDictionary[diseaseName])).First().Id;
         }
 
         public int GetDiseaseIDPredictedByAppRankedFirst(int caseId, string tableName)
@@ -343,7 +370,7 @@ namespace EddieToNewFramework
             {
                 var ranks = eddie.DiseaseRankN.FromSql(rawSQL, caseId).ToList();
                 var firstRanked = ranks.First();
-                string diseaseName = firstRanked.DiseaseName.Trim().ToUpper();
+                string diseaseName = firstRanked.DiseaseName.Trim();
                 mostLikelyDiseaseAccordingToAppId = GetDiseaseID(diseaseName);
 
             }
@@ -351,7 +378,7 @@ namespace EddieToNewFramework
             {
                 var ranks = eddie.DiseaseRank.FromSql(rawSQL, caseId).ToList();
                 var firstRanked = ranks.First();
-                string diseaseName = firstRanked.DiseaseName.Trim().ToUpper();
+                string diseaseName = firstRanked.DiseaseName.Trim();
                 mostLikelyDiseaseAccordingToAppId = GetDiseaseID(diseaseName);
             }
 
@@ -361,7 +388,7 @@ namespace EddieToNewFramework
 
 
 
-        private int  GetSignID(string signName)
+        private int GetSignID(string signName)
         {
             return 4; // dummy result for first sign to test the population of get symptomsforcaseandpopulatetable
         }
@@ -374,9 +401,9 @@ namespace EddieToNewFramework
             {
                 //selected symptoms n
                 //get the symptoms for the specific case
-                List<SignForCases> syptoms = eddie.SelectedSymptomsN.Select(x=> new SignForCases {CaseId= newCaseId, SignId = GetSignID(x.SymptomName)}).Where(x => x.CaseId == originalCaseId).ToList();
+                List<SignForCases> syptoms = eddie.SelectedSymptomsN.Select(x => new SignForCases { CaseId = newCaseId, SignId = GetSignID(x.SymptomName) }).Where(x => x.CaseId == originalCaseId).ToList();
                 ADDB.SignForCases.AddRange(syptoms);
-                
+
 
             }
             else if (tableName.Equals(CASE_INFO_TABLE))
