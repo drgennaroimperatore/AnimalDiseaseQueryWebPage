@@ -1,6 +1,7 @@
 Abdominal pain /Rolling/Kicking stomach,ABDOMINAL PAIN / ROLLING / KICKING STOMACH
 Abnormal breathing,BREATHING ABNORMAL
 Abortion_v2,ABORTION
+Abortion,ABORTION
 Anaemia/Pallor,ANAEMIA / PALLOR (PALE MEMBRANES)
 Anoroxia/Loss of apetite,ANOREXIA / (LOSS OF APPETITE)
 Ataxia/ Incoordination of movement,ATAIXA / INCORDINATION OF MOVEMENT
