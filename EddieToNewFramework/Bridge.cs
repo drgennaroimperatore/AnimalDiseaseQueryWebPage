@@ -217,6 +217,9 @@ namespace EddieToNewFramework
                 {
                     string logFileStartLine = "Adding Case From " + SET_CASE_TABLE + " ID: " + c.CaseId;
                     Console.WriteLine(logFileStartLine);
+
+                    if (CheckIfCaseWasAlreadyInserted(c.CaseId, tableName)) // skip if this case was already inserted 
+                        continue;
                    // logFileWriter.WriteLine(logFileStartLine);
 
                     #region GENERAL CASE INFORMATION
@@ -262,6 +265,7 @@ namespace EddieToNewFramework
                     newCase.DiseasePredictedByAppId = DiseasePredictedByApp.ID;
 
                     #region INFO ON RESULTS OF THE CASE
+
                     #endregion
 
                     #region INFO ON TREATMENT CHOSEN BY USER
@@ -294,6 +298,23 @@ namespace EddieToNewFramework
                // logFileWriter.WriteLine("Added Case {0} from {1} Successfully", c.CaseId, tableName);
             }
 
+        }
+
+        private bool CheckIfCaseWasAlreadyInserted(int originalCaseID, string tableName)
+        {
+            bool caseIsAlreadyPresent = false;
+
+            try
+            {
+               var duplicateCases= ADDB.Cases.Where(x => x.OriginId == originalCaseID && x.OriginTableName.Equals(tableName)).ToList();
+               caseIsAlreadyPresent = duplicateCases.Count > 0;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Stop Execution there is a problem with the duplication checking method");
+            }
+
+            return false;
         }
 
         private void CleanUpNewPatientAndNewOwnerAsAResultOfAnError(int patientID, int ownerID)
@@ -477,8 +498,6 @@ namespace EddieToNewFramework
                 };
         }
 
-
-
         private int GetSignID(string signName)
         {
             string symptomName = symptomLookupDictionary[signName.Trim()];
@@ -535,6 +554,59 @@ namespace EddieToNewFramework
             }
             Console.WriteLine("Succesfully added signs for case {0}: {1} ", tableName, originalCaseId);
             return new ReturnValue { ID = 0, ThereWasAnError = thereWasAnError };
+        }
+
+        private float ConvertLikelihoodFromStringToFloat(string likelihood)
+        {
+            float fLikelihood;
+            float.TryParse(likelihood, out fLikelihood);
+            return fLikelihood;
+
+        }
+
+        private ReturnValue GetResultsForCaseAndPopulateTable (int originalCaseId, int newCaseId, string tableName)
+        {
+            try
+            {
+                if (tableName.Equals(SET_CASE_TABLE))
+                {
+                    //selected symptoms n
+                    //get the symptoms for the specific case
+                    List<ResultForCases> syptoms = eddie.DiseaseRankN
+                        .Where(x => x.CaseId == originalCaseId)
+                        .Select(x => 
+                        new ResultForCases
+                        {
+                            CaseId = x.CaseId,
+                            DiseaseId =GetDiseaseID(x.DiseaseName),
+                            PredictedLikelihoodOfDisease = ConvertLikelihoodFromStringToFloat(x.Percentage)
+                        }).ToList();
+                    ADDB.ResultForCases.AddRange(syptoms);
+
+
+                }
+                else if (tableName.Equals(CASE_INFO_TABLE))
+                {
+                    //selected symptoms
+                    List<ResultForCases> syptoms = eddie.DiseaseRank
+                        .Where(x => x.CaseId == originalCaseId)
+                        .Select(x => new ResultForCases
+                        {
+                            CaseId = x.CaseId,
+                            DiseaseId = GetDiseaseID(x.DiseaseName),
+                            PredictedLikelihoodOfDisease = ConvertLikelihoodFromStringToFloat(x.Percentage)
+                        }).ToList(); 
+                    ADDB.ResultForCases.AddRange(syptoms);
+                }
+                ADDB.SaveChanges();
+
+            }
+            catch(Exception e)
+            {
+
+            }
+
+            return new ReturnValue { ID=0 };
         }
 
         private int GetInfOnTreatmentChosenByUserOrCreateNewOneIfNotFound(string userChTreatment)
