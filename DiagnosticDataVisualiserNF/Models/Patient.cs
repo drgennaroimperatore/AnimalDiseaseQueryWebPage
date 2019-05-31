@@ -6,29 +6,30 @@ namespace DiagnosticDataVisualiser.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("TestFramework.Treatments")]
-    public partial class Treatment
+    [Table("TestFramework.Patients")]
+    public partial class Patient
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Treatment()
+        public Patient()
         {
             Cases = new HashSet<Case>();
             SuspectCases = new HashSet<SuspectCas>();
-            Diseases = new HashSet<Disease>();
         }
 
-        public int Id { get; set; }
+        public int ID { get; set; }
 
-        [StringLength(1073741823)]
-        public string Info { get; set; }
+        public int AnimalID { get; set; }
+
+        public int OwnerID { get; set; }
+
+        public virtual Animal Animal { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Case> Cases { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SuspectCas> SuspectCases { get; set; }
+        public virtual Owner Owner { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Disease> Diseases { get; set; }
+        public virtual ICollection<SuspectCas> SuspectCases { get; set; }
     }
 }

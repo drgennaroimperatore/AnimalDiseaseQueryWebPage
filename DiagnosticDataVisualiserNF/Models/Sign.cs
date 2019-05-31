@@ -6,29 +6,34 @@ namespace DiagnosticDataVisualiser.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("TestFramework.Treatments")]
-    public partial class Treatment
+    [Table("TestFramework.Signs")]
+    public partial class Sign
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Treatment()
+        public Sign()
         {
-            Cases = new HashSet<Case>();
-            SuspectCases = new HashSet<SuspectCas>();
-            Diseases = new HashSet<Disease>();
+            Likelihoods = new HashSet<Likelihood>();
+            SignCores = new HashSet<SignCore>();
+            SignForCases = new HashSet<SignForCas>();
         }
 
         public int Id { get; set; }
 
+        public int Type_of_Value { get; set; }
+
         [StringLength(1073741823)]
-        public string Info { get; set; }
+        public string Probability { get; set; }
+
+        [StringLength(1073741823)]
+        public string Name { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Case> Cases { get; set; }
+        public virtual ICollection<Likelihood> Likelihoods { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SuspectCas> SuspectCases { get; set; }
+        public virtual ICollection<SignCore> SignCores { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Disease> Diseases { get; set; }
+        public virtual ICollection<SignForCas> SignForCases { get; set; }
     }
 }

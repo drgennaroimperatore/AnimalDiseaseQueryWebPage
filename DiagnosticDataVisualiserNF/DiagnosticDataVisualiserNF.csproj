@@ -158,7 +158,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ADDB.cs" />
+    <Compile Include="Models\Animal.cs" />
+    <Compile Include="Models\Case.cs" />
     <Compile Include="Models\caseInfo.cs" />
+    <Compile Include="Models\C__MigrationHistory.cs" />
     <Compile Include="Models\disease.cs" />
     <Compile Include="Models\diseaseRank.cs" />
     <Compile Include="Models\diseaseRankN.cs" />
@@ -166,17 +170,26 @@
     <Compile Include="Models\drug.cs" />
     <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\IEMI.cs" />
+    <Compile Include="Models\Likelihood.cs" />
     <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\ot_disease.cs" />
     <Compile Include="Models\ot_dis_spec.cs" />
+    <Compile Include="Models\Owner.cs" />
+    <Compile Include="Models\Patient.cs" />
+    <Compile Include="Models\PriorsDiseas.cs" />
     <Compile Include="Models\probablity.cs" />
     <Compile Include="Models\rank.cs" />
     <Compile Include="Models\rankTable1.cs" />
+    <Compile Include="Models\ResultForCas.cs" />
     <Compile Include="Models\selectedSymptom.cs" />
     <Compile Include="Models\selectedSymptomsN.cs" />
     <Compile Include="Models\setCase.cs" />
+    <Compile Include="Models\Sign.cs" />
+    <Compile Include="Models\SignCore.cs" />
+    <Compile Include="Models\SignForCas.cs" />
     <Compile Include="Models\species.cs" />
     <Compile Include="Models\spec_symp.cs" />
+    <Compile Include="Models\SuspectCas.cs" />
     <Compile Include="Models\symptom.cs" />
     <Compile Include="Models\treatment.cs" />
     <Compile Include="Models\user.cs" />
