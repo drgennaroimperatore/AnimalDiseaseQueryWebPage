@@ -33,6 +33,11 @@ namespace EddieToNewFramework
             public bool ThereWasAnError { get; set; }
         }
 
+        public class DiseasePredictedByUserReturnValue : ReturnValue
+        {
+            public float likelihoodOfDisease { get; set; }
+        }
+
 
         public Bridge(string applicationVersion)
         {
@@ -212,7 +217,7 @@ namespace EddieToNewFramework
                 {
                     string logFileStartLine = "Adding Case From " + SET_CASE_TABLE + " ID: " + c.CaseId;
                     Console.WriteLine(logFileStartLine);
-                    logFileWriter.WriteLine(logFileStartLine);
+                   // logFileWriter.WriteLine(logFileStartLine);
 
                     #region GENERAL CASE INFORMATION
                     Cases newCase = new Cases();
@@ -247,14 +252,17 @@ namespace EddieToNewFramework
                     newCase.LikelihoodOfDiseaseChosenByUser = likelihoodOfDiseaseChosenByUser;
                     #endregion
 
-                    ReturnValue DiseasePredictedByApp = GetDiseaseIDPredictedByAppRankedFirst(c.CaseId, tableName);
+                    ReturnValue DiseasePredictedByApp = GetInfoOnDiseasePredictedByAppRankedFirst(c.CaseId, tableName);
                     if (DiseasePredictedByApp.ThereWasAnError)
                     {
                         CleanUpNewPatientAndNewOwnerAsAResultOfAnError(patientID, ownerID);
                         continue;
                     }
 
-                    newCase.DiseasePredictedByAppId = DiseasePredictedByApp.ID; // a dummy id as we need a join to get the disease and the likelihood of disease from disease rank
+                    newCase.DiseasePredictedByAppId = DiseasePredictedByApp.ID;
+
+                    #region INFO ON RESULTS OF THE CASE
+                    #endregion
 
                     #region INFO ON TREATMENT CHOSEN BY USER
                     //!!!TO DO CHANGE THIS WHEN TREATMENT DESIGH IS COMPLETE!!!!!
@@ -283,7 +291,7 @@ namespace EddieToNewFramework
                 #endregion
 
                 Console.WriteLine("Added Case Succesfully");
-                logFileWriter.WriteLine("Added Case {0} from {1} Successfully", c.CaseId, tableName);
+               // logFileWriter.WriteLine("Added Case {0} from {1} Successfully", c.CaseId, tableName);
             }
 
         }
@@ -405,11 +413,12 @@ namespace EddieToNewFramework
             return ADDB.Diseases.Where(x => x.Name.Equals(diseaseLookupDictionary[diseaseName])).First().Id;
         }
 
-        public ReturnValue GetDiseaseIDPredictedByAppRankedFirst(int caseId, string tableName)
+        private DiseasePredictedByUserReturnValue GetInfoOnDiseasePredictedByAppRankedFirst(int caseId, string tableName)
         {
 #pragma warning disable EF1000 // Possible SQL injection vulnerability.
             int mostLikelyDiseaseAccordingToAppId = 0;
             bool thereWasAProblem = false;
+            float mostLikelyDiseaseAccordingToAppLikelihood = -1.0f;
             try
             {
 
@@ -438,6 +447,7 @@ namespace EddieToNewFramework
                     var ranks = eddie.DiseaseRankN.FromSql(rawSQL, caseId).ToList();
                     var firstRanked = ranks.First();
                     string diseaseName = firstRanked.DiseaseName.Trim();
+                   float.TryParse(firstRanked.Percentage, out mostLikelyDiseaseAccordingToAppLikelihood);
                     mostLikelyDiseaseAccordingToAppId = GetDiseaseID(diseaseName);
 
                 }
@@ -446,6 +456,7 @@ namespace EddieToNewFramework
                     var ranks = eddie.DiseaseRank.FromSql(rawSQL, caseId).ToList();
                     var firstRanked = ranks.First();
                     string diseaseName = firstRanked.DiseaseName.Trim();
+                    float.TryParse(firstRanked.Percentage, out mostLikelyDiseaseAccordingToAppLikelihood);
                     mostLikelyDiseaseAccordingToAppId = GetDiseaseID(diseaseName);
                 }
             }
@@ -457,7 +468,13 @@ namespace EddieToNewFramework
             }
 
 
-            return new ReturnValue { ID = mostLikelyDiseaseAccordingToAppId, ThereWasAnError = thereWasAProblem };
+            return 
+                new DiseasePredictedByUserReturnValue
+                {
+                    ID = mostLikelyDiseaseAccordingToAppId,
+                    likelihoodOfDisease = mostLikelyDiseaseAccordingToAppLikelihood,
+                    ThereWasAnError = thereWasAProblem
+                };
         }
 
 
