@@ -9,7 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiagnosticDataVisualiser", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiagnosticDataVisualiser.Tests", "DiagnosticDataVisualiser.Tests\DiagnosticDataVisualiser.Tests.csproj", "{579B9ACB-E1DB-4A44-B4B1-B42F21C39EEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EddieToNewFramework", "EddieToNewFramework\EddieToNewFramework.csproj", "{07B603AF-A3D8-4264-8758-F0A1FC7951EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EddieToNewFramework", "EddieToNewFramework\EddieToNewFramework.csproj", "{07B603AF-A3D8-4264-8758-F0A1FC7951EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiagnosticDataVisualiserNF", "DiagnosticDataVisualiserNF\DiagnosticDataVisualiserNF.csproj", "{28FB2E5B-A6A8-499F-89DF-C37E082BDC03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,12 @@ Global
 		{07B603AF-A3D8-4264-8758-F0A1FC7951EE}.PublishToDevWeb|Any CPU.Build.0 = Debug|Any CPU
 		{07B603AF-A3D8-4264-8758-F0A1FC7951EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07B603AF-A3D8-4264-8758-F0A1FC7951EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28FB2E5B-A6A8-499F-89DF-C37E082BDC03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28FB2E5B-A6A8-499F-89DF-C37E082BDC03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28FB2E5B-A6A8-499F-89DF-C37E082BDC03}.PublishToDevWeb|Any CPU.ActiveCfg = Release|Any CPU
+		{28FB2E5B-A6A8-499F-89DF-C37E082BDC03}.PublishToDevWeb|Any CPU.Build.0 = Release|Any CPU
+		{28FB2E5B-A6A8-499F-89DF-C37E082BDC03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28FB2E5B-A6A8-499F-89DF-C37E082BDC03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
