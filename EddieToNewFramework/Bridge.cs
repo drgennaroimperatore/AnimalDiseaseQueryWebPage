@@ -114,8 +114,8 @@ namespace EddieToNewFramework
             }
 
 
-            CopyCaseData(CASE_INFO_TABLE);
-            // CopyCaseData(SET_CASE_TABLE);
+           // CopyCaseData(CASE_INFO_TABLE);
+            CopyCaseData(SET_CASE_TABLE);
 
 
             CleanUp();
@@ -125,7 +125,7 @@ namespace EddieToNewFramework
         public void CopyCaseData(string tableName)
         {
             /* 
-             *
+             *0) copy comments, and add general information (general info, dates, app version etc.)
              * 1)identify owner or create a new one
              * 2)identify patient or create new patient
              * assign appropriate animal id based on species, sex,age
@@ -136,7 +136,7 @@ namespace EddieToNewFramework
              * 5)populate results given by app for specific case
              * 6)parse treatment column to extract name of drugs, duration, dosage 
              * (create new treatment or assign existing treatment id)
-             * 7) copy comments if any
+             * 
              * 
              */
 
@@ -264,9 +264,7 @@ namespace EddieToNewFramework
 
                     newCase.DiseasePredictedByAppId = DiseasePredictedByApp.ID;
 
-                    #region INFO ON RESULTS OF THE CASE
-
-                    #endregion
+                   
 
                     #region INFO ON TREATMENT CHOSEN BY USER
                     //!!!TO DO CHANGE THIS WHEN TREATMENT DESIGH IS COMPLETE!!!!!
@@ -282,7 +280,13 @@ namespace EddieToNewFramework
                 {
                     logFileWriter.WriteLine("Problem With Case " + c.CaseId + "from " + tableName);
                     logFileWriter.WriteLine("Excpetion details: {0} {1}", e.Message, e.StackTrace);
-                    CleanUpNewPatientAndNewOwnerAsAResultOfAnError(patientID, ownerID);
+
+                    if (ADDB.Patients.Count() > 0)
+                    {
+                        patientID = ADDB.Patients.Last().Id;
+                        patientID = ADDB.Owners.Last().Id;
+                        CleanUpNewPatientAndNewOwnerAsAResultOfAnError(patientID, ownerID);
+                    }
                     continue;
                 }
 
@@ -292,6 +296,12 @@ namespace EddieToNewFramework
                 #region POPULATE THE SIGNS FOR CASE TABLE
                 int currentCaseID = ADDB.Cases.Last().Id; // get the id of the latest case
                 GetSymptomsForCaseAndPopulateTable(c.CaseId, currentCaseID, tableName);
+                #endregion
+
+                #region INFO ON RESULTS OF THE CASE
+               ReturnValue ResultsOfTheCaseInsertionOutcome = GetResultsForCaseAndPopulateTable(c.CaseId, currentCaseID, tableName);
+                if (ResultsOfTheCaseInsertionOutcome.ThereWasAnError)
+                    continue;
                 #endregion
 
                 Console.WriteLine("Added Case Succesfully");
@@ -566,47 +576,53 @@ namespace EddieToNewFramework
 
         private ReturnValue GetResultsForCaseAndPopulateTable (int originalCaseId, int newCaseId, string tableName)
         {
+            bool thereWasAnError = false;
             try
             {
                 if (tableName.Equals(SET_CASE_TABLE))
                 {
-                    //selected symptoms n
+                    //diseaseRank n
                     //get the symptoms for the specific case
-                    List<ResultForCases> syptoms = eddie.DiseaseRankN
+                    List<ResultForCases> results = eddie.DiseaseRankN
                         .Where(x => x.CaseId == originalCaseId)
                         .Select(x => 
                         new ResultForCases
                         {
-                            CaseId = x.CaseId,
+                            CaseId = newCaseId,
                             DiseaseId =GetDiseaseID(x.DiseaseName),
                             PredictedLikelihoodOfDisease = ConvertLikelihoodFromStringToFloat(x.Percentage)
                         }).ToList();
-                    ADDB.ResultForCases.AddRange(syptoms);
+                    ADDB.ResultForCases.AddRange(results);
 
 
                 }
                 else if (tableName.Equals(CASE_INFO_TABLE))
                 {
-                    //selected symptoms
-                    List<ResultForCases> syptoms = eddie.DiseaseRank
+                    //diseaseRank
+                    List<ResultForCases> results = eddie.DiseaseRank
                         .Where(x => x.CaseId == originalCaseId)
                         .Select(x => new ResultForCases
                         {
-                            CaseId = x.CaseId,
+                            CaseId = newCaseId,
                             DiseaseId = GetDiseaseID(x.DiseaseName),
                             PredictedLikelihoodOfDisease = ConvertLikelihoodFromStringToFloat(x.Percentage)
                         }).ToList(); 
-                    ADDB.ResultForCases.AddRange(syptoms);
+                    ADDB.ResultForCases.AddRange(results);
                 }
                 ADDB.SaveChanges();
 
             }
             catch(Exception e)
             {
+                thereWasAnError = true;
+                logFileWriter.WriteLine("Problem in method GetResultsForCaseAndPopulateTable() method for case {0} in table {1}", originalCaseId, tableName);
+                logFileWriter.WriteLine("Excpetion details: {0} {1}", e.Message, e.StackTrace);
 
             }
 
-            return new ReturnValue { ID=0 };
+            Console.WriteLine("Sucessfully added results for case {0} from table {1}", originalCaseId, tableName);
+
+            return new ReturnValue { ID=0, ThereWasAnError= thereWasAnError };
         }
 
         private int GetInfOnTreatmentChosenByUserOrCreateNewOneIfNotFound(string userChTreatment)
