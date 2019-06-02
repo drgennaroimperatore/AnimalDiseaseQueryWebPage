@@ -50,9 +50,9 @@
 
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(drawChart);
-    google.charts.setOnLoadCallback(drawDiseaseByAnimalChart);
-    google.charts.setOnLoadCallback(drawDiseaseHistogramByAnimalandMonth);
-    google.charts.setOnLoadCallback(drawCasesBySpeciesAndYear);
+   // google.charts.setOnLoadCallback(drawDiseaseByAnimalChart);
+   // google.charts.setOnLoadCallback(drawDiseaseHistogramByAnimalandMonth);
+   // google.charts.setOnLoadCallback(drawCasesBySpeciesAndYear);
 
     // Callback that creates and populates a data table,
     // instantiates the pie chart, passes in the data and
@@ -341,7 +341,7 @@
 
     </div>
 
-    <div class="col-md-6">
+    @*<div class="col-md-6">
         <div>
             <select id="select_animal_diseasebyAnimalBarChart">
                 @foreach (string animal in Model.SpeciesInEddie)
@@ -356,10 +356,10 @@
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-    </div>
+    </div>*@
 </div>
 
-<div class="row">
+@*<div class="row">
 
     <div class="col-md-10">
 
@@ -406,4 +406,4 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
