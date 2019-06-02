@@ -50,7 +50,7 @@
 
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(drawChart);
-   // google.charts.setOnLoadCallback(drawDiseaseByAnimalChart);
+    google.charts.setOnLoadCallback(drawDiseaseByAnimalChart);
    // google.charts.setOnLoadCallback(drawDiseaseHistogramByAnimalandMonth);
    // google.charts.setOnLoadCallback(drawCasesBySpeciesAndYear);
 
@@ -115,7 +115,7 @@
     }
 
 
-    function drawDiseaseByAnimalChart(species = 'Cattle') {
+    function drawDiseaseByAnimalChart(species = ' CATTLE') {
         $("#barchart_div").html('<div id="spinner_disease_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem; " role="status"> < span class="sr-only" > Loading...</span > </div > ');
         $.ajax({
                     url: '@Url.Action("DrawDiseasebyAnimal", "Home")',
@@ -341,7 +341,7 @@
 
     </div>
 
-    @*<div class="col-md-6">
+    <div class="col-md-6">
         <div>
             <select id="select_animal_diseasebyAnimalBarChart">
                 @foreach (string animal in Model.SpeciesInEddie)
@@ -356,7 +356,7 @@
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-    </div>*@
+    </div>
 </div>
 
 @*<div class="row">
