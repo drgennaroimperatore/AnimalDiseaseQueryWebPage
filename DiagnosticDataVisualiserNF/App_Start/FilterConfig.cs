@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace DiagnosticDataVisualiser
+namespace DiagnosticDataVisualiserNF
 {
     public class FilterConfig
     {
