@@ -51,7 +51,7 @@
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(drawChart);
     google.charts.setOnLoadCallback(drawDiseaseByAnimalChart);
-    //google.charts.setOnLoadCallback(drawDiseaseHistogramByAnimalandMonth);
+    google.charts.setOnLoadCallback(drawDiseaseHistogramByAnimalandMonth);
     google.charts.setOnLoadCallback(drawCasesBySpeciesAndYear);
 
     // Callback that creates and populates a data table,
@@ -172,7 +172,7 @@
 
 
 
-     function drawDiseaseHistogramByAnimalandMonth(species ='Cattle', queryYear = '2019') {
+     function drawDiseaseHistogramByAnimalandMonth(species =' CATTLE', queryYear = '2019') {
 
          $("#histogram_month_disease_div").html('<div id="spinner_disease_animal_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem; " role="status"> < span class="sr-only" > Loading...</span > </div > ');
 
@@ -381,7 +381,7 @@
     </div>
 </div>
 
-@*<div class="row">
+<div class="row">
         <div class="col-md-10">
 
             <div>
@@ -406,4 +406,4 @@
                 </div>
             </div>
         </div>
-    </div>*@
+    </div>

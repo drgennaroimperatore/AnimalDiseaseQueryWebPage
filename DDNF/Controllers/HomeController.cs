@@ -48,48 +48,7 @@ namespace DDNF.Controllers
             return View(model);
         }
 
-        //public List<string> GetDiseaseNames(Eddie context)
-        //{
-        //    return context.diseases.OrderBy(x => x.diseaseName).Select(x => x.diseaseName).ToList();
 
-
-        //}
-
-        //public class DiseaseName
-        //{
-        //    public string userCHDisease { get; set; }
-        //}
-
-        //public List<string> GetDiseaseNames (Eddie context, string species)
-        //{
-        //    string rawsql = "SELECT userCHdisease " +
-        //        "FROM " +
-        //        "(SELECT species,userCHdisease  " +
-        //        "FROM setCase " +
-        //        "UNION ALL " +
-        //        "SELECT species,userCHdisease " +
-        //        "FROM caseInfo) " +
-        //        "derivedtbl_1 " + 
-        //        "WHERE(species = @p0) " +
-        //        "GROUP BY userCHdisease " +
-        //        "ORDER BY userCHdisease";
-
-        //    var query = context.Database.SqlQuery<DiseaseName>(rawsql, species);
-
-        //    HashSet<string> temp = new HashSet<string>();
-
-
-        //    foreach (var q in query)
-        //    {
-        //        Regex rgx = new Regex(":(.*)");
-        //        temp.Add (rgx.Replace(q.userCHDisease, "").TrimEnd());
-        //    }
-
-
-
-        //    return (temp.ToList());
-
-        //}
 
         public class AnimalCount
         {
@@ -103,12 +62,6 @@ namespace DDNF.Controllers
                 "FROM Animals, Patients, Cases" +
                 " WHERE Patients.ID = Cases.PatientID AND Patients.AnimalID = Animals.Id " +
                 "GROUP by Animals.Name";
-
-            /*rawSql = "SELECT        species, COUNT(species) AS Expr1 " +
-                "FROM(SELECT species  " +
-                "FROM setCase UNION ALL SELECT species FROM caseInfo) " +
-                "derivedtbl_1 " +
-                "GROUP BY species";*/
 
             var query = context.Database.SqlQuery<AnimalCount>(rawSql).ToList();
 
@@ -129,15 +82,6 @@ namespace DDNF.Controllers
         public JsonResult DrawDiseaseByAnimal(ADDB context, string animalName)
         {
             string an = animalName;
-            //const string rawSql = @"SELECT species, userCHdisease, COUNT(userCHdisease) AS Expr1 FROM caseInfo WHERE(species = @p0) GROUP BY userCHdisease";
-            //const string rawSql = @"SELECT        species, userCHdisease, COUNT(userCHdisease) AS Expr1
-            //                            FROM            (SELECT        species, userCHdisease
-            //                            FROM            setCase
-            //                           UNION ALL
-            //                            SELECT        species, userCHdisease
-            //                            FROM            caseInfo) derivedtbl_1
-            //                            WHERE        (species = @p0)
-            //                            GROUP BY userCHdisease";
 
             string rawSql = @"SELECT DISTINCT Diseases.Name AS userCHdisease, COUNT(Cases.DiseaseChosenByUserID) as Expr1 FROM Animals, Patients, Cases,Diseases WHERE Diseases.Id= Cases.DiseaseChosenByUserID AND Patients.ID = Cases.PatientID AND Patients.AnimalID = Animals.Id AND Animals.Name= @p0 GROUP by Diseases.Name";
 
@@ -152,13 +96,13 @@ namespace DDNF.Controllers
             return Json(query);
         }
 
-        //        public class DiseaseByDate
-        //        {
-        //            public string Species { get; set; }
-        //            public string userChDisease { get; set; }
-        //            public int DCount { get; set; }
-        //            public string Date { get; set; }
-        //        }
+        public class DiseaseByDate
+        {
+            public string Species { get; set; }
+            public string userChDisease { get; set; }
+            public int DCount { get; set; }
+            public string Date { get; set; }
+        }
 
         public class HistogramData
         {
@@ -182,7 +126,7 @@ namespace DDNF.Controllers
             List<string> annotations = new List<string>();
             histogramData.Arr = new List<List<string>>();
             annotations.Add("Species");
-            List<string> species = context.Animals.Select(x => x.Name).Distinct().OrderBy(x=>x).ToList(); // very important that the order matches in both queries
+            List<string> species = context.Animals.Select(x => x.Name).Distinct().OrderBy(x => x).ToList(); // very important that the order matches in both queries
             annotations.AddRange(species);
 
 
@@ -223,19 +167,19 @@ namespace DDNF.Controllers
 
                     //temporary fix until i figure out the query for the right join
                     //if there is a missing species find out which one it is and add a 0 count at the appropriate index position
-                    if(species.Count > query.Count)
+                    if (species.Count > query.Count)
                     {
                         List<string> speciesInQuery = query.Select(x => x.Name).ToList();
                         List<string> missingElements = species.Except(speciesInQuery).ToList();
 
-                        foreach(string missing in missingElements)
+                        foreach (string missing in missingElements)
                         {
-                            int indexOfInsertion = species.IndexOf(missing)+1; // insert with an offset of one as the first element is the month
+                            int indexOfInsertion = species.IndexOf(missing) + 1; // insert with an offset of one as the first element is the month
                             dataRow.Insert(indexOfInsertion, "0");
-                            
+
                         }
-                        
-                       
+
+
                     }
                 }
 
@@ -248,126 +192,106 @@ namespace DDNF.Controllers
             return Json(histogramData);
         }
 
-        //        [HttpPost]
-        //        public JsonResult DrawDiseaseByAnimalAndDate(Eddie context, string animalName, string year)
-        //        {
-        //            string an = animalName;
-        //            HistogramData histogramData = new HistogramData();
+        [HttpPost]
+        public JsonResult DrawDiseaseByAnimalAndDate(ADDB context, string animalName, string year)
+        {
+            string an = animalName;
+            HistogramData histogramData = new HistogramData();
 
-        //            string[] months = { "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec" };
-        //            Dictionary<string, List<DiseaseByDate>> result = new Dictionary<string, List<DiseaseByDate>>();
+            string[] months = { "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec" };
+            Dictionary<string, List<DiseaseByDate>> result = new Dictionary<string, List<DiseaseByDate>>();
 
-        //            for (int i = 0; i < months.Length; i++)
-        //            {
+            for (int i = 0; i < months.Length; i++)
+            {
 
-        //                /*const string rawSql =
-        //                    @"SELECT  species, userChdisease, COUNT(*) AS dcount FROM caseInfo " +
-        //                    "WHERE species = @p0 AND date LIKE CONCAT('%',@p1,'/',@p2)" +
-        //                    "group by userChdisease "+
-        //                    "ORDER BY userChdisease";*/
+                /*const string rawSql =
+                    @"SELECT  species, userChdisease, COUNT(*) AS dcount FROM caseInfo " +
+                    "WHERE species = @p0 AND date LIKE CONCAT('%',@p1,'/',@p2)" +
+                    "group by userChdisease "+
+                    "ORDER BY userChdisease";*/
 
-        //                const string rawSql =
-        //                  @"SELECT  species, userChdisease, COUNT(*) AS dcount FROM 
-        //                                (SELECT        species, userCHdisease, date
-        //                                FROM            setCase
-        //                               UNION ALL
-        //                                SELECT        species, userCHdisease, date
-        //                                FROM            caseInfo) derivedtbl_1 " +
-        //                  "WHERE species = @p0 AND date LIKE CONCAT('%',@p1,'/',@p2)" +
-        //                  "group by userChdisease " +
-        //                  "ORDER BY userChdisease";
+                const string rawSql =
+                  @"SELECT Diseases.Name as userCHdisease, COUNT(*) AS Dcount
+                    FROM Diseases
+                    JOIN Cases ON Cases.DiseaseChosenByUserID= Diseases.Id AND YEAR (Cases.DateOfCaseObserved)=@p0 AND MONTH(Cases.DateOfCaseObserved)=@p1
+                    JOIN Patients ON Cases.PatientID =Patients.ID
+                    JOIN Animals ON Patients.AnimalID = Animals.Id AND Animals.Name= @p2
+                    GROUP BY Diseases.Name";
 
-        //                string month = "";
-        //                if (i < 9)
-        //                {
-        //                    month = "0" + (i + 1).ToString();
-        //                }
-        //                else
-        //                    month = (i + 1).ToString();
+                object[] p = { year, i + 1, an };
 
-        //                object[] p = { an, month, year };
-        //                var query = context.Database.SqlQuery<DiseaseByDate>(rawSql, p).ToList();
+                var currentMonthDiseases = context.Database.SqlQuery<DiseaseByDate>(rawSql, p).ToList();
+                result.Add(months[i], currentMonthDiseases);
+            }
+            histogramData.Arr = new List<List<string>>();
+            foreach (var m in months)
+            {
+                List<string> dataList = new List<string>();
+                dataList.Add(m);
+                var diseasesForMonth = result[m];
+                var diseaseNamesForMonth = diseasesForMonth.Select(diseasebyDate => diseasebyDate.userChDisease.TrimEnd()).ToList();
 
-        //                foreach (var q in query)
-        //                {
-        //                    Regex rgx = new Regex(":(.*)"); q.userChDisease = rgx.Replace(q.userChDisease, "");
-        //                }
+                if (result[m].Count == 0) // if we have no results for that month just add 0 values
+                {
+                    foreach (var dn in GetDiseaseNames(context, an))
+                    {
+                        dataList.Add("0");
+                    }
+                }
+                else // if we do add the results for the disease we have
+                {
 
-        //                string currentDisease = "";
-        //                List<DiseaseByDate> ad = new List<DiseaseByDate>();
-        //                int index = -1;
+                    foreach (var dn in GetDiseaseNames(context, an))
+                    {
+                        if (diseaseNamesForMonth.Contains(dn))
+                        {
+                            string valueToAdd = diseasesForMonth.Where(x => x.userChDisease.TrimEnd().Equals(dn)).First().DCount.ToString();
+                            dataList.Add(valueToAdd);
+                        }
+                        else
+                        {
+                            dataList.Add("0");
+                        }
 
-        //                foreach (var q in query)
-        //                {
-        //                    DiseaseByDate cad = new DiseaseByDate();
-        //                    if (q.userChDisease != currentDisease)
-        //                    {
-        //                        cad.Date = q.Date;
-        //                        cad.DCount = q.DCount;
-        //                        cad.userChDisease = q.userChDisease;
-        //                        cad.Species = q.Species;
-        //                        ad.Add(cad);
-        //                        currentDisease = q.userChDisease;
-
-        //                        index++;
-        //                    }
-        //                    else
-        //                    {
-        //                        ad[index].DCount += q.DCount;
-        //                    }
-
-        //                }
-        //                result.Add(months[i], ad);
-        //            }
-
-        //            histogramData.Arr = new List<List<string>>();
-        //            foreach (var m in months)
-        //            {
-        //                List<string> dataList = new List<string>();
-        //                dataList.Add(m);
-        //                var diseasesForMonth = result[m];
-        //                var diseaseNamesForMonth = diseasesForMonth.Select(diseasebyDate => diseasebyDate.userChDisease.TrimEnd()).ToList();
-
-        //                if (result[m].Count == 0) // if we have no results for that month just add 0 values
-        //                {
-        //                    foreach (var dn in GetDiseaseNames(context,an))
-        //                    {
-        //                        dataList.Add("0");
-        //                    }
-        //                }
-        //                else // if we do add the results for the disease we have
-        //                {
-
-        //                    foreach (var dn in GetDiseaseNames(context,an))
-        //                    {
-        //                        if (diseaseNamesForMonth.Contains(dn))
-        //                        {
-        //                            string valueToAdd = diseasesForMonth.Where(x => x.userChDisease.TrimEnd().Equals(dn)).First().DCount.ToString();
-        //                            dataList.Add(valueToAdd);
-        //                        }
-        //                        else
-        //                        {
-        //                            dataList.Add("0");
-        //                        }
-
-        //                    }
+                    }
 
 
 
-        //                    //add the data list to the bdimensional
-        //                };
-        //                dataList.Add(" ");//annotation padding
-        //                histogramData.Arr.Add(dataList);
-        //            }
+                    //add the data list to the bdimensional
+                };
+                dataList.Add(" ");//annotation padding
+                histogramData.Arr.Add(dataList);
+            }
 
-        //            histogramData.Annotations = GetDiseaseNames(context,an);
-        //            histogramData.Annotations.Insert(0, "Diseases");
-
-
-        //            return Json(histogramData);
-        //        }
+            histogramData.Annotations = GetDiseaseNames(context, an);
+            histogramData.Annotations.Insert(0, "Diseases");
 
 
+            return Json(histogramData);
+        }
 
+
+
+
+
+        public class DiseaseName
+        {
+            public string userCHDisease { get; set; }
+        }
+
+        private List<string> GetDiseaseNames(ADDB context, string an)
+        {
+            string rawSql = "SELECT Diseases.Name AS userCHDisease " +
+                 "FROM Diseases " +
+                 "JOIN Cases ON Cases.DiseaseChosenByUserID = Diseases.Id " +
+                 "JOIN Patients ON Patients.ID = Cases.PatientID " +
+                 "JOIN Animals ON Patients.AnimalID = Animals.ID AND Animals.Name = @p0 " +
+                 "GROUP BY Diseases.Name " +
+                 "ORDER BY Diseases.Name";
+
+            return context.Database.SqlQuery<DiseaseName>(rawSql, an).Select(x => x.userCHDisease).ToList();
+
+
+        }
     }
 }
