@@ -182,7 +182,7 @@ namespace DDNF.Controllers
             List<string> annotations = new List<string>();
             histogramData.Arr = new List<List<string>>();
             annotations.Add("Species");
-            List<string> species = context.Animals.OrderBy(x => x.Name).Select(x => x.Name).Distinct().ToList(); // very important that the order matches in both queries
+            List<string> species = context.Animals.Select(x => x.Name).Distinct().OrderBy(x=>x).ToList(); // very important that the order matches in both queries
             annotations.AddRange(species);
 
 
@@ -219,6 +219,23 @@ namespace DDNF.Controllers
                     foreach (CasesByMonth cbm in query) // if we have results for the month populate with real data
                     {
                         dataRow.Add(cbm.DCount.ToString());
+                    }
+
+                    //temporary fix until i figure out the query for the right join
+                    //if there is a missing species find out which one it is and add a 0 count at the appropriate index position
+                    if(species.Count > query.Count)
+                    {
+                        List<string> speciesInQuery = query.Select(x => x.Name).ToList();
+                        List<string> missingElements = species.Except(speciesInQuery).ToList();
+
+                        foreach(string missing in missingElements)
+                        {
+                            int indexOfInsertion = species.IndexOf(missing)+1; // insert with an offset of one as the first element is the month
+                            dataRow.Insert(indexOfInsertion, "0");
+                            
+                        }
+                        
+                       
                     }
                 }
 
