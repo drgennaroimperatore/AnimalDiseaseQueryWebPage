@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EddieToNewFramework", "Eddi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDNF", "DDNF\DDNF.csproj", "{CEB12E1E-EC9C-4678-A378-BE434C84B539}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomaticPinger", "AutomaticPinger\AutomaticPinger.csproj", "{D451D2F0-85DC-4EFB-A24A-574175E1BF23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,12 @@ Global
 		{CEB12E1E-EC9C-4678-A378-BE434C84B539}.PublishToDevWeb|Any CPU.Build.0 = Release|Any CPU
 		{CEB12E1E-EC9C-4678-A378-BE434C84B539}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEB12E1E-EC9C-4678-A378-BE434C84B539}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D451D2F0-85DC-4EFB-A24A-574175E1BF23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D451D2F0-85DC-4EFB-A24A-574175E1BF23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D451D2F0-85DC-4EFB-A24A-574175E1BF23}.PublishToDevWeb|Any CPU.ActiveCfg = Release|Any CPU
+		{D451D2F0-85DC-4EFB-A24A-574175E1BF23}.PublishToDevWeb|Any CPU.Build.0 = Release|Any CPU
+		{D451D2F0-85DC-4EFB-A24A-574175E1BF23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D451D2F0-85DC-4EFB-A24A-574175E1BF23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
