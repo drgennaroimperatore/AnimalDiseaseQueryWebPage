@@ -114,7 +114,7 @@ namespace EddieToNewFramework
             }
 
 
-           // CopyCaseData(CASE_INFO_TABLE);
+            //CopyCaseData(CASE_INFO_TABLE);
             CopyCaseData(SET_CASE_TABLE);
 
 
@@ -324,7 +324,7 @@ namespace EddieToNewFramework
                 Console.WriteLine("Stop Execution there is a problem with the duplication checking method");
             }
 
-            return false;
+            return caseIsAlreadyPresent;
         }
 
         private void CleanUpNewPatientAndNewOwnerAsAResultOfAnError(int patientID, int ownerID)
