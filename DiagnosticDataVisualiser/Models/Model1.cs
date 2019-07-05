@@ -234,6 +234,8 @@ namespace DiagnosticDataVisualiser.Models
             modelBuilder.Entity<selectedSymptomsN>()
                 .Property(e => e.Selection)
                 .IsUnicode(false);
+
+            
         }
     }
 }

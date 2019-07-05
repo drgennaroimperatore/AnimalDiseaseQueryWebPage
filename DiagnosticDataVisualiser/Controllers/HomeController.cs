@@ -25,6 +25,7 @@ namespace DiagnosticDataVisualiser.Controllers
       ]
 }*/
 
+            
         public ActionResult Index(Eddie context)
         {
             //comment
@@ -32,6 +33,11 @@ namespace DiagnosticDataVisualiser.Controllers
             model.SpeciesInEddie = context.species.Select(s => s.speciesName).ToList();
             Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             model.BuildVersion = version.ToString();
+
+          
+
+            
+
 
             return View(model);
         }
