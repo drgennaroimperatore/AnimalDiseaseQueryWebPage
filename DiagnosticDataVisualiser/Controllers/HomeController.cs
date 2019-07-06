@@ -34,9 +34,11 @@ namespace DiagnosticDataVisualiser.Controllers
             Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             model.BuildVersion = version.ToString();
 
-          
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
-            
 
 
             return View(model);
