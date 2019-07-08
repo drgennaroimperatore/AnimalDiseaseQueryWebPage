@@ -86,7 +86,7 @@ namespace DiagnosticDataVisualiser.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Tentativo di accesso non valido.");
+                    ModelState.AddModelError("", "Unsuccesful login attempt");
                     return View(model);
             }
         }

@@ -1,7 +1,7 @@
 ﻿@using DiagnosticDataVisualiser.Models
 @model LoginViewModel
 @{
-    ViewBag.Title = "Accedi";
+    ViewBag.Title = "D3F Project - Login";
 }
 
 <h2>@ViewBag.Title.</h2>
@@ -11,7 +11,7 @@
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                <h4>Usare un account locale per accedere.</h4>
+                <h4>Please Insert your Credentials</h4>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
@@ -38,11 +38,11 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Accedi" class="btn btn-default" />
+                        <input type="submit" value="Log In" class="btn btn-default" />
                     </div>
                 </div>
                 <p>
-                    @Html.ActionLink("Esegui registrazione come nuovo utente", "Register")
+                    @Html.ActionLink("Register as a new user", "Register")
                 </p>
                 @* Abilitare questa opzione dopo aver abilitato la conferma dell'account per la funzionalità di reimpostazione della password
                     <p>
@@ -53,7 +53,7 @@
     </div>
     <div class="col-md-4">
         <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+            @*   @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl }) *@
         </section>
     </div>
 </div>

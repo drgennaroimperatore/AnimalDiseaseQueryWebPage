@@ -6,7 +6,7 @@ namespace DiagnosticDataVisualiser.Models
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
-        [Display(Name = "Posta elettronica")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
     }
 
@@ -42,14 +42,14 @@ namespace DiagnosticDataVisualiser.Models
     public class ForgotViewModel
     {
         [Required]
-        [Display(Name = "Posta elettronica")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
     }
 
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Posta elettronica")]
+        [Display(Name = "Email")]
         [EmailAddress]
         public string Email { get; set; }
 
@@ -58,7 +58,7 @@ namespace DiagnosticDataVisualiser.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
 
-        [Display(Name = "Memorizza account")]
+        [Display(Name = "Remember Me")]
         public bool RememberMe { get; set; }
     }
 
@@ -70,14 +70,14 @@ namespace DiagnosticDataVisualiser.Models
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "La lunghezza di {0} deve essere di almeno {2} caratteri.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "The length of {0} must be at least {2} characters", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Conferma password")]
-        [Compare("Password", ErrorMessage = "La password e la password di conferma non corrispondono.")]
+        [Display(Name = "Confirm Password")]
+        [Compare("Password", ErrorMessage = "The two passwords don't match.")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -89,14 +89,14 @@ namespace DiagnosticDataVisualiser.Models
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "La lunghezza di {0} deve essere di almeno {2} caratteri.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "The length of {0} must be at least {2} characters.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Conferma password")]
-        [Compare("Password", ErrorMessage = "La password e la password di conferma non corrispondono.")]
+        [Compare("Password", ErrorMessage = "The two passwords don't match.")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
