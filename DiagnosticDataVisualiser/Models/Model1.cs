@@ -27,11 +27,16 @@ namespace DiagnosticDataVisualiser.Models
         public virtual DbSet<species> species { get; set; }
         public virtual DbSet<symptom> symptoms { get; set; }
         public virtual DbSet<treatment> treatments { get; set; }
-        public virtual DbSet<user> users { get; set; }
+        
         public virtual DbSet<diseaseRank> diseaseRanks { get; set; }
         public virtual DbSet<diseaseRankN> diseaseRankNs { get; set; }
         public virtual DbSet<selectedSymptom> selectedSymptoms { get; set; }
         public virtual DbSet<selectedSymptomsN> selectedSymptomsNs { get; set; }
+        public virtual DbSet<UserClaims> UserClaims { get; set; }
+        public virtual DbSet<UserLogins> UserLogins { get; set; }
+        public virtual DbSet<UserRoles> UserRoles { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -195,47 +200,96 @@ namespace DiagnosticDataVisualiser.Models
                 .Property(e => e.symptomName)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<user>()
-                .Property(e => e.username)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<user>()
-                .Property(e => e.password)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<diseaseRank>()
-                .Property(e => e.diseaseName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<diseaseRank>()
-                .Property(e => e.percentage)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<diseaseRankN>()
-                .Property(e => e.diseaseName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<diseaseRankN>()
-                .Property(e => e.percentage)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<selectedSymptom>()
-                .Property(e => e.symptomName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<selectedSymptom>()
-                .Property(e => e.Selection)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<selectedSymptomsN>()
-                .Property(e => e.symptomName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<selectedSymptomsN>()
-                .Property(e => e.Selection)
-                .IsUnicode(false);
-
             
+            modelBuilder.Entity<diseaseRank>()
+                .Property(e => e.diseaseName)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<diseaseRank>()
+                .Property(e => e.percentage)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<diseaseRankN>()
+                .Property(e => e.diseaseName)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<diseaseRankN>()
+                .Property(e => e.percentage)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<selectedSymptom>()
+                .Property(e => e.symptomName)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<selectedSymptom>()
+                .Property(e => e.Selection)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<selectedSymptomsN>()
+                .Property(e => e.symptomName)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<selectedSymptomsN>()
+                .Property(e => e.Selection)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<UserClaims>()
+                .Property(e => e.UserId)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<UserClaims>()
+                .Property(e => e.ClaimType)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<UserClaims>()
+                .Property(e => e.ClaimValue)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<UserLogins>()
+                .Property(e => e.LoginProvider)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<UserLogins>()
+                .Property(e => e.ProviderKey)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<UserLogins>()
+                .Property(e => e.UserId)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<UserRoles>()
+                .Property(e => e.UserId)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<UserRoles>()
+                .Property(e => e.RoleId)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Users>()
+                .Property(e => e.Id)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Users>()
+                .Property(e => e.Email)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Users>()
+                .Property(e => e.PasswordHash)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Users>()
+                .Property(e => e.SecurityStamp)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Users>()
+                .Property(e => e.PhoneNumber)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Users>()
+                .Property(e => e.UserName)
+                .IsUnicode(false);
+
+
         }
     }
 }

@@ -15,7 +15,7 @@ namespace DiagnosticDataVisualiser.Controllers
         // GET: AdminPage
         public ActionResult Index(Eddie context, AdminPageViewModel model)
         {
-           
+            var users = context.Users.ToList();
 
             return View(model);
         }
