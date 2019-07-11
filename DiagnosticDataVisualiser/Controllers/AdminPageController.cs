@@ -1,4 +1,5 @@
-﻿using DiagnosticDataVisualiser.Models;
+﻿using AspNet.Identity.MySQL;
+using DiagnosticDataVisualiser.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
@@ -12,12 +13,9 @@ namespace DiagnosticDataVisualiser.Controllers
     public class AdminPageController : Controller
     {
         // GET: AdminPage
-        public ActionResult Index(AdminPageViewModel model)
+        public ActionResult Index(Eddie context, AdminPageViewModel model)
         {
-            model.currentUser = User.Identity.Name;
-            var userManager =HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var u = userManager.Users;
-            
+           
 
             return View(model);
         }

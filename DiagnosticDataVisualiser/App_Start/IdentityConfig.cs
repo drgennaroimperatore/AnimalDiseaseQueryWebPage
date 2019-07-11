@@ -50,6 +50,10 @@ namespace DiagnosticDataVisualiser
                 RequireUniqueEmail = true
             };
 
+            
+
+            
+
             // Configurare la logica di convalida per le password
             manager.PasswordValidator = new PasswordValidator
             {
