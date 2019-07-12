@@ -11,10 +11,13 @@
 
 @foreach (var user in Model.registeredUsers)
 {
-    <div class="row">
-        <div class="col-md-4">
-            @user.Email
-        </div>
+<div class="row">
+    <div class="col-md-4">
+        @user.Email
     </div>
+    <div class="col-md-4">
+        @user.Role
+    </div>
+</div>
 }
 

@@ -216,6 +216,7 @@
     <Compile Include="Models\probablity.cs" />
     <Compile Include="Models\rank.cs" />
     <Compile Include="Models\rankTable1.cs" />
+    <Compile Include="Models\Roles.cs" />
     <Compile Include="Models\selectedSymptom.cs" />
     <Compile Include="Models\selectedSymptomsN.cs" />
     <Compile Include="Models\setCase.cs" />

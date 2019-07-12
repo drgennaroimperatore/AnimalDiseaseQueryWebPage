@@ -22,12 +22,12 @@ namespace DiagnosticDataVisualiser.Models
         public virtual DbSet<probablity> probablities { get; set; }
         public virtual DbSet<rank> ranks { get; set; }
         public virtual DbSet<rankTable1> rankTable1 { get; set; }
+        public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<setCase> setCases { get; set; }
         public virtual DbSet<spec_symp> spec_symp { get; set; }
         public virtual DbSet<species> species { get; set; }
         public virtual DbSet<symptom> symptoms { get; set; }
         public virtual DbSet<treatment> treatments { get; set; }
-        
         public virtual DbSet<diseaseRank> diseaseRanks { get; set; }
         public virtual DbSet<diseaseRankN> diseaseRankNs { get; set; }
         public virtual DbSet<selectedSymptom> selectedSymptoms { get; set; }
@@ -287,6 +287,14 @@ namespace DiagnosticDataVisualiser.Models
 
             modelBuilder.Entity<Users>()
                 .Property(e => e.UserName)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Roles>()
+                .Property(e => e.Id)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Roles>()
+                .Property(e => e.Name)
                 .IsUnicode(false);
 
 

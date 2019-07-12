@@ -31,6 +31,7 @@ namespace DiagnosticDataVisualiser
                 var role = new IdentityRole();
                 role.Name = "Admin";
                 roleManager.Create(role);
+                
 
                //Here we create a Admin super user who will maintain the website                  
 
