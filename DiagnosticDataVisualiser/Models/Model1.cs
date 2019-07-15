@@ -22,7 +22,7 @@ namespace DiagnosticDataVisualiser.Models
         public virtual DbSet<probablity> probablities { get; set; }
         public virtual DbSet<rank> ranks { get; set; }
         public virtual DbSet<rankTable1> rankTable1 { get; set; }
-        public virtual DbSet<Roles> Roles { get; set; }
+        
         public virtual DbSet<setCase> setCases { get; set; }
         public virtual DbSet<spec_symp> spec_symp { get; set; }
         public virtual DbSet<species> species { get; set; }
@@ -32,10 +32,10 @@ namespace DiagnosticDataVisualiser.Models
         public virtual DbSet<diseaseRankN> diseaseRankNs { get; set; }
         public virtual DbSet<selectedSymptom> selectedSymptoms { get; set; }
         public virtual DbSet<selectedSymptomsN> selectedSymptomsNs { get; set; }
-        public virtual DbSet<UserClaims> UserClaims { get; set; }
-        public virtual DbSet<UserLogins> UserLogins { get; set; }
-        public virtual DbSet<UserRoles> UserRoles { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
+        
+        
+        
+        
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -233,69 +233,7 @@ namespace DiagnosticDataVisualiser.Models
                 .Property(e => e.Selection)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<UserClaims>()
-                .Property(e => e.UserId)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<UserClaims>()
-                .Property(e => e.ClaimType)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<UserClaims>()
-                .Property(e => e.ClaimValue)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<UserLogins>()
-                .Property(e => e.LoginProvider)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<UserLogins>()
-                .Property(e => e.ProviderKey)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<UserLogins>()
-                .Property(e => e.UserId)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<UserRoles>()
-                .Property(e => e.UserId)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<UserRoles>()
-                .Property(e => e.RoleId)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Users>()
-                .Property(e => e.Id)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Users>()
-                .Property(e => e.Email)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Users>()
-                .Property(e => e.PasswordHash)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Users>()
-                .Property(e => e.SecurityStamp)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Users>()
-                .Property(e => e.PhoneNumber)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Users>()
-                .Property(e => e.UserName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Roles>()
-                .Property(e => e.Id)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Roles>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
+                        
 
 
         }

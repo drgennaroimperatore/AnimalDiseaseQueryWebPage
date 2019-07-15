@@ -6,15 +6,20 @@ namespace DiagnosticDataVisualiser.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("eddie.UserRoles")]
-    public partial class UserRoles
+    public partial class AspNetUserLogins
     {
         [Key]
         [Column(Order = 0)]
-        public string UserId { get; set; }
+        public string LoginProvider { get; set; }
 
         [Key]
         [Column(Order = 1)]
-        public string RoleId { get; set; }
+        public string ProviderKey { get; set; }
+
+        [Key]
+        [Column(Order = 2)]
+        public string UserId { get; set; }
+
+        public virtual AspNetUsers AspNetUsers { get; set; }
     }
 }

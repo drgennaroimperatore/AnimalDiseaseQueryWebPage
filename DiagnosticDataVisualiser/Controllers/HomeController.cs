@@ -1,10 +1,13 @@
 ﻿using DiagnosticDataVisualiser.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace DiagnosticDataVisualiser.Controllers
 {
@@ -25,20 +28,26 @@ namespace DiagnosticDataVisualiser.Controllers
       ]
 }*/
 
-            
+
+        
         public ActionResult Index(Eddie context)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+           
+           
+
+
             //comment
             HomeViewModel model = new HomeViewModel();
             model.SpeciesInEddie = context.species.Select(s => s.speciesName).ToList();
             Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             model.BuildVersion = version.ToString();
 
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
+           
 
 
             return View(model);

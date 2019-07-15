@@ -1,6 +1,7 @@
-﻿using AspNet.Identity.MySQL;
+﻿
 using DiagnosticDataVisualiser.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Owin;
 
@@ -22,6 +23,8 @@ namespace DiagnosticDataVisualiser
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             //roleManager.Delete( roleManager.FindByName("Admin"));
+
+       
 
             // In Startup iam creating first Admin Role and creating a default Admin User    
             if (!roleManager.RoleExists("Admin"))

@@ -1,8 +1,8 @@
 ﻿using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace DiagnosticDataVisualiser.Models
 {
@@ -18,10 +18,10 @@ namespace DiagnosticDataVisualiser.Models
         }
     }
 
-    public class ApplicationDbContext : MySQLDatabase
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("Model1")
+            : base("UserManagmentDB", throwIfV1Schema: false)
         {
         }
 
@@ -30,6 +30,4 @@ namespace DiagnosticDataVisualiser.Models
             return new ApplicationDbContext();
         }
     }
-
-
 }

@@ -1,4 +1,4 @@
-namespace WebApplication1.Models
+namespace DiagnosticDataVisualiser.Models
 {
     using System;
     using System.Collections.Generic;
@@ -6,24 +6,21 @@ namespace WebApplication1.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("TestFramework.Owners")]
-    public partial class Owners
+    public partial class AspNetRoles
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Owners()
+        public AspNetRoles()
         {
-            Patients = new HashSet<Patients>();
+            AspNetUsers = new HashSet<AspNetUsers>();
         }
 
-        public int ID { get; set; }
+        public string Id { get; set; }
 
-        [StringLength(1073741823)]
+        [Required]
+        [StringLength(256)]
         public string Name { get; set; }
 
-        [StringLength(1073741823)]
-        public string Profession { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Patients> Patients { get; set; }
+        public virtual ICollection<AspNetUsers> AspNetUsers { get; set; }
     }
 }

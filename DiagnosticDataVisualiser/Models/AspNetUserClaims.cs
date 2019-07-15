@@ -1,4 +1,4 @@
-namespace WebApplication1.Models
+namespace DiagnosticDataVisualiser.Models
 {
     using System;
     using System.Collections.Generic;
@@ -6,8 +6,7 @@ namespace WebApplication1.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("TestFramework.UserClaims")]
-    public partial class UserClaims
+    public partial class AspNetUserClaims
     {
         public int Id { get; set; }
 
@@ -15,10 +14,10 @@ namespace WebApplication1.Models
         [StringLength(128)]
         public string UserId { get; set; }
 
-        [StringLength(1073741823)]
         public string ClaimType { get; set; }
 
-        [StringLength(1073741823)]
         public string ClaimValue { get; set; }
+
+        public virtual AspNetUsers AspNetUsers { get; set; }
     }
 }

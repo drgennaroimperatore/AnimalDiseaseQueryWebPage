@@ -28,14 +28,14 @@ namespace DiagnosticDataVisualiser.Models
     public class SetPasswordViewModel
     {
         [Required]
-        [StringLength(100, ErrorMessage = "The length of {0} must be at least {2} characters.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "La lunghezza di {0} deve essere di almeno {2} caratteri.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = "Nuova password")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The two passwords don't match.")]
+        [Display(Name = "Conferma nuova password")]
+        [Compare("NewPassword", ErrorMessage = "La nuova password e la password di conferma non corrispondono.")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -43,18 +43,18 @@ namespace DiagnosticDataVisualiser.Models
     {
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Current Password")]
+        [Display(Name = "Password corrente")]
         public string OldPassword { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The length of {0} must be at least {2} characters.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "La lunghezza di {0} deve essere di almeno {2} caratteri.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "New Password")]
+        [Display(Name = "Nuova password")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The two passwords don't match")]
+        [Display(Name = "Conferma nuova password")]
+        [Compare("NewPassword", ErrorMessage = "La nuova password e la password di conferma non corrispondono.")]
         public string ConfirmPassword { get; set; }
     }
 

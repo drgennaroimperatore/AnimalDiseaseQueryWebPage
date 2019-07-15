@@ -1,4 +1,4 @@
-﻿using AspNet.Identity.MySQL;
+﻿
 using DiagnosticDataVisualiser.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -13,33 +13,28 @@ namespace DiagnosticDataVisualiser.Controllers
     public class AdminPageController : Controller
     {
         // GET: AdminPage
-        public ActionResult Index(/*Eddie context,*/ AdminPageViewModel model)
+        public ActionResult Index(UserManagement context, AdminPageViewModel model)
         {
-           // var users = context.Users.ToList();
-           // var userRoles = context.UserRoles.ToList();
+            // var users = context.Users.ToList();
+            // var userRoles = context.UserRoles.ToList();
 
+            var rawSQL = "Select UserName, Name" +
+                "From AspNetUsers, AspNetRoles, AspNetUserRoles Where AspNetUsers.Id = AspNetUserRoles.UserId AND AspNetRoles.ID = AspNetUserRoles.RoleId ";
+
+            var result = context.Database.SqlQuery<AppUserViewModel>(rawSQL);
             model.registeredUsers = new List<AppUserViewModel>();
-            ApplicationDbContext context = new ApplicationDbContext();
 
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            foreach (var q in result)
+            {
+                model.registeredUsers.Add(new AppUserViewModel { Name = q.Name, UserName = q.UserName });
+            }
+
 
             
+                           
+            
 
-            /*
-            foreach (var u in users)
-            {
-                var au = new AppUserViewModel();
-                au.Email = u.Email;
-                var userId = u.Id;
-                
-                
-                model.registeredUsers.Add(au);
-                
-            }*/
-
-
-            return View(model);
+                  return View(model);
         }
     }
 }
