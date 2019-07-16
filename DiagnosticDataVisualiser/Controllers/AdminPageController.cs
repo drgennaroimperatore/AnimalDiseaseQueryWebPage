@@ -1,6 +1,7 @@
 ﻿
 using DiagnosticDataVisualiser.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,21 @@ namespace DiagnosticDataVisualiser.Controllers
         // GET: AdminPage
         public ActionResult Index(UserManagement context, AdminPageViewModel model)
         {
-             var users = context.AspNetUsers.ToList();
+
+            bool isAdmin = false;
+            using (var ctx = new ApplicationDbContext())
+            {
+                var userStore = new UserStore<ApplicationUser>(ctx);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+
+                isAdmin = userManager.IsInRole(User.Identity.GetUserId(), "Admin");
+
+                if (!isAdmin)
+                   return RedirectToAction("Index", "Home");
+
+            }
+
+                var users = context.AspNetUsers.ToList();
             // var userRoles = context.UserRoles.ToList();
 
             string rawSQL = @"Select UserName, Name " +
