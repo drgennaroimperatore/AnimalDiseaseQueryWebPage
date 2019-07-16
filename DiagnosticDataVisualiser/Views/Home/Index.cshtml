@@ -329,6 +329,11 @@
     <h1>Diagnostic Data Visualiser</h1>
     <h6>@Model.BuildVersion</h6>
 
+    @if (Model.isAdmin)
+    {
+        <button class="btn btn-info" type="button" onclick="document.location.href='@Url.Action("Index", "AdminPage")'"> Admin Page </button>
+    }
+
 </div>
 
 <div class="row">

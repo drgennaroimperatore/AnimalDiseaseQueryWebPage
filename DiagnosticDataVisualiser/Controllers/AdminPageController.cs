@@ -17,6 +17,9 @@ namespace DiagnosticDataVisualiser.Controllers
         public ActionResult Index(UserManagement context, AdminPageViewModel model)
         {
 
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Login", "Account");
+
             bool isAdmin = false;
             using (var ctx = new ApplicationDbContext())
             {
@@ -46,6 +49,7 @@ namespace DiagnosticDataVisualiser.Controllers
             {
                 AppUserViewModel uvm = new AppUserViewModel();
                 uvm.UserName = u.UserName;
+                uvm.Id = u.Id;
                 var r = result.Where(x => x.UserName == u.UserName);
 
                 if (r.Count() > 0)
@@ -62,13 +66,22 @@ namespace DiagnosticDataVisualiser.Controllers
 
                 model.registeredUsers.Add(uvm);
             }
-
-
-            
-                           
-            
-
+                                                   
                   return View(model);
+        }
+
+        public ActionResult ApproveUserAccount (string userId)
+        {
+            using (var ctx = new ApplicationDbContext())
+            {
+                var userStore = new UserStore<ApplicationUser>(ctx);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+                userManager.RemoveFromRole(userId, "Pending");
+                userManager.AddToRole(userId, "Approved");
+
+            }
+
+            return RedirectToAction("Index", "AdminPage");
         }
     }
 }

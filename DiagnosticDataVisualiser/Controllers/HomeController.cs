@@ -37,9 +37,7 @@ namespace DiagnosticDataVisualiser.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-           
-           
-
+            
 
             //comment
             HomeViewModel model = new HomeViewModel();
@@ -47,7 +45,23 @@ namespace DiagnosticDataVisualiser.Controllers
             Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             model.BuildVersion = version.ToString();
 
-           
+            bool isAdmin = false;
+            using (var ctx = new ApplicationDbContext())
+            {
+                var userStore = new UserStore<ApplicationUser>(ctx);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+
+                isAdmin = userManager.IsInRole(User.Identity.GetUserId(), "Admin");
+
+                model.isAdmin = isAdmin;
+
+                if (userManager.IsInRole(User.Identity.GetUserId(), "Pending"))
+                    return RedirectToAction("Index", "PendingAccount");
+
+
+
+
+            }
 
 
             return View(model);
