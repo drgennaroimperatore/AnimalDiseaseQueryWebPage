@@ -15,18 +15,37 @@ namespace DiagnosticDataVisualiser.Controllers
         // GET: AdminPage
         public ActionResult Index(UserManagement context, AdminPageViewModel model)
         {
-            // var users = context.Users.ToList();
+             var users = context.AspNetUsers.ToList();
             // var userRoles = context.UserRoles.ToList();
 
-            var rawSQL = "Select UserName, Name" +
-                "From AspNetUsers, AspNetRoles, AspNetUserRoles Where AspNetUsers.Id = AspNetUserRoles.UserId AND AspNetRoles.ID = AspNetUserRoles.RoleId ";
+            string rawSQL = @"Select UserName, Name " +
+                "From AspNetUsers, AspNetUserRoles, AspNetRoles " +
+                "Where AspNetUsers.Id = AspNetUserRoles.UserId AND AspNetRoles.Id = AspNetUserRoles.RoleId ";
 
             var result = context.Database.SqlQuery<AppUserViewModel>(rawSQL);
             model.registeredUsers = new List<AppUserViewModel>();
 
-            foreach (var q in result)
+
+
+            foreach (var u in users)
             {
-                model.registeredUsers.Add(new AppUserViewModel { Name = q.Name, UserName = q.UserName });
+                AppUserViewModel uvm = new AppUserViewModel();
+                uvm.UserName = u.UserName;
+                var r = result.Where(x => x.UserName == u.UserName);
+
+                if (r.Count() > 0)
+                {
+                    //model.registeredUsers.Add(new AppUserViewModel { Name = q.Name, UserName = q.UserName });
+
+                    uvm.Name = r.First().Name;
+
+                }
+                else
+                {
+                    uvm.Name = "Unassigned";
+                }
+
+                model.registeredUsers.Add(uvm);
             }
 
 
