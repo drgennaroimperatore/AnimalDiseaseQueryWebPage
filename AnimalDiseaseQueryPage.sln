@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDNF", "DDNF\DDNF.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomaticPinger", "AutomaticPinger\AutomaticPinger.csproj", "{D451D2F0-85DC-4EFB-A24A-574175E1BF23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{F0297A63-9A84-415D-AA8F-F5D77E23EC82}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateForAuthentication", "WebApplication1\TemplateForAuthentication.csproj", "{F0297A63-9A84-415D-AA8F-F5D77E23EC82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

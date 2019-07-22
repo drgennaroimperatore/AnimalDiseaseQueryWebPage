@@ -1,14 +1,52 @@
-﻿
-<div class="jumbotron">
-    <h1>D3F Project</h1>
-    <h6>....</h6>
-</div>
+﻿<div id="landing_page" style="background-color:white">
+    <div class="jumbotron">
+        <h1>D3F: Differential Disease Diagnosis Framework</h1>
 
-<div>
-    <h2> About us </h2>
-</div>
+    </div>
 
-<div>
-     <input type="button" value="Diagnoser" onclick="location.href='@Url.Action("Index", "Home")'" /> 
-     <input type="button" value="Visualiser" onclick="location.href='http://datavisualiser.d3f.world'" /> 
+
+
+    <div>
+        <h3 style="background-color:white; color:black;"> About the project</h3>
+        <br />
+        <p>
+            Cloud-based solutions and mobile apps are increasingly being applied to support those working to improve the health and welfare of human and animal populations. However, such so-called eHealth or mHealth initiatives are often devised and deployed in isolation, and without designed solutions to ensure that the data collected can be integrated and the knowledge embodied in such systems more widely utilised within future apps.
+        </p>
+        <p>
+            This project is creating a framework to support approaches to differential diagnosis that are scalable and allow for the re-use of both open source code and anonymised data. Specifically it seeks to achieve the following:
+        </p>
+        <ul>
+            <li> provide tools to quickly extract expert knowledge and build preliminary diagnostic tools; </li>
+            <li> use ontologies to make sure that the data collected can be shared with the wider community and that available relevant data (e.g. from LOD sources) can be utilised within such tools; </li>
+            <li> develop a repository of code to support applications such as data dash-boards to ensure that such data can be usefully accessed by various stakeholders; </li>
+            <li> given these initial data are available for ‘bootstrap’, use machine learning approaches to improve the quality and coverage of the diagnostic tools created. </li>
+        </ul>
+        <p>
+            A pilot study is currently underway to test the value of these approaches in rural Ethiopia. This work grew from earlier research that targeted disease diagnosis in cattle, and currently covers five species of animals. The field study is primarily funded by the Ethiopian Biotechnology Institute, with support from the Brooke Hospital for Animals, UK, and led by colleagues from the University of Addis Ababa. The research that focuses on the supporting framework (D3F) is based in the Department of Computer and Information Sciences at the University of Strathclyde, and also benefits from funding provided by Brooke.
+        </p>
+        <p>
+            Details regarding the previous diagnostic app (VetAfrica) which dealt only with cattle can be found in these articles:
+            <br />
+            IDRC1
+            <br />
+            IDRC2
+            <br />
+        <p>
+            Some insight into the approaches that under-pin the development of D3F can be found by exploring this poster which was presented at ISVEE in 2018:
+            <em>Using ontologies to create open source smartphone-based differential disease diagnosis and reporting tools for animals in rural settings </em>
+            <br />
+        </p>
+        
+        A broader introduction to the philosophy of our group around the use of ontologies to support data-driven disease surveillance can also be found at this web site:
+        <a href="http://www.datadrivensurveillance.org/">http://www.datadrivensurveillance.org/</a>
+        </p>
+
+
+    </div>
+
+    <div style="text-align:center">
+        <h3 style="color:black">Our Web Apps</h3>
+        <input class="btn btn-info" type="button" value="Diagnoser" onclick="location.href='@Url.Action("Index", "Home")'" />
+        <input class="btn btn-info" type="button" value="Visualiser" onclick="location.href='http://datavisualiser.d3f.world'" />
+    </div>
 </div>

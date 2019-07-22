@@ -47,12 +47,14 @@
 
     // Load the Visualization API and the corechart package.
     google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.load('current', { 'packages': ['table'] });
 
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(drawChart);
     google.charts.setOnLoadCallback(drawDiseaseByAnimalChart);
     google.charts.setOnLoadCallback(drawDiseaseHistogramByAnimalandMonth);
     google.charts.setOnLoadCallback(drawCasesBySpeciesAndYear);
+    google.charts.setOnLoadCallback(drawAccuracyTable);
 
     // Callback that creates and populates a data table,
     // instantiates the pie chart, passes in the data and
@@ -320,6 +322,24 @@
 
     }
 
+    function drawAccuracyTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Disease');
+        data.addColumn('number', 'Match');
+        data.addColumn('number', 'Unsure');
+        data.addColumn('number', 'No Match');
+        data.addRows([
+            ['Disease 1', { v: 0, f: '0' }, { v: 0, f: '0' }, { v: 0, f: '0' }],
+            ['Disease 2', { v: 0, f: '0' }, { v: 0, f: '0' }, { v: 0, f: '0' }],
+            ['Disease 3', { v: 0, f: '0' }, { v: 0, f: '0' }, { v: 0, f: '0' }],
+            ['Disease 4', { v: 0, f: '0' }, { v: 0, f: '0' }, { v: 0, f: '0' }]
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('table_accuracy'));
+
+        table.draw(data, { showRowNumber: true, width: '100%', height: '100%' });
+    }
+
 
 
 </script>
@@ -409,6 +429,14 @@
             <div id="spinner_disease_animal_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5">
+        <div id="table_accuracy">
+
         </div>
     </div>
 </div>
