@@ -411,6 +411,100 @@ ORDER BY
             return Json(histogramData);
         }
 
+        public class AccuracyTableData
+        {
+         public   KeyValuePair<int, string> NMatch { get; set; }
+         public   KeyValuePair<int, string> NUnsure { get; set; }
+         public   KeyValuePair<int, string> NNotSure { get; set; }
+        }
+
+        public class CaseQuery
+        {
+           public  string caseID { get; set; }
+           public   string userCHDisease { get; set; }
+        }
+        public class DiseaseRankQuery
+        {
+           public string disease { get; set; }
+           public float percentage { get; set; }
+        }
+
+        public JsonResult DrawAccuracyTable (Eddie context, string animal, string year)
+        {
+
+
+
+            /* pseudo code from prof revie
+             * Dset = {D1}
+if D1 > 55%
+   then Dset = {D1}    	# definitive diagnosis and we are done
+   else i = 2
+      while i <> 99
+      if (D1 - Di < 10%) 	# or perhaps this should be 7% or 15% (we can vary)
+         then Dset = {Dset} ++ {Di}
+                   i = i + 1
+         else i = 99      	# finished adding possible diagnoses
+
+if size(Dset) = 1
+   then if {U1} == {Dset} 
+               then “match”
+               else “no_match”
+   else if {U1} in {Dset}
+               then “unsure”
+               else “no_match”
+
+             */
+
+            /*steps of the algo
+             * 
+           
+             3) if the first choice is 55% or more marke it as match
+             3) if not if the difference betwen the first disease and the each disease is less than 10% add it, when we are done exit the loop
+             4) if the list of disease contains one disease, if it matches the vet's then it is match, if it doesn't it is no match
+             5) if there is more than one disease, if the list contains the vet's choice we are unsure, if the list does not, it is a definite no match
+             */
+
+            /*caseInfo -> diseaseRank
+            setCase ->diseaseRankN
+                */
+            Dictionary<string, AccuracyTableData> result = new Dictionary<string, AccuracyTableData>();
+            string caseRawQuery = "SELECT caseID, userCHdisease FROM caseInfo";
+            var casesFromCaseInfo = context.Database.SqlQuery<CaseQuery>(caseRawQuery);
+
+            foreach (CaseQuery c in casesFromCaseInfo)
+            {
+
+                
+                string[] nameAndPercentage = c.userCHDisease.Split(':');
+                string userChosenDiseaseName = nameAndPercentage[0];
+                float userChosenDiseasePercentage;  float.TryParse(nameAndPercentage[1], out userChosenDiseasePercentage);
+
+                string caseID = c.caseID.ToString();
+                string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRank WHERE caseID = "+ caseID + " ORDER BY rank" ;
+
+                var diseaseRank = context.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery);
+
+                if (result.ContainsKey(userChosenDiseaseName))
+                {
+                    
+                }
+                else
+                {
+                    result.Add(userChosenDiseaseName,
+                        new AccuracyTableData
+                        {
+                            NMatch = new KeyValuePair<int, string>(0, "0"),
+                            NNotSure = new KeyValuePair<int, string>(0, "0"),
+                            NUnsure = new KeyValuePair<int, string>(0, "0")
+                        });
+                }
+
+            }
+            
+
+            return Json(result);
+        }
+
 
     }
 
