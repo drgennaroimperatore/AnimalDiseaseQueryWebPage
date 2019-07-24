@@ -322,7 +322,58 @@
 
     }
 
-    function drawAccuracyTable() {
+    function drawAccuracyTable(species ='Cattle') {
+
+        url: '@Url.Action("DrawDiseasebyAnimal", "Home")',
+                    contentType: 'application/json; charset=utf-8',
+                    type: 'post',
+                    data: '{animalName: "' + species + '" }',
+                    success: (function (result) {
+                        console.log(result);
+                        var tempArray = [];
+                        var labelArray = ["Disease", "Occurences", { role: "style" }];
+                        tempArray.push(labelArray);
+                        for (var r in result)
+                        {
+                            var dataRow = [result[r].userCHDisease, result[r].Expr1, getRandomColor()];
+                            tempArray.push(dataRow);
+                          //  console.log(result[r].userCHDisease);
+
+
+                        }
+
+                        var dataTable = google.visualization.arrayToDataTable(tempArray);
+
+                        //Create the data table.
+                        var view = new google.visualization.DataView(dataTable);
+                        view.setColumns([0, 1,
+                            {
+                                calc: "stringify",
+                                sourceColumn: 1,
+                                type: "string",
+                                role: "annotation"
+                            },
+                            2]);
+
+
+
+                        // Set chart options
+                        var options = {
+                            'title': 'Occurences of Diseases in Eddie',
+                            'width': 800,
+                            'height': 300,
+                            'legend': {position:"none"},
+                        };
+
+                        // Instantiate and draw our chart, passing in some options.
+                        var chart = new google.visualization.ColumnChart(document.getElementById('barchart_div'));
+                        chart.draw(view, options);
+                    }),
+                    error: (function (xhr, status) {
+                        alert(status);
+                    })
+    
+    })
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Disease');
         data.addColumn('number', 'Match');

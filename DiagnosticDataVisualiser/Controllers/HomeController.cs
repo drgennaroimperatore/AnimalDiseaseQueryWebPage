@@ -29,7 +29,7 @@ namespace DiagnosticDataVisualiser.Controllers
 }*/
 
 
-        
+
         public ActionResult Index(Eddie context)
         {
             if (!User.Identity.IsAuthenticated)
@@ -37,7 +37,7 @@ namespace DiagnosticDataVisualiser.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            
+
 
             //comment
             HomeViewModel model = new HomeViewModel();
@@ -79,7 +79,7 @@ namespace DiagnosticDataVisualiser.Controllers
             public string userCHDisease { get; set; }
         }
 
-        public List<string> GetDiseaseNames (Eddie context, string species)
+        public List<string> GetDiseaseNames(Eddie context, string species)
         {
             string rawsql = "SELECT userCHdisease " +
                 "FROM " +
@@ -88,7 +88,7 @@ namespace DiagnosticDataVisualiser.Controllers
                 "UNION ALL " +
                 "SELECT species,userCHdisease " +
                 "FROM caseInfo) " +
-                "derivedtbl_1 " + 
+                "derivedtbl_1 " +
                 "WHERE(species = @p0) " +
                 "GROUP BY userCHdisease " +
                 "ORDER BY userCHdisease";
@@ -96,15 +96,15 @@ namespace DiagnosticDataVisualiser.Controllers
             var query = context.Database.SqlQuery<DiseaseName>(rawsql, species);
 
             HashSet<string> temp = new HashSet<string>();
-            
+
 
             foreach (var q in query)
             {
                 Regex rgx = new Regex(":(.*)");
-                temp.Add (rgx.Replace(q.userCHDisease, "").TrimEnd());
+                temp.Add(rgx.Replace(q.userCHDisease, "").TrimEnd());
             }
 
-            
+
 
             return (temp.ToList());
 
@@ -374,7 +374,7 @@ ORDER BY
 
                 if (result[m].Count == 0) // if we have no results for that month just add 0 values
                 {
-                    foreach (var dn in GetDiseaseNames(context,an))
+                    foreach (var dn in GetDiseaseNames(context, an))
                     {
                         dataList.Add("0");
                     }
@@ -382,7 +382,7 @@ ORDER BY
                 else // if we do add the results for the disease we have
                 {
 
-                    foreach (var dn in GetDiseaseNames(context,an))
+                    foreach (var dn in GetDiseaseNames(context, an))
                     {
                         if (diseaseNamesForMonth.Contains(dn))
                         {
@@ -404,7 +404,7 @@ ORDER BY
                 histogramData.Arr.Add(dataList);
             }
 
-            histogramData.Annotations = GetDiseaseNames(context,an);
+            histogramData.Annotations = GetDiseaseNames(context, an);
             histogramData.Annotations.Insert(0, "Diseases");
 
 
@@ -413,23 +413,25 @@ ORDER BY
 
         public class AccuracyTableData
         {
-         public   KeyValuePair<int, string> NMatch { get; set; }
-         public   KeyValuePair<int, string> NUnsure { get; set; }
-         public   KeyValuePair<int, string> NNotSure { get; set; }
+            public KeyValuePair<int, string> NMatch { get; set; }
+            public KeyValuePair<int, string> NUnsure { get; set; }
+            public KeyValuePair<int, string> NNoMatch { get; set; }
         }
 
         public class CaseQuery
         {
-           public  string caseID { get; set; }
-           public   string userCHDisease { get; set; }
+            public string caseID { get; set; }
+            public string userCHDisease { get; set; }
         }
         public class DiseaseRankQuery
         {
-           public string disease { get; set; }
-           public float percentage { get; set; }
+            public string diseaseName { get; set; }
+            public float percentage { get; set; }
         }
 
-        public JsonResult DrawAccuracyTable (Eddie context, string animal, string year)
+        public enum AccuracyResult { MATCH, UNSURE, NO_MATCH }
+
+        public JsonResult DrawAccuracyTable(Eddie context, string animal, string year)
         {
 
 
@@ -474,33 +476,102 @@ if size(Dset) = 1
             foreach (CaseQuery c in casesFromCaseInfo)
             {
 
-                
                 string[] nameAndPercentage = c.userCHDisease.Split(':');
                 string userChosenDiseaseName = nameAndPercentage[0];
-                float userChosenDiseasePercentage;  float.TryParse(nameAndPercentage[1], out userChosenDiseasePercentage);
+                float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1], out userChosenDiseasePercentage);
 
                 string caseID = c.caseID.ToString();
-                string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRank WHERE caseID = "+ caseID + " ORDER BY rank" ;
+                string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRank WHERE caseID = " + caseID + " ORDER BY rank";
 
                 var diseaseRank = context.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery);
+                AccuracyResult accuracyResult = AccuracyResult.MATCH;
+                List<DiseaseRankQuery> diseaseRankCompleteList = diseaseRank.ToList(); 
 
-                if (result.ContainsKey(userChosenDiseaseName))
+                List<DiseaseRankQuery> highRankingDiagnoses = new List<DiseaseRankQuery>();
+                DiseaseRankQuery firstDiagnosis = highRankingDiagnoses.First();
+                highRankingDiagnoses.Add(firstDiagnosis);
+                /*TODO REST OF THE ALGORITHM*/
+                if(firstDiagnosis.percentage < 55)
                 {
+
+                }
                     
+
+                
+                /*THIS PART OF THE ALGORITHM CHECKS WETHER THE VET'S CHOICE IS IN THE LIST WE PREVIOUSLY CREATED*/
+                if(highRankingDiagnoses.Count==1)
+                {
+                    if (highRankingDiagnoses.First().diseaseName.Equals(userChosenDiseaseName))
+                        accuracyResult = AccuracyResult.MATCH;
+                    else
+                        accuracyResult = AccuracyResult.NO_MATCH;
                 }
                 else
                 {
+                    bool vetChoiceIsContainedInAppDiagnoses = highRankingDiagnoses.Where(x => x.diseaseName.Equals(userChosenDiseaseName)).Count() > 0;
+                    if (vetChoiceIsContainedInAppDiagnoses)
+                        accuracyResult = AccuracyResult.UNSURE;
+                    else
+                        accuracyResult = AccuracyResult.NO_MATCH;
+
+                }
+
+
+                if (result.ContainsKey(userChosenDiseaseName))
+                {
+                    switch (accuracyResult)
+                    {
+                        case AccuracyResult.MATCH:
+                            KeyValuePair<int, string> oldResult = result[userChosenDiseaseName].NMatch;
+                            string incrementedFormat = (oldResult.Key + 1).ToString();
+                            result[userChosenDiseaseName].NMatch = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
+                            break;
+
+                        case AccuracyResult.UNSURE:
+                            oldResult = result[userChosenDiseaseName].NUnsure;
+                            incrementedFormat = (oldResult.Key + 1).ToString();
+                            result[userChosenDiseaseName].NUnsure = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
+                            break;
+
+                        case AccuracyResult.NO_MATCH:
+                            oldResult = result[userChosenDiseaseName].NNoMatch;
+                            incrementedFormat = (oldResult.Key + 1).ToString();
+                            result[userChosenDiseaseName].NNoMatch = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
+                            break;
+                    }
+                }
+                else
+                {
+                    int nMatch = 0;
+                    int nUnsure = 0;
+                    int nNoMatch = 0;
+
+                    switch (accuracyResult)
+                    {
+                        case AccuracyResult.MATCH:
+                            nMatch = 1;
+                            break;
+
+                        case AccuracyResult.UNSURE:
+                            nUnsure = 1;
+                            break;
+
+                        case AccuracyResult.NO_MATCH:
+                            nNoMatch= 1;
+                            break;
+                    }
+
                     result.Add(userChosenDiseaseName,
                         new AccuracyTableData
                         {
-                            NMatch = new KeyValuePair<int, string>(0, "0"),
-                            NNotSure = new KeyValuePair<int, string>(0, "0"),
-                            NUnsure = new KeyValuePair<int, string>(0, "0")
+                            NMatch = new KeyValuePair<int, string>(nMatch, nMatch.ToString()),
+                            NNoMatch = new KeyValuePair<int, string>(nNoMatch, nNoMatch.ToString()),
+                            NUnsure = new KeyValuePair<int, string>(nUnsure, nUnsure.ToString())
                         });
                 }
 
             }
-            
+
 
             return Json(result);
         }
