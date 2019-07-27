@@ -478,7 +478,7 @@ if size(Dset) = 1
             {
 
                 string[] nameAndPercentage = c.userCHDisease.Split(':');
-                string userChosenDiseaseName = nameAndPercentage[0];
+                string userChosenDiseaseName = nameAndPercentage[0].Trim();
                 float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1], out userChosenDiseasePercentage);
 
                 string caseID = c.caseID.ToString();
@@ -494,12 +494,19 @@ if size(Dset) = 1
                 highRankingDiagnoses.Add(diseaseRank.First());
 
                 DiseaseRankQuery firstDiagnosis = highRankingDiagnoses.First();
-                var d = Convert.ToDecimal(firstDiagnosis.percentage, new CultureInfo("en-GB"));
+                var d1 = Convert.ToDecimal(firstDiagnosis.percentage, new CultureInfo("en-GB"));
 
                 /*TODO REST OF THE ALGORITHM*/
-                if (d < 55)
+                if (d1 < 55)
                 {
-
+                    for (int i=1; i<diseaseRank.Count; i++ )
+                    {
+                        var di= Convert.ToDecimal(diseaseRank[i].percentage, new CultureInfo("en-GB"));
+                        if ((d1 - di) < 10)
+                            highRankingDiagnoses.Add(diseaseRank[i]);
+                        else
+                            i = diseaseRank.Count;
+                    }                         
                 }
                     
 
@@ -507,14 +514,14 @@ if size(Dset) = 1
                 /*THIS PART OF THE ALGORITHM CHECKS WETHER THE VET'S CHOICE IS IN THE LIST WE PREVIOUSLY CREATED*/
                 if(highRankingDiagnoses.Count==1)
                 {
-                    if (highRankingDiagnoses.First().diseaseName.Equals(userChosenDiseaseName))
+                    if (highRankingDiagnoses.First().diseaseName.Split(':')[0].Equals(userChosenDiseaseName))
                         accuracyResult = AccuracyResult.MATCH;
                     else
                         accuracyResult = AccuracyResult.NO_MATCH;
                 }
                 else
                 {
-                    bool vetChoiceIsContainedInAppDiagnoses = highRankingDiagnoses.Where(x => x.diseaseName.Equals(userChosenDiseaseName)).Count() > 0;
+                    bool vetChoiceIsContainedInAppDiagnoses = highRankingDiagnoses.Where(x => x.diseaseName.Split(':')[0].Equals(userChosenDiseaseName)).Count() > 0;
                     if (vetChoiceIsContainedInAppDiagnoses)
                         accuracyResult = AccuracyResult.UNSURE;
                     else
