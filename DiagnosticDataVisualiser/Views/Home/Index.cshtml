@@ -323,8 +323,8 @@
     }
 
     function drawAccuracyTable(species ='Cattle') {
-
-        url: '@Url.Action("DrawDiseasebyAnimal", "Home")',
+        $.ajax({
+        url: '@Url.Action("DrawAccuracyTable", "Home")',
                     contentType: 'application/json; charset=utf-8',
                     type: 'post',
                     data: '{animalName: "' + species + '" }',

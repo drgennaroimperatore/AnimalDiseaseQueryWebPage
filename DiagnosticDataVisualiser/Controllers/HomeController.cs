@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -426,12 +427,12 @@ ORDER BY
         public class DiseaseRankQuery
         {
             public string diseaseName { get; set; }
-            public float percentage { get; set; }
+            public string percentage { get; set; }
         }
 
         public enum AccuracyResult { MATCH, UNSURE, NO_MATCH }
 
-        public JsonResult DrawAccuracyTable(Eddie context, string animal, string year)
+        public JsonResult DrawAccuracyTable(Eddie context, string animalName, string year)
         {
 
 
@@ -471,7 +472,7 @@ if size(Dset) = 1
                 */
             Dictionary<string, AccuracyTableData> result = new Dictionary<string, AccuracyTableData>();
             string caseRawQuery = "SELECT caseID, userCHdisease FROM caseInfo";
-            var casesFromCaseInfo = context.Database.SqlQuery<CaseQuery>(caseRawQuery);
+            var casesFromCaseInfo = context.Database.SqlQuery<CaseQuery>(caseRawQuery).ToList();
 
             foreach (CaseQuery c in casesFromCaseInfo)
             {
@@ -483,15 +484,20 @@ if size(Dset) = 1
                 string caseID = c.caseID.ToString();
                 string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRank WHERE caseID = " + caseID + " ORDER BY rank";
 
-                var diseaseRank = context.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery);
-                AccuracyResult accuracyResult = AccuracyResult.MATCH;
-                List<DiseaseRankQuery> diseaseRankCompleteList = diseaseRank.ToList(); 
+                var diseaseRank = context.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
+                if (diseaseRank.Count == 0)
+                    continue;
 
+                AccuracyResult accuracyResult = AccuracyResult.MATCH;
+                
                 List<DiseaseRankQuery> highRankingDiagnoses = new List<DiseaseRankQuery>();
+                highRankingDiagnoses.Add(diseaseRank.First());
+
                 DiseaseRankQuery firstDiagnosis = highRankingDiagnoses.First();
-                highRankingDiagnoses.Add(firstDiagnosis);
+                var d = Convert.ToDecimal(firstDiagnosis.percentage, new CultureInfo("en-GB"));
+
                 /*TODO REST OF THE ALGORITHM*/
-                if(firstDiagnosis.percentage < 55)
+                if (d < 55)
                 {
 
                 }
