@@ -45,6 +45,14 @@
             })
     });
 
+    $(function () {
+        $("#select_animal_accuracy_table").change(
+            function () {
+                console.log($(this).val());
+                drawAccuracyTable($(this).val());
+            })
+    });
+
     // Load the Visualization API and the corechart package.
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.load('current', { 'packages': ['table'] });
@@ -464,10 +472,18 @@
 
 <div class="row">
     <div class="col-md-5">
+        <div>
+            <select id="select_animal_accuracy_table">
+                @foreach (string animal in Model.SpeciesInEddie)
+                {
+                    <option value="@animal">@animal</option>
+                }
+            </select>
+        </div>
         <div id="table_accuracy">
             <div id="spinner_accuracy_table" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
                 <span class="sr-only">Loading...</span>
 
             </div>
         </div>
-</div>
+    </div>

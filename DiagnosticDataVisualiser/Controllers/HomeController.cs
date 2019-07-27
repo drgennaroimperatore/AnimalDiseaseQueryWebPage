@@ -470,9 +470,9 @@ if size(Dset) = 1
             /*caseInfo -> diseaseRank
             setCase ->diseaseRankN
                 */
-            Dictionary<string, AccuracyTableData> result = new Dictionary<string, AccuracyTableData>();
-            string caseRawQuery = "SELECT caseID, userCHdisease FROM caseInfo";
-            var casesFromCaseInfo = context.Database.SqlQuery<CaseQuery>(caseRawQuery).ToList();
+            SortedDictionary<string, AccuracyTableData> result = new SortedDictionary<string, AccuracyTableData>();
+            string caseRawQuery = @"SELECT caseID, userCHdisease FROM caseInfo WHERE species = @p0";
+            var casesFromCaseInfo = context.Database.SqlQuery<CaseQuery>(caseRawQuery,animalName).ToList();
 
             foreach (CaseQuery c in casesFromCaseInfo)
             {
@@ -482,7 +482,7 @@ if size(Dset) = 1
                 float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1], out userChosenDiseasePercentage);
 
                 string caseID = c.caseID.ToString();
-                string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRank WHERE caseID = " + caseID + " ORDER BY rank";
+                string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRank WHERE caseID = " + caseID +" ORDER BY rank";
 
                 var diseaseRank = context.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
                 if (diseaseRank.Count == 0)
