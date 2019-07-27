@@ -529,6 +529,7 @@ if size(Dset) = 1
 
                 }
 
+                // do the same for table
 
                 if (result.ContainsKey(userChosenDiseaseName))
                 {
@@ -571,6 +572,121 @@ if size(Dset) = 1
 
                         case AccuracyResult.NO_MATCH:
                             nNoMatch= 1;
+                            break;
+                    }
+
+                    result.Add(userChosenDiseaseName,
+                        new AccuracyTableData
+                        {
+                            NMatch = new KeyValuePair<int, string>(nMatch, nMatch.ToString()),
+                            NNoMatch = new KeyValuePair<int, string>(nNoMatch, nNoMatch.ToString()),
+                            NUnsure = new KeyValuePair<int, string>(nUnsure, nUnsure.ToString())
+                        });
+                }
+
+            }
+
+            caseRawQuery = @"SELECT caseID, userCHdisease FROM setCase WHERE species = @p0";
+            var casesFromSetCase = context.Database.SqlQuery<CaseQuery>(caseRawQuery, animalName).ToList();
+
+            foreach (CaseQuery c in casesFromSetCase)
+            {
+
+                string[] nameAndPercentage = c.userCHDisease.Split(':');
+                string userChosenDiseaseName = nameAndPercentage[0].Trim();
+                float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1], out userChosenDiseasePercentage);
+
+                string caseID = c.caseID.ToString();
+                string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRankN WHERE caseID = " + caseID + " ORDER BY rank";
+
+                var diseaseRank = context.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
+                if (diseaseRank.Count == 0)
+                    continue;
+
+                AccuracyResult accuracyResult = AccuracyResult.MATCH;
+
+                List<DiseaseRankQuery> highRankingDiagnoses = new List<DiseaseRankQuery>();
+                highRankingDiagnoses.Add(diseaseRank.First());
+
+                DiseaseRankQuery firstDiagnosis = highRankingDiagnoses.First();
+                var d1 = Convert.ToDecimal(firstDiagnosis.percentage, new CultureInfo("en-GB"));
+
+                /*TODO REST OF THE ALGORITHM*/
+                if (d1 < 55)
+                {
+                    for (int i = 1; i < diseaseRank.Count; i++)
+                    {
+                        var di = Convert.ToDecimal(diseaseRank[i].percentage, new CultureInfo("en-GB"));
+                        if ((d1 - di) < 10)
+                            highRankingDiagnoses.Add(diseaseRank[i]);
+                        else
+                            i = diseaseRank.Count;
+                    }
+                }
+
+
+
+                /*THIS PART OF THE ALGORITHM CHECKS WETHER THE VET'S CHOICE IS IN THE LIST WE PREVIOUSLY CREATED*/
+                if (highRankingDiagnoses.Count == 1)
+                {
+                    if (highRankingDiagnoses.First().diseaseName.Split(':')[0].Equals(userChosenDiseaseName))
+                        accuracyResult = AccuracyResult.MATCH;
+                    else
+                        accuracyResult = AccuracyResult.NO_MATCH;
+                }
+                else
+                {
+                    bool vetChoiceIsContainedInAppDiagnoses = highRankingDiagnoses.Where(x => x.diseaseName.Split(':')[0].Equals(userChosenDiseaseName)).Count() > 0;
+                    if (vetChoiceIsContainedInAppDiagnoses)
+                        accuracyResult = AccuracyResult.UNSURE;
+                    else
+                        accuracyResult = AccuracyResult.NO_MATCH;
+
+                }
+
+                // do the same for table
+
+                if (result.ContainsKey(userChosenDiseaseName))
+                {
+                    switch (accuracyResult)
+                    {
+                        case AccuracyResult.MATCH:
+                            KeyValuePair<int, string> oldResult = result[userChosenDiseaseName].NMatch;
+                            string incrementedFormat = (oldResult.Key + 1).ToString();
+                            result[userChosenDiseaseName].NMatch = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
+                            break;
+
+                        case AccuracyResult.UNSURE:
+                            oldResult = result[userChosenDiseaseName].NUnsure;
+                            incrementedFormat = (oldResult.Key + 1).ToString();
+                            result[userChosenDiseaseName].NUnsure = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
+                            break;
+
+                        case AccuracyResult.NO_MATCH:
+                            oldResult = result[userChosenDiseaseName].NNoMatch;
+                            incrementedFormat = (oldResult.Key + 1).ToString();
+                            result[userChosenDiseaseName].NNoMatch = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
+                            break;
+                    }
+                }
+                else
+                {
+                    int nMatch = 0;
+                    int nUnsure = 0;
+                    int nNoMatch = 0;
+
+                    switch (accuracyResult)
+                    {
+                        case AccuracyResult.MATCH:
+                            nMatch = 1;
+                            break;
+
+                        case AccuracyResult.UNSURE:
+                            nUnsure = 1;
+                            break;
+
+                        case AccuracyResult.NO_MATCH:
+                            nNoMatch = 1;
                             break;
                     }
 
