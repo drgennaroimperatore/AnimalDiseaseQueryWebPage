@@ -110,7 +110,7 @@
 
     <script type="text/javascript" src="~/Scripts/customselect.js"></script>
 
-    <div class="w3-panel w3-amber">
+    <div >
 
         <h2>Diagnose An Animal</h2>
 
@@ -126,7 +126,7 @@
         }
         else
         {
-            <select id="select_diagnose_animal" class="custom-select" name="animalID">
+            <select id="select_diagnose_animal" name="animalID">
                 <option value="-1"> PLEASE SELECT AN ANIMAL</option>
                 @foreach (AnimalDiseaseQueryWebApp.Models.Animal a in Model.animals)
                 {
@@ -151,10 +151,10 @@
         <div id="div_diagnose_loading" class="spinner-border text-primary" role="status">
             <span class="sr-only">Loading...</span>
         </div>
-        <button id="button_diagnose" type="submit" class="w3-block w3-amber w3-button w3-large w3-hover-black" onclick="DiagnoseAnimal()">Diagnose Animal</button>
+        <button id="button_diagnose" type="submit" onclick="DiagnoseAnimal()">Diagnose Animal</button>
     </div>
 
-    <div id="results" class="w3-amber w3-panel w3-padding-64">
+    <div id="results">
 
     </div>
 
