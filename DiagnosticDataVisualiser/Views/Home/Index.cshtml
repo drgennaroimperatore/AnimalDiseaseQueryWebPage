@@ -3,12 +3,18 @@
 @{
     ViewBag.Title = "Home Page";
 }
+<html>
+<head>
 
-<!--Load the AJAX API-->
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script src="~/Scripts/jquery-3.3.1.js"></script>
-<script src="~/Scripts/bootstrap.js"></script>
-<script type="text/javascript">
+</head>
+
+<body>
+
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script type="text/javascript">
 
 
         $(function () {
@@ -340,7 +346,7 @@
                     success: (function (result) {
                         console.log(result);
                         var rows = [];
-                       
+
                         for (var r in result)
                         {
                             console.log(result[r]);
@@ -353,7 +359,7 @@
                             datarow.push(match);
                             datarow.push(unsure);
                             datarow.push(Nomatch);
-                            rows.push(datarow);                           
+                            rows.push(datarow);
                         }
                         console.log(rows);
                         var data = new google.visualization.DataTable();
@@ -367,123 +373,126 @@
 
                         table.draw(data, { showRowNumber: true, width: '100%', height: '100%' });
 
-                       
+
                     }),
                     error: (function (xhr, status) {
                         alert(status);
                     })
-    
+
     })
-       
+
     }
 
 
 
-</script>
+    </script>
 
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Diagnostic Data Visualiser</h1>
+            <h6>@Model.BuildVersion</h6>
 
-<div class="jumbotron">
-    <h1>Diagnostic Data Visualiser</h1>
-    <h6>@Model.BuildVersion</h6>
+            @if (Model.isAdmin)
+            {
+                <button class="btn btn-info" type="button" onclick="document.location.href='@Url.Action("Index", "AdminPage")'"> Admin Page </button>
+            }
 
-    @if (Model.isAdmin)
-    {
-        <button class="btn btn-info" type="button" onclick="document.location.href='@Url.Action("Index", "AdminPage")'"> Admin Page </button>
-    }
-
-</div>
-
-<div class="row">
-
-
-    <div id="chart_div" class="col-md-6">
-        <div id="spinner_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
-            <span class="sr-only">Loading...</span>
         </div>
 
-    </div>
+        <div class="row">
 
-    <div class="col-md-6">
-        <div>
-            <select id="select_animal_diseasebyAnimalBarChart">
-                @foreach (string animal in Model.SpeciesInEddie)
-                {
-                    <option value="@animal">@animal</option>
-                }
-            </select>
-        </div>
+            <div id="chart_div" class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <div id="spinner_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
 
-        <div id="barchart_div">
-            <div id="spinner_disease_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
-                <span class="sr-only">Loading...</span>
             </div>
-        </div>
-    </div>
-</div>
 
-<div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <div>
+                    <select id="select_animal_diseasebyAnimalBarChart">
+                        @foreach (string animal in Model.SpeciesInEddie)
+                        {
+                            <option value="@animal">@animal</option>
+                        }
+                    </select>
+                </div>
 
-    <div class="col-md-10">
-
-        <div>
-            <select id="select_year_casesbyMonthHistogram">
-                <option value="2019">2019</option>
-                <option value="2018">2018</option>
-
-            </select>
-
-        </div>
-
-        <div id="histogram_cases_year_div">
-            <div id="spinner_cases_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
-                <span class="sr-only">Loading...</span>
+                <div id="barchart_div">
+                    <div id="spinner_disease_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-    </div>
-</div>
+        <div class="row">
 
-<div class="row">
-    <div class="col-md-10">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 
-        <div>
-            <select id="select_animal_diseasebyMonthHistogram">
-                @foreach (string animal in Model.SpeciesInEddie)
-                {
-                    <option value="@animal">@animal</option>
-                }
-            </select>
+                <div>
+                    <select id="select_year_casesbyMonthHistogram">
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
 
-            <select id="select_year_diseasebyMonthHistogram">
-                <option value="2019">2019</option>
-                <option value="2018">2018</option>
+                    </select>
 
-            </select>
+                </div>
 
-        </div>
-
-        <div id="histogram_month_disease_div">
-            <div id="spinner_disease_animal_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-5">
-        <div>
-            <select id="select_animal_accuracy_table">
-                @foreach (string animal in Model.SpeciesInEddie)
-                {
-                    <option value="@animal">@animal</option>
-                }
-            </select>
-        </div>
-        <div id="table_accuracy">
-            <div id="spinner_accuracy_table" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
-                <span class="sr-only">Loading...</span>
+                <div id="histogram_cases_year_div">
+                    <div id="spinner_cases_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
 
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+
+                <div>
+                    <select id="select_animal_diseasebyMonthHistogram">
+                        @foreach (string animal in Model.SpeciesInEddie)
+                        {
+                            <option value="@animal">@animal</option>
+                        }
+                    </select>
+
+                    <select id="select_year_diseasebyMonthHistogram">
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+
+                    </select>
+
+                </div>
+
+                <div id="histogram_month_disease_div">
+                    <div id="spinner_disease_animal_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <div>
+                    <select id="select_animal_accuracy_table">
+                        @foreach (string animal in Model.SpeciesInEddie)
+                        {
+                            <option value="@animal">@animal</option>
+                        }
+                    </select>
+                </div>
+                <div id="table_accuracy">
+                    <div id="spinner_accuracy_table" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                        <span class="sr-only">Loading...</span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</body>
+</html>
