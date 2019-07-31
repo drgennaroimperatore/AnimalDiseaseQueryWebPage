@@ -8,21 +8,22 @@
 </div>
 
 
-<div>
+<div class="page_content">
     <ul>
         <li>Is it possible to build mobile apps that use simple clinical signs to support animal health workers to more accurately diagnose and treat common diseases?</li>  
         <li>How can the data collected by such apps be most effectively integrated into the systems that inform animal health policy making at district, country and global levels?</li>  
         <li>Can ontology-based approaches assist the process of integrating externally generated data and knowledge into these types of mHealth apps?</li>  
-        <li>These are just some of the questions being explored as part of this project…  you can find more details on this page…  (see below)</li> 
-        <li>A web-based version illustrating the basic functionality of an app currently being field tested in Ethiopia can be accessed through the “Diagnose” button below.</li> 
+        <li>These are just some of the questions being explored as part of this project you can find more details on this page  (see below)</li> 
+        <li>A web-based version illustrating the basic functionality of an app currently being field tested in Ethiopia can be accessed through the “Diagnoser” button below.</li> 
     </ul>
 </div>
 
 <div>
     <div style="text-align:center">
-        <h3 style="color:black">Our Web Apps</h3>
-        <div id="web_app_links">
-            <input class="btn btn-info" type="button" value="Diagnoser" onclick="location.href='@Url.Action("Index", "Home")'" />
+        <h3 style="color:black">Links</h3>
+        <div class="web_app_links">
+            <input class="btn btn-info" type="button" value="About Us" onclick="location.href='@Url.Action("AboutUs", "Landing")'" />
+            <input class="btn btn-info" type="button" value="Diagnoser" onclick="location.href='@Url.Action("Index", "Diagnose")'" />
             <input class="btn btn-info" type="button" value="Visualiser" onclick="location.href='http://datavisualiser.d3f.world'" />
         </div>
     </div>

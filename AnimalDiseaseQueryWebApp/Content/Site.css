@@ -17,8 +17,8 @@ body {
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+   /* padding-left: 15px;*/
+   /* padding-right: 15px;*/
     text-align: justify;
 }
 
@@ -44,7 +44,7 @@ input[type=radio]
 /*Spacing and sizes*/
 
 .page_content{
-    padding-bottom:200px;
+    padding-bottom:50px;
 }
 
 /*Text styling*/
@@ -76,13 +76,17 @@ button {
     
 }
 
-#web_app_links {
+.web_app_links {
     margin-top:50px;
 }
 
-#page_content {
+.page_content {
     margin: 70px;
     margin-top:0px;
+}
+
+#results {
+    margin-top:20px;
 }
 
 .confirmation_button {

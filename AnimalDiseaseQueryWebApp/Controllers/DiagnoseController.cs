@@ -239,7 +239,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         
             normalisedList.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
 
-            normalisedList.ForEach(x => result.Add(x.Key, " "+ x.Value.ToString("f2")+"</br>")); 
+            normalisedList.ForEach(x => result.Add(x.Key, " "+ x.Value.ToString("f2")+"%")); 
 
             return result;
         }
