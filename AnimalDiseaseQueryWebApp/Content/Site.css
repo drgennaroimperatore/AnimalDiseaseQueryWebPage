@@ -1,6 +1,6 @@
 ﻿html body{
     background-color:white;
-}
+ }
 
 header{
     margin-bottom:100px;
@@ -12,12 +12,14 @@ header{
 body {
     padding-top: 50px;
     padding-bottom: 20px;
+    
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    text-align: justify;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -61,17 +63,26 @@ h3 {
 
 
 
-@media screen and (min-device-width: 500px) {
+/*@media screen and (min-device-width: 500px) {
     h3 {
         color: white;
     }
-}
+}*/
 
 /*Button styling*/
 
 button {
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     
+}
+
+#web_app_links {
+    margin-top:50px;
+}
+
+#page_content {
+    margin: 70px;
+    margin-top:0px;
 }
 
 .confirmation_button {
