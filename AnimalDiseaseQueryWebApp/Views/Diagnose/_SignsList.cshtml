@@ -11,11 +11,24 @@
     @{int i = 0; }
     @foreach (AnimalDiseaseQueryWebApp.Models.Sign s in Model)
     {
-        <div>
-            <label> @s.Name </label>
-            <label> Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_P" />  <span class="checkmark"></span> </label>
-            <label> Not Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NP" />  <span class="checkmark"></span> </label>
-            <label> Not Observed  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NO" checked="checked" />  <span class="checkmark"></span> </label>
+    <div class="row">
+        <div class="col-md-3 col-sm-3 col-xl-3 col-lg-3"> <label> @s.Name </label>
+    </div>
+        <div class="col-md-2 col-sm-2 col-xl-2 col-lg-2">
+            <label> Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_P" />  
+            @*<span class="checkmark"></span>*@ 
+            </label>
+        </div>
+        <div class="col-md-2 col-sm-2 col-xl-2 col-lg-2">
+            <label> Not Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NP" />  
+            @*<span class="checkmark"></span>*@ 
+            </label>
+        </div>
+        <div class="col-md-2 col-sm-2 col-xl-2 col-lg-2">
+            <label> Not Observed  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NO" checked="checked" />  
+            @*<span class="checkmark"></span>*@ 
+            </label>
+        </div>
             <br />
         </div>
         i++;
