@@ -74,7 +74,10 @@
                         console.log(animalID);
                         //console.log(signs);
                         $(document).ready(function () { $('#div_diagnose_loading').hide(); });
-                        
+
+                        $('#results').append('<div> <h2> Results </h2> </div>');
+                        $('#results').append('<br />');
+
                         for (var d in data)
                         {
                             $('#results').append('<div class="row">' + '<div class="col-lg-4 col-md-4 col-sm-4"> ' + d + '</div>' + '<div class="col-lg-4 col-md-4 col-sm-4"> ' + data[d] + '</div>' + '</div>');                                                                                   
@@ -97,45 +100,56 @@
         <h1>Diagnose An Animal</h1>    
     </div>
     <hr />
-    
-    <div>
+    <div class="page_content">
+        <div>
 
-        @if (Model.animals.Count == 0)
-        {
-            <h4>There are no Animals in the Database</h4>
-        }
-        else
-        {
-            <select id="select_diagnose_animal" name="animalID">
-                <option value="-1"> PLEASE SELECT AN ANIMAL</option>
-                @foreach (AnimalDiseaseQueryWebApp.Models.Animal a in Model.animals)
-                {
-                    <option value="@a.Id">@a.Name @a.Sex @a.Age</option>
-                }
-            </select>
-        }
+            @if (Model.animals.Count == 0)
+            {
+                <h4>There are no Animals in the Database</h4>
+            }
+            else
+            {
+                <h3>Select An Animal To Diagnose</h3>
 
-    </div>
+                <br />
 
-    <div id="div_select_signs">
+                <select id="select_diagnose_animal" name="animalID">
+                    <option value="-1"> PLEASE SELECT AN ANIMAL</option>
+                    @foreach (AnimalDiseaseQueryWebApp.Models.Animal a in Model.animals)
+                    {
+                        <option value="@a.Id">@a.Name @a.Sex @a.Age</option>
+                    }
+                </select>
+            }
 
-        <div id="div_diagnose_loading_signs" class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
         </div>
 
-        @Html.Partial("_SignsList", new List<AnimalDiseaseQueryWebApp.Models.Sign>())
+        <hr />
 
-    </div>
+        <div id="div_select_signs">
 
-    <div>
-        <div id="div_diagnose_loading" class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
+            <div id="div_diagnose_loading_signs" class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+
+            @Html.Partial("_SignsList", new List<AnimalDiseaseQueryWebApp.Models.Sign>())
+
         </div>
-        <button id="button_diagnose" type="submit" onclick="DiagnoseAnimal()">Diagnose Animal</button>
-    </div>
 
-    <div id="results" class="container">
+        <div>
 
+            <br />
+            <button class="btn btn-info" id="button_diagnose" type="submit" onclick="DiagnoseAnimal()">Diagnose Animal</button>
+
+            <div id="div_diagnose_loading" class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+
+        </div>
+
+        <div id="results" class="container">
+
+        </div>
     </div>
 
 </body>

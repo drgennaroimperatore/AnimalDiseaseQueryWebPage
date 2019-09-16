@@ -5,32 +5,40 @@
 <div>
 
     <div id="select_signs_title">
-        <h4> Select Signs </h4>
+        <h3> Select Signs </h3>
     </div>
-    
-    @{int i = 0; }
-    @foreach (AnimalDiseaseQueryWebApp.Models.Sign s in Model)
-    {
-    <div class="row">
-        <div class="col-md-5 col-sm-5 col-xl-5 col-lg-5"> <label> @s.Name </label>
+
+    <br />
+   
+        @{int i = 0; }
+        @foreach (AnimalDiseaseQueryWebApp.Models.Sign s in Model)
+        {
+
+            <div class="row">
+                <div class="col-md-5 col-sm-5 col-xl-5 col-lg-5">
+                    <label> @s.Name </label>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xl-2 col-lg-2">
+                    <label>
+                        Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_P" />
+                        @*<span class="checkmark"></span>*@
+                    </label>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xl-2 col-lg-2">
+                    <label>
+                        Not Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NP" />
+                        @*<span class="checkmark"></span>*@
+                    </label>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xl-2 col-lg-2">
+                    <label>
+                        Not Observed  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NO" checked="checked" />
+                        @*<span class="checkmark"></span>*@
+                    </label>
+                </div>
+                <br />
+            </div>
+            i++;
+        }
+        
     </div>
-        <div class="col-md-2 col-sm-2 col-xl-2 col-lg-2">
-            <label> Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_P" />  
-            @*<span class="checkmark"></span>*@ 
-            </label>
-        </div>
-        <div class="col-md-2 col-sm-2 col-xl-2 col-lg-2">
-            <label> Not Present  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NP" />  
-            @*<span class="checkmark"></span>*@ 
-            </label>
-        </div>
-        <div class="col-md-2 col-sm-2 col-xl-2 col-lg-2">
-            <label> Not Observed  <input type="radio" class="signs" name="signs[@i]" value="@s.Id+_NO" checked="checked" />  
-            @*<span class="checkmark"></span>*@ 
-            </label>
-        </div>
-            <br />
-        </div>
-        i++;
-    }
-</div>
