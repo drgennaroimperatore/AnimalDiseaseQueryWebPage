@@ -85,9 +85,16 @@ button {
     margin-top:0px;
 }
 
-#results {
-    margin-top:20px;
+#select_signs_title
+{
+    margin:70px;
 }
+
+#results {
+    margin-top: 20px;
+}
+
+
 
 .confirmation_button {
     
