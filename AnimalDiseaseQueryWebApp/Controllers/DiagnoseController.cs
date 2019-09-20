@@ -194,6 +194,35 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             return Json(NormaliseResults(results));
         }
 
+        public JsonResult LogCase (ADDB context, int animalID, string[] signs, Dictionary<string,string> results)
+        {
+            string r = "";
+
+
+
+            // Create owner
+
+            IdentifyOrCreateOwnerOfCase(context, "", "", "");
+
+            Case newCase = new Case();
+            newCase.DateOfCaseLogged = DateTime.Now;
+
+
+            //create patient
+
+            //create case
+
+            //log signs
+
+            //log results
+
+            return Json(r);
+        }
+
+
+
+        #region ACCESSORY FUNCTIONS
+
         private float GetLikelihoodValue(ADDB context, int animalID, int signID, int diseaseID)
         {
             float likelihoodValue = 1.0f;
@@ -245,6 +274,27 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         }
 
 
+        private int IdentifyOrCreateOwnerOfCase(ADDB context, string name, string region, string location)
+        {
+            /*this method analyses each case to identify the owner of a case if it doesn't find one it adds a new owner to the owner table*/
 
-    }   
+            //for the moment since we are copying the data from eddie we will assign the same owner as eddie to all cases
+
+            Owner owner = new Owner();
+            owner.Name = name;
+            owner.Profession = "Eddie User";
+
+            /* if (ADDB.Owners.Select(x => x.Name).Contains(name))
+                return ADDB.Owners.Where(x => x.Equals(name)).First().Id;*/
+
+            context.Owners.Add(owner);
+            context.SaveChanges();
+            int id = context.Owners.Last().ID;
+            return id;
+        }
+
+        #endregion
+
+
+    }
 }
