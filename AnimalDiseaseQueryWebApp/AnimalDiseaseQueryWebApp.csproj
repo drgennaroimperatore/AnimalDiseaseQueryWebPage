@@ -295,6 +295,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Landing\Index.cshtml" />
     <Content Include="Views\Landing\AboutUs.cshtml" />
+    <Content Include="Views\Diagnose\_LogCase.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

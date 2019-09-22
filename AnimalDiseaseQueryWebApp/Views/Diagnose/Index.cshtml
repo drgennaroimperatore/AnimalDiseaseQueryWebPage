@@ -160,7 +160,7 @@
                     <option value="-1"> PLEASE SELECT AN ANIMAL</option>
                     @foreach (AnimalDiseaseQueryWebApp.Models.Animal a in Model.animals)
                     {
-                        <option value="@a.Id">@a.Name @a.Sex @a.Age</option>
+                        <option value="@a.Id">@a.Name @a.Age @a.Sex</option>
                     }
                 </select>
             }
@@ -193,6 +193,10 @@
         <div id="results" class="container">
 
         </div>
+
+        @Html.Partial("_LogCase")
+
+
     </div>
 
 </body>
