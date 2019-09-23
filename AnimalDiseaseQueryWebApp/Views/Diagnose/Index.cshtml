@@ -81,9 +81,43 @@
                         $('#results').append('<div> <h2> Results </h2> </div>');
                         $('#results').append('<br />');
 
+                        var results = document.getElementById("results");
+
                         for (var d in data)
                         {
-                            $('#results').append('<div class="row">' + '<div class="col-lg-4 col-md-4 col-sm-4"> ' + d + '</div>' + '<div class="col-lg-4 col-md-4 col-sm-4"> ' + data[d] + '</div>' + '</div>');                                                                                   
+                            
+                            //$('#results').append('<div class="row"> <div class="col-lg-5 col-md-5 col-sm-5"> ' + d + ' </div>' + '<div class="col-lg-4 col-md-4 col-sm-4">' + data[d] + ' </div>' + '</div>');
+
+
+                            var row = document.createElement("div");
+                            var diseaseColumn = document.createElement("div");
+                            var valueColumn = document.createElement("div");
+                            var radioLabel = document.createElement("label");
+
+                            var radio = document.createElement("input");
+                            radio.setAttribute("type", "radio");
+                            radio.setAttribute("name", "diseasechosenbyuser");
+                            radio.setAttribute("value", d);
+                            radio.setAttribute("style", "padding:15px;");
+
+                            row.setAttribute("class", "row");
+                            diseaseColumn.setAttribute("class", "col-lg-5 col-md-5 col-sm-5");
+                            valueColumn.setAttribute("class", "col-lg-5 col-md-5 col-sm-5");
+
+
+                            radioLabel.append(d+' ');
+                            valueColumn.append(data[d]);
+
+                            results.appendChild(row);
+                            row.appendChild(diseaseColumn);
+                            diseaseColumn.appendChild(radioLabel);
+                            radioLabel.appendChild(radio);
+                            row.appendChild(valueColumn);
+                            
+                            
+                            
+
+
                         }
                                                 
                         $('#results').show();

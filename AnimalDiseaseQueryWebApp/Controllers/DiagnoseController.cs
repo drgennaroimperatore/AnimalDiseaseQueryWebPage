@@ -194,23 +194,62 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             return Json(NormaliseResults(results));
         }
 
-        public JsonResult LogCase (ADDB context, int animalID, string[] signs, Dictionary<string,string> results)
+        public JsonResult LogCase (ADDB context, 
+            int animalID, 
+            string[] signs, 
+            Dictionary<string,string> results,
+            string diseasechosenbyuser,
+            string region, 
+            string location, 
+            DateTime datecaseobserved,
+            string comments)
         {
             string r = "";
 
-
+            string name = "temporary name";
 
             // Create owner
 
-            IdentifyOrCreateOwnerOfCase(context, "", "", "");
+           int ownerID= IdentifyOrCreateOwnerOfCase(context, name ,region, location);
 
-            Case newCase = new Case();
-            newCase.DateOfCaseLogged = DateTime.Now;
+           
 
 
             //create patient
+            Patient newPatient = new Patient();
+
+            newPatient.AnimalID = animalID;
+            newPatient.OwnerID = ownerID;
+
+            context.Patients.Add(newPatient);
+
+            context.SaveChanges();
+
+            int patientID = context.Patients.Last().ID;
+
 
             //create case
+
+            Case newCase = new Case();
+            newCase.DateOfCaseLogged = DateTime.Now;
+            newCase.Location = location;
+           
+            newCase.PatientID = patientID;
+            newCase.DiseasePredictedByAppID = GetDiseaseID(context, results.Keys.First());
+            newCase.Comments = comments;
+
+            newCase.DateOfCaseObserved = datecaseobserved;
+            newCase.ApplicationVersion = "1.0";
+            newCase.OriginTableName = "Cases";
+            newCase.OriginDBName = "D3FFramework";
+
+
+
+            context.Cases.Add(newCase);
+
+            context.SaveChanges();
+
+
 
             //log signs
 
@@ -222,6 +261,11 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
 
         #region ACCESSORY FUNCTIONS
+
+        private int GetDiseaseID (ADDB context, string disease)
+        {
+            return context.Diseases.Where(x => x.Name.Equals(disease)).First().Id;
+        }
 
         private float GetLikelihoodValue(ADDB context, int animalID, int signID, int diseaseID)
         {
