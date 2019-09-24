@@ -74,7 +74,7 @@
                     //data: '{animalID: "' + animalID +'", signs: "'+ s+'" }',
                     data: JSON.stringify({ "animalID": animalID, "signs": s }),
                     success: (function (data) {
-                        console.log(animalID);
+                       // console.log(animalID);
                         //console.log(signs);
                         $(document).ready(function () { $('#div_diagnose_loading').hide(); });
 
@@ -96,6 +96,7 @@
 
                             var radio = document.createElement("input");
                             radio.setAttribute("type", "radio");
+                            radio.setAttribute("id", "radio_disease_chosen_by_user");
                             radio.setAttribute("name", "diseasechosenbyuser");
                             radio.setAttribute("value", d);
                             radio.setAttribute("style", "padding:15px;");
@@ -132,7 +133,7 @@
 
                         window.localStorage.setItem('tempcase', JSON.stringify(tempcase));
 
-                        LogCase(tempcase);
+                        
 
                     }),
                     error: (function (xhr, status) {
@@ -141,33 +142,7 @@
                 })
         };
 
-        function LogCase(log) {
-
-           // console.log(log);
-           // console.log(log["animalID"]);
-           // console.log(log["results"]);
-
-
-            //retrieve data from localstorage about the unsaved case and send it to the controller
-            var aid = log["animalID"];
-            var res = log["results"];
-            var s = log["signs"];
-
-            //use ajax to call function
-
-
-            $.ajax({
-                url: '@Url.Action("LogCase", "Diagnose")',
-                contentType: 'application/json; charset=utf-8',
-                type: 'post',
-                //data: '{animalID: "' + animalID +'", signs: "'+ s+'" }',
-                data: JSON.stringify({ "animalID": aid, "signs": s, "results":res }),
-                success: (function (data) { console.log(data) }),
-                error: (function (xhr, status) { })
-            })
-
-
-        }
+      
     </script>
 
     <script type="text/javascript" src="~/Scripts/customselect.js"></script>

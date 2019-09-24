@@ -1,23 +1,88 @@
-﻿<div id="div_log_case">
+﻿<script>
+
+      function LogCase() {
+
+           
+
+
+          var log = JSON.parse(window.localStorage.getItem('tempcase'));
+           console.log(log);
+           console.log(log["animalID"]);
+           console.log(log["results"]);
+
+          //retrieve data from localstorage about the unsaved case and send it to the controller
+          var aid = document.getElementById("select_diagnose_animal").value
+          var res = log["results"];
+          var s = log["signs"];
+
+          //retrieve selected disease selected by user and additional info about the case
+          var diseasechosenbyuser = document.getElementById("radio_disease_chosen_by_user").value;
+          var comments = document.getElementById("log_case_comments").value
+          var datecaseobserved = document.getElementById("log_case_datecaseobserved").value
+          var region = document.getElementById("log_case_region").value;
+          var location = document.getElementById("log_case_location").value;
+
+          console.log(aid);
+          console.log(diseasechosenbyuser);
+          console.log(comments);
+          console.log(datecaseobserved);
+          console.log(region);
+          console.log(location);
+
+            //use ajax to call function
+
+
+            $.ajax({
+                url: '@Url.Action("LogCase", "Diagnose")',
+                contentType: 'application/json; charset=utf-8',
+                type: 'post',
+                //data: '{animalID: "' + animalID +'", signs: "'+ s+'" }',
+                data: JSON.stringify({
+                    "animalID": aid,
+                    "signs": s,
+                    "results": res,
+                    "diseasechosenbyuser": diseasechosenbyuser,
+                    "comments": comments,
+                    "datecaseobserved": datecaseobserved,
+                    "region": region,
+                    "location": location
+                }),
+                success: (function (data) { console.log(data) }),
+                error: (function (xhr, status) { console.log(xhr) })
+            })
+
+
+        }
+
+</script>
+
+<div id="div_log_case">
     <h2> Log the Case</h2>
-    <label> Date Case Occurred  <input type="date" name="datecaseobserved"> </label>
-    
+    <label> Date Case Observed  <input type="date" id="log_case_datecaseobserved" name="datecaseobserved"> </label>
+
     <h3>Location</h3>
     <label>
         Region
-        <select>
-            <option value="">Region 1 </option>
+        <select id="log_case_region">
+            <option value="Addis Ababa">Addis Ababa </option>
+            <option value="Afar">Afar </option>
+            <option value="Amhara">Amhara </option>
+            <option value="Benishangul-Gumuz"> Benishangul-Gumuz </option>
+            <option value="Dire Dawa"> Dire Dawa </option>
+            <option value="Gambela">Gambela </option>
+            <option value="Harari">Harari </option>
+            <option value="Southern NNP">Southern NNP </option>
         </select>
     </label>
 
-    <label> Location <input type="text" name="location"> </label>
+    <label> Location <input type="text" id="log_case_location" name="location"> </label>
 
     <br />
     <h3>Further Information</h3>
-    <label> Comments <input type="text" name="comments" /> </label>
+    <label> Comments <input type="text" id="log_case_comments" name="comments" /> </label>
 
     <br />
 
-    <input type="button" id="button_logcase" class="btn btn-success" /> Submit Case
+    <input type="button" id="button_logcase" class="btn btn-success" style="width:auto;" onclick="LogCase()" value="Submit Case"/>  
 
 </div>
