@@ -8,7 +8,7 @@ using System.Web;
 
 namespace AnimalDiseaseQueryWebApp.Models
 {
-    public enum SignPresence {PRESENT = 0, NOT_PRESENT = 1 };
+    public enum SignPresence {PRESENT = 0, NOT_PRESENT = 1, NOT_OBSERVED= 2 };
 
     public partial class ADDB : DbContext
     {

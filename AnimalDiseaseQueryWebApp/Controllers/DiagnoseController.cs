@@ -13,14 +13,14 @@ namespace AnimalDiseaseQueryWebApp.Controllers
     public class DiagnoseController : Controller
     {
         Dictionary<Animal, List<Sign>> signsForAnimal = new Dictionary<Animal, List<Sign>>();
-        
+
         // GET: Diagnose
         public ActionResult Index(ADDB context, DiagnoseViewModel model)
         {
-           
+
             model.animals = context.Animals.ToList();
 
-            if(context.SignCore.Count()==0)
+            if (context.SignCore.Count() == 0)
                 LoadSignsMasterList(context); //load the signcore table if the signcore table is empty
 
             return View(model);
@@ -54,7 +54,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                         continue;
                     name = name.ToUpper(); // name needs to be uppercase
 
-                    if(name.Equals("Sheep".ToUpper()))
+                    if (name.Equals("Sheep".ToUpper()))
                     {
                         CreateSignCoresForAnimal(context, "SHEEP", c, rowsLength, valueArray);
                         CreateSignCoresForAnimal(context, "GOAT", c, rowsLength, valueArray);
@@ -86,9 +86,9 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             }
         }
 
-        private void CreateSignCoresForAnimal(ADDB context, string name, int c, int rowsLength,  object[,] valueArray)
+        private void CreateSignCoresForAnimal(ADDB context, string name, int c, int rowsLength, object[,] valueArray)
         {
-             List<int> ids = new List<int>();
+            List<int> ids = new List<int>();
 
             var animals = context.Animals.Where(n => n.Name.Contains(name)).ToList();
 
@@ -118,10 +118,10 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult RenderSignsPartial (ADDB context, int animalID)
+        public ActionResult RenderSignsPartial(ADDB context, int animalID)
         {
             var signcore = context.SignCore.Where(sc => sc.AnimalID == animalID).ToList();
-            
+
             List<Sign> model = new List<Sign>();
             foreach (SignCore sc in signcore)
                 model.Add(context.Signs.Find(sc.SignID));
@@ -132,22 +132,22 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         public JsonResult DiagnoseAnimal(ADDB context, int animalID, string[] signs)
 
         {
-            if( context.Diseases.Count()==0 ||
-                context.Likelihoods.Count()==0 || 
-                context.PriorsDiseases.Count()==0 || 
-                animalID==-1 ||
-                signs== null)
+            if (context.Diseases.Count() == 0 ||
+                context.Likelihoods.Count() == 0 ||
+                context.PriorsDiseases.Count() == 0 ||
+                animalID == -1 ||
+                signs == null)
                 return Json("Error");
 
-            
+
             Dictionary<string, float> results = new Dictionary<string, float>();
             var diseases = context.Diseases.ToList();
 
-            foreach(Disease d in diseases)
+            foreach (Disease d in diseases)
             {
                 if (!CheckIfDiseaseAffectsAnimal(context, animalID, d.Id))
                     continue;
-                
+
                 float chainProbability = 1.0f;
                 foreach (string s in signs)
                 {
@@ -170,9 +170,9 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                         }
 
                         //calculate the chain probability 
-                        
+
                         chainProbability *= likelihoodValue;
-                       
+
 
                     }
                     catch (Exception)
@@ -183,62 +183,80 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 }
 
                 float posterior = chainProbability * GetPriorForDisease(context, animalID, d.Id);
-             
-               
-               
-                results.Add(d.Name, (posterior*100.0f));
+
+
+
+                results.Add(d.Name, (posterior * 100.0f));
             }
 
-                
-                 
+
+
             return Json(NormaliseResults(results));
         }
 
-        public JsonResult LogCase (ADDB context, 
-            int animalID, 
-            string[] signs, 
-            Dictionary<string,string> results,
+        public JsonResult LogCase(ADDB context,
+            int animalID,
+            string[] signs,
+            Dictionary<string, string> results,
             string diseasechosenbyuser,
-            string region, 
-            string location, 
+            string region,
+            string location,
             DateTime datecaseobserved,
             string comments)
         {
             string r = "";
 
-            string name = "temporary name";
+            //string name = "temporary name";
 
-            // Create owner
+            //// Create owner
 
-           int ownerID= IdentifyOrCreateOwnerOfCase(context, name ,region, location);
-
-           
+            //int ownerID = IdentifyOrCreateOwnerOfCase(context, name, region, location);
 
 
-            //create patient
-            Patient newPatient = new Patient();
-
-            newPatient.AnimalID = animalID;
-            newPatient.OwnerID = ownerID;
-
-            context.Patients.Add(newPatient);
-
-            context.SaveChanges();
-
-            int patientID = context.Patients.Last().ID;
 
 
-            //create case
+            ////create patient
+            //Patient newPatient = new Patient();
+
+            //newPatient.AnimalID = animalID;
+            //newPatient.OwnerID = ownerID;
+
+            //context.Patients.Add(newPatient);
+
+            //context.SaveChanges();
+
+            //int patientID = context.Patients.Last().ID;
+
+
+            ////create case
 
             Case newCase = new Case();
-            newCase.DateOfCaseLogged = DateTime.Now;
-            newCase.Location = location;
-           
-            newCase.PatientID = patientID;
-            newCase.DiseasePredictedByAppID = GetDiseaseID(context, results.Keys.First());
-            newCase.Comments = comments;
 
+            //newCase.Location = location + "," + region;
+
+            //newCase.PatientID = patientID;
+
+            //get info about the disease chosen by the user (we'll call this dbu)
+            //the data is formatted name_likelihoodvalue%
+            string[] dbu = diseasechosenbyuser.Split('_');
+            string dbuName = dbu[0]; string dbuLikelihood = dbu[1];
+            dbuLikelihood= dbuLikelihood.Remove(dbuLikelihood.Length - 1, 1); // remove the percentage symbol
+            float dbuLikelihoodVal; float.TryParse(dbuLikelihood, out dbuLikelihoodVal);
+
+
+            newCase.DiseasePredictedByAppID = GetDiseaseID(context, results.Keys.First());
+            newCase.DiseaseChosenByUserID = GetDiseaseID(context, dbuName);
+            newCase.LikelihoodOfDiseaseChosenByUser = dbuLikelihoodVal;
+            
+
+            newCase.Comments = comments;
             newCase.DateOfCaseObserved = datecaseobserved;
+            newCase.DateOfCaseLogged = DateTime.Now;
+
+
+
+
+
             newCase.ApplicationVersion = "1.0";
             newCase.OriginTableName = "Cases";
             newCase.OriginDBName = "D3FFramework";
@@ -249,11 +267,43 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
             context.SaveChanges();
 
-
+            int caseID = context.Cases.Last().ID;
 
             //log signs
 
+            foreach (string sign in signs)
+            {
+                string[] splitSymbol = { "+_" };
+                string[] s = sign.Split(splitSymbol, StringSplitOptions.None);
+
+                int signID = Convert.ToInt32(s[0]);
+                string signPresence = s[1];
+                SignForCase signForCase = new SignForCase();
+                signForCase.CaseID = caseID;
+                signForCase.SignID = signID;
+                
+                switch(signPresence)
+                {
+                    case "P":
+                        signForCase.SignPresence = SignPresence.PRESENT;
+                        break;
+                    case "NP":
+                        signForCase.SignPresence = SignPresence.NOT_PRESENT;
+                        break;
+                    case "NO":
+                        signForCase.SignPresence = SignPresence.NOT_OBSERVED;
+                        break;
+                }
+
+                context.SignsForCases.Add(signForCase);
+            }
+
             //log results
+
+            foreach(string result in results.Keys)
+            {
+
+            }
 
             return Json(r);
         }
@@ -262,9 +312,14 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
         #region ACCESSORY FUNCTIONS
 
-        private int GetDiseaseID (ADDB context, string disease)
+        private int GetDiseaseID(ADDB context, string disease)
         {
             return context.Diseases.Where(x => x.Name.Equals(disease)).First().Id;
+        }
+
+        private int GetSignID(ADDB context, string signName)
+        {
+            return context.Signs.Where(x => x.Name.Equals(signName)).First().Id;
         }
 
         private float GetLikelihoodValue(ADDB context, int animalID, int signID, int diseaseID)
@@ -275,7 +330,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             float.TryParse(likelihood.Value, out likelihoodValue);
             likelihoodValue /= 100.0f;
 
-            
+
             return likelihoodValue;
         }
 
@@ -293,7 +348,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             return context.PriorsDiseases.Where(m => m.AnimalID == animalID && m.DiseaseID == diseaseID).Count() > 0;
         }
 
-        public Dictionary<string,string> NormaliseResults(Dictionary<string, float> originalList)
+        public Dictionary<string, string> NormaliseResults(Dictionary<string, float> originalList)
         {
             List<KeyValuePair<string, float>> normalisedList = new List<KeyValuePair<string, float>>();
             Dictionary<string, string> result = new Dictionary<string, string>();
@@ -302,17 +357,17 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
             var keys = originalList.Keys;
 
-            foreach(string k in keys)
+            foreach (string k in keys)
             {
                 float value = originalList[k];
                 float norm = (value / sumValue);
-                normalisedList.Add(new KeyValuePair<string, float>(k,(norm*100)));
+                normalisedList.Add(new KeyValuePair<string, float>(k, (norm * 100)));
             }
 
-        
+
             normalisedList.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
 
-            normalisedList.ForEach(x => result.Add(x.Key, " "+ x.Value.ToString("f2")+"%")); 
+            normalisedList.ForEach(x => result.Add(x.Key, " " + x.Value.ToString("f2") + "%"));
 
             return result;
         }
