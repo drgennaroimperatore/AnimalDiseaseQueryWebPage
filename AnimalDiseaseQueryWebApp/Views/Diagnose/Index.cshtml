@@ -12,6 +12,11 @@
             var animalId = $(this).val();
             console.log(animalId);
             $('#div_diagnose_loading_signs').show();
+            $('#div_diagnose_loading').hide();
+            $('#results').hide();
+            $('#div_signs_list').hide();
+            $('#button_diagnose').hide();
+            $('#div_log_case').hide();
 
 
             if (animalId && animalId != '') {
@@ -24,8 +29,9 @@
                     success: (function (result) {
                         $('#div_select_signs').html(result);
                         $('#div_diagnose_loading_signs').hide();
-                        $('#select_signs_title').show();
+                        $('#div_signs_list').show();
                         $('#button_diagnose').show();
+                        
 
                     }),
                     error: (function (xhr, status) {
@@ -63,6 +69,7 @@
             window.localStorage.removeItem('tempcase');
 
             $('#results').html("");
+            $('#button_diagnose').hide();
             var animalID = $('#select_diagnose_animal').val();
             var s = []
             var signs = $('.signs:checked').each(function () { s.push($(this).val()); });

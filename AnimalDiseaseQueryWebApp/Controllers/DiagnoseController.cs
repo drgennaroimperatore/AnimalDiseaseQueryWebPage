@@ -206,38 +206,38 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         {
             string r = "";
 
-            //string name = "temporary name";
+            string name = "temporary name";
 
-            //// Create owner
+            // Create owner
 
-            //int ownerID = IdentifyOrCreateOwnerOfCase(context, name, region, location);
-
-
+            int ownerID = IdentifyOrCreateOwnerOfCase(context, name, region, location);
 
 
-            ////create patient
-            //Patient newPatient = new Patient();
-
-            //newPatient.AnimalID = animalID;
-            //newPatient.OwnerID = ownerID;
-
-            //context.Patients.Add(newPatient);
-
-            //context.SaveChanges();
-
-            //int patientID = context.Patients.Last().ID;
 
 
-            ////create case
+            //create patient
+            Patient newPatient = new Patient();
+
+            newPatient.AnimalID = animalID;
+            newPatient.OwnerID = ownerID;
+
+            context.Patients.Add(newPatient);
+
+            context.SaveChanges();
+
+            int patientID = context.Patients.ToList().Last().ID;
+
+
+            //create case
 
             Case newCase = new Case();
 
-            //newCase.Location = location + "," + region;
+            newCase.Location = location + "," + region;
 
-            //newCase.PatientID = patientID;
+            newCase.PatientID = patientID;
 
-            //get info about the disease chosen by the user (we'll call this dbu)
-            //the data is formatted rank_name_likelihoodvalue%
+            //get info about the disease chosen by the user(we'll call this dbu)
+            //the data is formatted rank_name_likelihoodvalue %
             string[] dbu = diseasechosenbyuser.Split('_');
             int rank = Convert.ToInt32(dbu[0]);
             string dbuName = dbu[1]; string dbuLikelihood = dbu[2];
@@ -256,7 +256,11 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             newCase.DateOfCaseObserved = datecaseobserved;
             newCase.DateOfCaseLogged = DateTime.Now;
 
+            #region TEMPORARY DUMMY TREATMENT CODE!!!!!!!! TO DO!! FIX!!!
+            int treatmentID = context.Treatments.ToList().Last().Id; // this dummy treatment was created during conversion of eddie cases...
+            newCase.TreatmentChosenByUserID = treatmentID;
 
+            #endregion
 
 
 
@@ -270,7 +274,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
             context.SaveChanges();
 
-            int caseID = context.Cases.Last().ID;
+            int caseID = context.Cases.ToList().Last().ID;
 
             //log signs
 
@@ -305,13 +309,21 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
             foreach(string result in results.Keys)
             {
+                ResultForCase resultForCase = new ResultForCase();
+                resultForCase.CaseID = caseID;
+                resultForCase.DiseaseID = GetDiseaseID(context,result);
+                //convert predicted likelihood of case //and remove last char because it's the perc symbol
+                float pl; float.TryParse(results[result].Remove(results[result].Length-1, 1), out pl);
+                resultForCase.PredictedLikelihoodOfDisease = pl;
 
+                context.ResultsForCases.Add(resultForCase);
             }
+            context.SaveChanges();
 
             return Json(r);
         }
 
-
+        
 
         #region ACCESSORY FUNCTIONS
 
@@ -391,7 +403,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
             context.Owners.Add(owner);
             context.SaveChanges();
-            int id = context.Owners.Last().ID;
+            int id = context.Owners.ToList().Last().ID;
             return id;
         }
 

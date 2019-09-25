@@ -12,6 +12,7 @@
         document.getElementById("log_case_comments").value = "No Comments";
 
         $('#label_location_error').hide();
+        $('#div_logcase_loading_sign').hide();
  });
 
     
@@ -26,6 +27,10 @@
     }
 
       function LogCase() {
+
+          $('#div_logcase_loading_sign').show();
+          $('#button_logcase').hide();
+
 
            
           var log = JSON.parse(window.localStorage.getItem('tempcase'));
@@ -68,7 +73,11 @@
                       "region": region,
                       "location": location
                   }),
-                  success: (function (data) { console.log(data) }),
+                  success: (function (data) {
+                      console.log(data)
+                      $('#div_logcase_loading_sign').hide();
+                     // $('#button_logcase').show();
+                  }),
                   error: (function (xhr, status) { console.log(xhr) })
               })
           }
@@ -97,7 +106,7 @@
         </select>
     </label>
 
-    <label> Location <input type="text" id="log_case_location" name="location"> </label> <label id="label_location_error" style="color:red; font-weight:bold"; > Please Provide A Location </label>
+    <label> Location <input type="text" id="log_case_location" name="location"> </label> <label id="label_location_error" style="color:red; font-weight:bold" ;> Please Provide A Location </label>
 
     <br />
     <h3>Further Information</h3>
@@ -105,6 +114,10 @@
 
     <br />
 
-    <input type="button" id="button_logcase" class="btn btn-success" style="width:auto;" onclick="LogCase()" value="Submit Case"/>  
+    <div id="div_logcase_loading_sign" class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+
+    <input type="button" id="button_logcase" class="btn btn-success" style="width:auto;" onclick="LogCase()" value="Submit Case" />
 
 </div>
