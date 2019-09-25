@@ -54,6 +54,7 @@
             $('#results').hide();
             $('#select_signs_title').hide();
             $('#button_diagnose').hide();
+            $('#div_log_case').hide();
         });
 
         function DiagnoseAnimal() {
@@ -83,6 +84,7 @@
 
                         var results = document.getElementById("results");
 
+                        var rank = 0;
                         for (var d in data)
                         {
                             
@@ -98,8 +100,11 @@
                             radio.setAttribute("type", "radio");
                             radio.setAttribute("id", "radio_disease_chosen_by_user");
                             radio.setAttribute("name", "diseasechosenbyuser");
-                            radio.setAttribute("value", d+'_'+data[d]);
+                            radio.setAttribute("value",rank+'_'+d+'_'+data[d]);
                             radio.setAttribute("style", "padding:15px;");
+
+                            if (rank == 0)
+                                radio.setAttribute("checked", "");
 
                             row.setAttribute("class", "row");
                             diseaseColumn.setAttribute("class", "col-lg-5 col-md-5 col-sm-5");
@@ -117,11 +122,13 @@
                             
                             
                             
-
+                            rank++; // increase the rank counter 
 
                         }
                                                 
                         $('#results').show();
+
+                        $('#div_log_case').show();
 
 
                         //save the case in localstorage in case the user wants to save

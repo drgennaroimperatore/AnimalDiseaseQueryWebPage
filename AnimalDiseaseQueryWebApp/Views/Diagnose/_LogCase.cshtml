@@ -1,10 +1,33 @@
 ﻿<script>
 
+    $('document').ready(function () {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        document.getElementById("log_case_datecaseobserved").value = today;
+
+        document.getElementById("log_case_comments").value = "No Comments";
+
+        $('#label_location_error').hide();
+ });
+
+    
+    function ValidateInput() {
+        var location = document.getElementById("log_case_location").value
+        if (location == "") {
+            $('#label_location_error').show();
+            return false;
+        }
+
+        return true;
+    }
+
       function LogCase() {
 
            
-
-
           var log = JSON.parse(window.localStorage.getItem('tempcase'));
            console.log(log);
            console.log(log["animalID"]);
@@ -29,27 +52,26 @@
           console.log(region);
           console.log(location);
 
-            //use ajax to call function
+          if (ValidateInput()) {
 
-
-            $.ajax({
-                url: '@Url.Action("LogCase", "Diagnose")',
-                contentType: 'application/json; charset=utf-8',
-                type: 'post',
-                //data: '{animalID: "' + animalID +'", signs: "'+ s+'" }',
-                data: JSON.stringify({
-                    "animalID": aid,
-                    "signs": s,
-                    "results": res,
-                    "diseasechosenbyuser": diseasechosenbyuser,
-                    "comments": comments,
-                    "datecaseobserved": datecaseobserved,
-                    "region": region,
-                    "location": location
-                }),
-                success: (function (data) { console.log(data) }),
-                error: (function (xhr, status) { console.log(xhr) })
-            })
+              $.ajax({
+                  url: '@Url.Action("LogCase", "Diagnose")',
+                  contentType: 'application/json; charset=utf-8',
+                  type: 'post',
+                  data: JSON.stringify({
+                      "animalID": aid,
+                      "signs": s,
+                      "results": res,
+                      "diseasechosenbyuser": diseasechosenbyuser,
+                      "comments": comments,
+                      "datecaseobserved": datecaseobserved,
+                      "region": region,
+                      "location": location
+                  }),
+                  success: (function (data) { console.log(data) }),
+                  error: (function (xhr, status) { console.log(xhr) })
+              })
+          }
 
 
         }
@@ -75,7 +97,7 @@
         </select>
     </label>
 
-    <label> Location <input type="text" id="log_case_location" name="location"> </label>
+    <label> Location <input type="text" id="log_case_location" name="location"> </label> <label id="label_location_error" style="color:red; font-weight:bold"; > Please Provide A Location </label>
 
     <br />
     <h3>Further Information</h3>

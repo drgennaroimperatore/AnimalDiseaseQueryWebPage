@@ -237,9 +237,10 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             //newCase.PatientID = patientID;
 
             //get info about the disease chosen by the user (we'll call this dbu)
-            //the data is formatted name_likelihoodvalue%
+            //the data is formatted rank_name_likelihoodvalue%
             string[] dbu = diseasechosenbyuser.Split('_');
-            string dbuName = dbu[0]; string dbuLikelihood = dbu[1];
+            int rank = Convert.ToInt32(dbu[0]);
+            string dbuName = dbu[1]; string dbuLikelihood = dbu[2];
             dbuLikelihood= dbuLikelihood.Remove(dbuLikelihood.Length - 1, 1); // remove the percentage symbol
             float dbuLikelihoodVal; float.TryParse(dbuLikelihood, out dbuLikelihoodVal);
 
@@ -247,6 +248,8 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             newCase.DiseasePredictedByAppID = GetDiseaseID(context, results.Keys.First());
             newCase.DiseaseChosenByUserID = GetDiseaseID(context, dbuName);
             newCase.LikelihoodOfDiseaseChosenByUser = dbuLikelihoodVal;
+            newCase.RankOfDiseaseChosenByUser = rank;
+            
             
 
             newCase.Comments = comments;
