@@ -204,7 +204,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             DateTime datecaseobserved,
             string comments)
         {
-            string r = "";
+            string r = "Case Added Sucessfully";
 
             string name = "temporary name";
 
@@ -213,112 +213,119 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             int ownerID = IdentifyOrCreateOwnerOfCase(context, name, region, location);
 
 
-
-
-            //create patient
-            Patient newPatient = new Patient();
-
-            newPatient.AnimalID = animalID;
-            newPatient.OwnerID = ownerID;
-
-            context.Patients.Add(newPatient);
-
-            context.SaveChanges();
-
-            int patientID = context.Patients.ToList().Last().ID;
-
-
-            //create case
-
-            Case newCase = new Case();
-
-            newCase.Location = location + "," + region;
-
-            newCase.PatientID = patientID;
-
-            //get info about the disease chosen by the user(we'll call this dbu)
-            //the data is formatted rank_name_likelihoodvalue %
-            string[] dbu = diseasechosenbyuser.Split('_');
-            int rank = Convert.ToInt32(dbu[0]);
-            string dbuName = dbu[1]; string dbuLikelihood = dbu[2];
-            dbuLikelihood= dbuLikelihood.Remove(dbuLikelihood.Length - 1, 1); // remove the percentage symbol
-            float dbuLikelihoodVal; float.TryParse(dbuLikelihood, out dbuLikelihoodVal);
-
-
-            newCase.DiseasePredictedByAppID = GetDiseaseID(context, results.Keys.First());
-            newCase.DiseaseChosenByUserID = GetDiseaseID(context, dbuName);
-            newCase.LikelihoodOfDiseaseChosenByUser = dbuLikelihoodVal;
-            newCase.RankOfDiseaseChosenByUser = rank;
-            
-            
-
-            newCase.Comments = comments;
-            newCase.DateOfCaseObserved = datecaseobserved;
-            newCase.DateOfCaseLogged = DateTime.Now;
-
-            #region TEMPORARY DUMMY TREATMENT CODE!!!!!!!! TO DO!! FIX!!!
-            int treatmentID = context.Treatments.ToList().Last().Id; // this dummy treatment was created during conversion of eddie cases...
-            newCase.TreatmentChosenByUserID = treatmentID;
-
-            #endregion
-
-
-
-            newCase.ApplicationVersion = "1.0";
-            newCase.OriginTableName = "Cases";
-            newCase.OriginDBName = "D3FFramework";
-
-
-
-            context.Cases.Add(newCase);
-
-            context.SaveChanges();
-
-            int caseID = context.Cases.ToList().Last().ID;
-
-            //log signs
-
-            foreach (string sign in signs)
+            try
             {
-                string[] splitSymbol = { "+_" };
-                string[] s = sign.Split(splitSymbol, StringSplitOptions.None);
 
-                int signID = Convert.ToInt32(s[0]);
-                string signPresence = s[1];
-                SignForCase signForCase = new SignForCase();
-                signForCase.CaseID = caseID;
-                signForCase.SignID = signID;
-                
-                switch(signPresence)
+                //create patient
+                Patient newPatient = new Patient();
+
+                newPatient.AnimalID = animalID;
+                newPatient.OwnerID = ownerID;
+
+                context.Patients.Add(newPatient);
+
+                context.SaveChanges();
+
+                int patientID = context.Patients.ToList().Last().ID;
+
+
+                //create case
+
+                Case newCase = new Case();
+
+                newCase.Location = location + "," + region;
+
+                newCase.PatientID = patientID;
+
+                //get info about the disease chosen by the user(we'll call this dbu)
+                //the data is formatted rank_name_likelihoodvalue %
+                string[] dbu = diseasechosenbyuser.Split('_');
+                int rank = Convert.ToInt32(dbu[0]);
+                string dbuName = dbu[1]; string dbuLikelihood = dbu[2];
+                dbuLikelihood = dbuLikelihood.Remove(dbuLikelihood.Length - 1, 1); // remove the percentage symbol
+                float dbuLikelihoodVal; float.TryParse(dbuLikelihood, out dbuLikelihoodVal);
+
+
+                newCase.DiseasePredictedByAppID = GetDiseaseID(context, results.Keys.First());
+                newCase.DiseaseChosenByUserID = GetDiseaseID(context, dbuName);
+                newCase.LikelihoodOfDiseaseChosenByUser = dbuLikelihoodVal;
+                newCase.RankOfDiseaseChosenByUser = rank;
+
+
+
+                newCase.Comments = comments;
+                newCase.DateOfCaseObserved = datecaseobserved;
+                newCase.DateOfCaseLogged = DateTime.Now;
+
+                #region TEMPORARY DUMMY TREATMENT CODE!!!!!!!! TO DO!! FIX!!!
+                int treatmentID = context.Treatments.ToList().Last().Id; // this dummy treatment was created during conversion of eddie cases...
+                newCase.TreatmentChosenByUserID = treatmentID;
+
+                #endregion
+
+
+
+                newCase.ApplicationVersion = "1.0";
+                newCase.OriginTableName = "Cases";
+                newCase.OriginDBName = "D3FFramework";
+
+
+
+                context.Cases.Add(newCase);
+
+                context.SaveChanges();
+
+                int caseID = context.Cases.ToList().Last().ID;
+
+                //log signs
+
+                foreach (string sign in signs)
                 {
-                    case "P":
-                        signForCase.SignPresence = SignPresence.PRESENT;
-                        break;
-                    case "NP":
-                        signForCase.SignPresence = SignPresence.NOT_PRESENT;
-                        break;
-                    case "NO":
-                        signForCase.SignPresence = SignPresence.NOT_OBSERVED;
-                        break;
+                    string[] splitSymbol = { "+_" };
+                    string[] s = sign.Split(splitSymbol, StringSplitOptions.None);
+
+                    int signID = Convert.ToInt32(s[0]);
+                    string signPresence = s[1];
+                    SignForCase signForCase = new SignForCase();
+                    signForCase.CaseID = caseID;
+                    signForCase.SignID = signID;
+
+                    switch (signPresence)
+                    {
+                        case "P":
+                            signForCase.SignPresence = SignPresence.PRESENT;
+                            break;
+                        case "NP":
+                            signForCase.SignPresence = SignPresence.NOT_PRESENT;
+                            break;
+                        case "NO":
+                            signForCase.SignPresence = SignPresence.NOT_OBSERVED;
+                            break;
+                    }
+
+                    context.SignsForCases.Add(signForCase);
                 }
 
-                context.SignsForCases.Add(signForCase);
+                //log results
+
+                foreach (string result in results.Keys)
+                {
+                    ResultForCase resultForCase = new ResultForCase();
+                    resultForCase.CaseID = caseID;
+                    resultForCase.DiseaseID = GetDiseaseID(context, result);
+                    //convert predicted likelihood of case //and remove last char because it's the perc symbol
+                    float pl; float.TryParse(results[result].Remove(results[result].Length - 1, 1), out pl);
+                    resultForCase.PredictedLikelihoodOfDisease = pl;
+
+                    context.ResultsForCases.Add(resultForCase);
+                }
+                context.SaveChanges();
             }
-
-            //log results
-
-            foreach(string result in results.Keys)
+            catch (Exception e)
             {
-                ResultForCase resultForCase = new ResultForCase();
-                resultForCase.CaseID = caseID;
-                resultForCase.DiseaseID = GetDiseaseID(context,result);
-                //convert predicted likelihood of case //and remove last char because it's the perc symbol
-                float pl; float.TryParse(results[result].Remove(results[result].Length-1, 1), out pl);
-                resultForCase.PredictedLikelihoodOfDisease = pl;
-
-                context.ResultsForCases.Add(resultForCase);
+                r = "There was an error logging the case";
+                //to do... write some code to clean up incomplete logged cases.... 
             }
-            context.SaveChanges();
 
             return Json(r);
         }

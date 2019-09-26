@@ -13,8 +13,37 @@
 
         $('#label_location_error').hide();
         $('#div_logcase_loading_sign').hide();
+
+        var logCaseDiv = document.getElementById('div_log_case');
+        var outcomeLabel = document.getElementById('label_outcome');
+        var resetButton = document.getElementById('button_reset');
+
+        if (outcomeLabel != null && resetButton != null) {
+
+            if (logCaseDiv.contains(outcomeLabel))
+                logCaseDiv.removeChild(outcomeLabel);
+            if (logCaseDiv.contains(resetButton))
+                logCaseDiv.removeChild(resetButton);
+        }
  });
 
+
+    function ResetPage() {
+        //$('#div_log_case').hide();
+        //$('#select_diagnose_animal').value = "-1";
+        //document.getElementById('select_diagnose_animal').onchange();
+
+
+        //document.getElementById("log_case_datecaseobserved").value = today;
+
+        //document.getElementById("log_case_comments").value = "No Comments";
+
+        //$('#label_location_error').hide();
+        //$('#div_logcase_loading_sign').hide();
+
+        document.location.reload();
+        //hide the form and reset values
+    }
     
     function ValidateInput() {
         var location = document.getElementById("log_case_location").value
@@ -28,9 +57,7 @@
 
       function LogCase() {
 
-          $('#div_logcase_loading_sign').show();
-          $('#button_logcase').hide();
-
+        
 
            
           var log = JSON.parse(window.localStorage.getItem('tempcase'));
@@ -59,6 +86,10 @@
 
           if (ValidateInput()) {
 
+              $('#div_logcase_loading_sign').show();
+              $('#button_logcase').hide();
+
+
               $.ajax({
                   url: '@Url.Action("LogCase", "Diagnose")',
                   contentType: 'application/json; charset=utf-8',
@@ -77,6 +108,22 @@
                       console.log(data)
                       $('#div_logcase_loading_sign').hide();
                      // $('#button_logcase').show();
+
+                      var outcomeLabel = document.createElement("label");
+                      outcomeLabel.setAttribute("style", "color:blue;");
+                      outcomeLabel.setAttribute("id", "label_outcome");
+                      outcomeLabel.append(data);
+                      document.getElementById('div_log_case').appendChild(outcomeLabel);
+
+                      var resetButton = document.createElement("input");
+                      resetButton.setAttribute("type", "button");
+                      resetButton.setAttribute("id", "button_reset");
+                      resetButton.setAttribute("class", "btn btn-primary");
+                      resetButton.setAttribute("value", "Diagnose New Animal");
+                      resetButton.setAttribute("onclick", "ResetPage()");
+                      document.getElementById('div_log_case').appendChild(resetButton);
+                      
+
                   }),
                   error: (function (xhr, status) { console.log(xhr) })
               })
