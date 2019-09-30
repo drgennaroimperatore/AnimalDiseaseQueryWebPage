@@ -31,7 +31,7 @@
                         $('#div_diagnose_loading_signs').hide();
                         $('#div_signs_list').show();
                         $('#button_diagnose').show();
-                        
+
 
                     }),
                     error: (function (xhr, status) {
@@ -94,7 +94,7 @@
                         var rank = 0;
                         for (var d in data)
                         {
-                            
+
                             //$('#results').append('<div class="row"> <div class="col-lg-5 col-md-5 col-sm-5"> ' + d + ' </div>' + '<div class="col-lg-4 col-md-4 col-sm-4">' + data[d] + ' </div>' + '</div>');
 
 
@@ -126,13 +126,13 @@
                             diseaseColumn.appendChild(radioLabel);
                             radioLabel.appendChild(radio);
                             row.appendChild(valueColumn);
-                            
-                            
-                            
-                            rank++; // increase the rank counter 
+
+
+
+                            rank++; // increase the rank counter
 
                         }
-                                                
+
                         $('#results').show();
 
                         $('#div_log_case').show();
@@ -147,7 +147,7 @@
 
                         window.localStorage.setItem('tempcase', JSON.stringify(tempcase));
 
-                        
+
 
                     }),
                     error: (function (xhr, status) {
@@ -156,14 +156,14 @@
                 })
         };
 
-      
+
     </script>
 
     <script type="text/javascript" src="~/Scripts/customselect.js"></script>
 
     <div class="jumbotron">
-  
-        <h1>Diagnose An Animal</h1>    
+
+        <h1>Diagnose An Animal</h1>
     </div>
     <hr />
     <div class="page_content">
@@ -220,6 +220,17 @@
         @Html.Partial("_LogCase")
 
 
+    </div>
+
+    <div>
+        <div style="text-align:center">
+            <h3 style="color:black">Links</h3>
+            <div class="web_app_links">
+                <input class="btn btn-info" type="button" value="About Us" onclick="location.href='@Url.Action("AboutUs", "Landing")'" />
+                <input class="btn btn-info" type="button" value="Diagnoser" onclick="location.href='@Url.Action("Index", "Diagnose")'" />
+                <input class="btn btn-info" type="button" value="Visualiser" onclick="location.href='http://datavisualiser.d3f.world'" />
+            </div>
+        </div>
     </div>
 
 </body>
