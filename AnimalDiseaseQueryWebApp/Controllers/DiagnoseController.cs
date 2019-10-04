@@ -274,6 +274,14 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 context.Cases.Add(newCase);
 
                 context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                r = "There was an error logging the case";
+            }
+
+            try
+            {
 
                 int caseID = context.Cases.ToList().Last().ID;
 
@@ -321,6 +329,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                 }
                 context.SaveChanges();
             }
+
             catch (Exception e)
             {
                 r = "There was an error logging the case";
@@ -330,7 +339,35 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             return Json(r);
         }
 
-        
+        public JsonResult DeleteIncompleteCase(ADDB context, int caseID)
+        {
+            string r = "";
+
+            //check if there have been symptoms log but no results
+            var signsForCase = context.SignsForCases.Where(x => x.CaseID == caseID).ToList();
+            if (signsForCase.Count > 0)
+            {
+
+                //delete the symps
+                context.SignsForCases.RemoveRange(signsForCase);
+
+                context.SaveChanges();
+            }
+
+
+
+            //finally delete the case
+            context.Cases.Remove(context.Cases.Find(caseID));
+
+            context.SaveChanges();
+
+
+
+
+            return Json(r);
+        }
+
+
 
         #region ACCESSORY FUNCTIONS
 
