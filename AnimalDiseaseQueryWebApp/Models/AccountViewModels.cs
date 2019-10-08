@@ -46,6 +46,13 @@ namespace AnimalDiseaseQueryWebApp.Models
         public string Email { get; set; }
     }
 
+    public class CustomLoginRegisterViewModel
+    {
+        public LoginViewModel LoginViewModel;
+        public RegisterViewModel RegisterViewModel;
+
+    }
+
     public class LoginViewModel
     {
         [Required]

@@ -18,6 +18,12 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         public ActionResult Index(ADDB context, DiagnoseViewModel model)
         {
 
+            if (!User.Identity.IsAuthenticated)
+            {
+                Console.WriteLine("Auth");
+            }
+
+
             model.animals = context.Animals.ToList();
 
             if (context.SignCore.Count() == 0)
