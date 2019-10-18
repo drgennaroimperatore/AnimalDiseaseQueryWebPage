@@ -2,6 +2,8 @@
 @model CustomLoginRegisterViewModel
 @{
     ViewBag.Title = "D3F Project - Login";
+    
+
 }
 
 <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -33,21 +35,30 @@
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.LoginViewModel.Email, new { @class = "col-md-2 control-label" })
                                             <div class="col-md-10">
-                                                @Html.TextBoxFor(m => m.LoginViewModel.Email, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => m.LoginViewModel.Email, "", new { @class = "text-danger" })
+                                                @*@Html.TextBoxFor(m => m.LoginViewModel.Email, new { @class = "form-control" , @name = "login_email" })*@
+                                                @Html.TextBox("login_email")
+                                               
+                                                @*@Html.ValidationMessageFor(m => m.LoginViewModel.Email, "", new { @class = "text-danger" })*@
+                                                @Html.ValidationMessage("login_email")
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.LoginViewModel.Password, new { @class = "col-md-2 control-label" })
                                             <div class="col-md-10">
-                                                @Html.PasswordFor(m => m.LoginViewModel.Password, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => m.LoginViewModel.Password, "", new { @class = "text-danger" })
+                                                @*@Html.PasswordFor(m => m.LoginViewModel.Password, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.LoginViewModel.Password, "", new { @class = "text-danger" })*@
+
+                                                @Html.Password("login_password")
+                                                @Html.ValidationMessage("login_password", "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-offset-2 col-md-10">
                                                 <div class="checkbox">
-                                                    @Html.CheckBoxFor(m => m.LoginViewModel.RememberMe)
+                                                    @*@Html.CheckBoxFor(m => m.LoginViewModel.RememberMe)
+        @Html.LabelFor(m => m.LoginViewModel.RememberMe)*@
+
+                                                    @Html.CheckBox("login_rememberMe")
                                                     @Html.LabelFor(m => m.LoginViewModel.RememberMe)
                                                 </div>
                                             </div>
@@ -75,22 +86,25 @@
                         </div>
                     </div>
                     <div id="register_menu" class="tab-pane fade">
-                        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @id ="loginform", @class = "form-horizontal", role = "form" }))
                         {
                             @Html.AntiForgeryToken()
                             <h4>Create a new Account.</h4>
                             <hr />
                             @Html.ValidationSummary("", new { @class = "text-danger" })
                             <div class="form-group">
-                                @Html.LabelFor(m => m.RegisterViewModel.Email, new { @class = "col-md-2 control-label" })
+                                @*@Html.LabelFor(m => m.RegisterViewModel.Email, new { @class = "col-md-2 control-label" })*@
+                                
                                 <div class="col-md-10">
-                                    @Html.TextBoxFor(m => m.RegisterViewModel.Email, new { @class = "form-control" })
+                                    @*@Html.TextBoxFor(m => m.RegisterViewModel.Email, new { @class = "form-control"})*@
+                                   @Html.TextBox("register_email")
                                 </div>
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(m => m.RegisterViewModel.Password, new { @class = "col-md-2 control-label" })
                                 <div class="col-md-10">
-                                    @Html.PasswordFor(m => m.RegisterViewModel.Password, new { @class = "form-control" })
+                                    @*@Html.PasswordFor(m => m.RegisterViewModel.Password, new { @class = "form-control" })*@
+                                    @Html.Password("register_password")
                                 </div>
                             </div>
                             <div class="form-group">

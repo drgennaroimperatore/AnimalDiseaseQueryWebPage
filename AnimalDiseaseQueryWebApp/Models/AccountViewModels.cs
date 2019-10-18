@@ -51,6 +51,12 @@ namespace AnimalDiseaseQueryWebApp.Models
         public LoginViewModel LoginViewModel;
         public RegisterViewModel RegisterViewModel;
 
+        public CustomLoginRegisterViewModel()
+        {
+            LoginViewModel = new LoginViewModel();
+            RegisterViewModel = new RegisterViewModel();
+        }
+
     }
 
     public class LoginViewModel

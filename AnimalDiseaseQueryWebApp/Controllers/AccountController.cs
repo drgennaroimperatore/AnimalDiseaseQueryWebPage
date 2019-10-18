@@ -67,7 +67,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(CustomLoginRegisterViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -76,15 +76,15 @@ namespace AnimalDiseaseQueryWebApp.Controllers
 
             // Questa opzione non calcola il numero di tentativi di accesso non riusciti per il blocco dell'account
             // Per abilitare il conteggio degli errori di password per attivare il blocco, impostare shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.LoginViewModel.Email, model.LoginViewModel.Password, model.LoginViewModel.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToLocal(Url.Action("Index","Diagnose"));
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.LoginViewModel.RememberMe });
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Unsuccesful login attempt");

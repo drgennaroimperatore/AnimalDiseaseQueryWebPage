@@ -233,6 +233,7 @@
     <Compile Include="Models\AspNetUserClaims.cs" />
     <Compile Include="Models\AspNetUserLogins.cs" />
     <Compile Include="Models\AspNetUsers.cs" />
+    <Compile Include="Models\CustomLoginRegisterModelBinder.cs" />
     <Compile Include="Models\DiagnoseViewModel.cs" />
     <Compile Include="Models\EditDBViewModel.cs" />
     <Compile Include="Models\ErrorDBViewModel.cs" />
