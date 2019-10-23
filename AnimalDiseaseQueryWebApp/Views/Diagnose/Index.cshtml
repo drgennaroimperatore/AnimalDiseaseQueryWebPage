@@ -2,6 +2,55 @@
 
 <html>
 <body>
+
+    <script>
+    $(document).ready(function () {
+
+
+        $.ajax({
+            url: '@Url.Action("GetLoginRegistrationErrors", "Account")',
+            contentType: 'application/json; charset=utf-8',
+            type: 'post',
+
+            success: (function (result) {
+
+                console.log("checking for login/registration errors");
+                console.log(result);
+                var error = "";
+                var isLogin = true;
+                if (result.length > 0) {
+                    for (var e in result) {
+                        if (e == result.length - 1) {
+                            if (result[e] == "Login") { isLogin = true; }
+                            else if (result[e] == "Registration") { isLogin = false; }
+                        }
+                        else {
+                            console.log(e);
+                            error += result[e] + "<br/>";
+                        }
+
+                    }
+
+                    if (isLogin)
+                        $("#loginErrorsList").html(error);
+                    else
+                        $("#registrationErrorsList").html(error);
+
+                    $("#exampleModalLong").modal('show');
+                }
+
+            }),
+            error: (function (xhr, status) {
+                alert(status);
+            })
+
+        });
+
+        });
+
+
+    </script>
+
     <script type="text/javascript">
 
         $(document).ready(function () { $('#div_diagnose_loading_signs').hide(); });
@@ -167,6 +216,8 @@
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
             Login/Register
         </button>
+
+       
 
     </div>
     <hr />

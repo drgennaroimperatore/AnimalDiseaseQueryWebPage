@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AnimalDiseaseQueryWebApp.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Collections.Generic;
 
 namespace AnimalDiseaseQueryWebApp.Controllers
 {
@@ -23,7 +24,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -35,9 +36,9 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -80,16 +81,39 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(Url.Action("Index","Diagnose"));
+                    return RedirectToLocal(Url.Action("Index", "Diagnose"));
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.LoginViewModel.RememberMe });
                 case SignInStatus.Failure:
                 default:
+                   
                     ModelState.AddModelError("", "Unsuccesful login attempt");
-                    return View(model);
+                    ModelState.AddModelError("", "Login");
+                    TempData["Errors"] = ModelState.Values;
+                    return RedirectToLocal(Url.Action("Index", "Diagnose"));
             }
+        }
+        [AllowAnonymous]
+        public JsonResult GetLoginRegistrationErrors()
+        {
+            List<string> errors = new List<string>();
+
+
+            if (TempData["Errors"] != null)
+            {
+                
+                foreach (ModelState modelState in TempData["Errors"] as ICollection<ModelState>)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        errors.Add(error.ErrorMessage);
+                    }
+                }
+            }
+
+            return Json(errors);
         }
 
         //
@@ -121,7 +145,7 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             // Se un utente immette codici non corretti in un intervallo di tempo specificato, l'account dell'utente 
             // viene bloccato per un intervallo di tempo specificato. 
             // Si possono configurare le impostazioni per il blocco dell'account in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -173,13 +197,20 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                         // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                         // await UserManager.SendEmailAsync(user.Id, "Conferma account", "Per confermare l'account, fare clic <a href=\"" + callbackUrl + "\">qui</a>");
 
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Diagnose");
                     }
+                    
                     AddErrors(result);
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Registration");
+                    
+                    TempData["Errors"] = ModelState.Values;
                 }
 
                 // Se si è arrivati a questo punto, significa che si è verificato un errore, rivisualizzare il form
-                return View(model);
+                return RedirectToAction("Index","Diagnose");
             }
         }
 
@@ -452,6 +483,8 @@ namespace AnimalDiseaseQueryWebApp.Controllers
             {
                 ModelState.AddModelError("", error);
             }
+
+           
         }
 
         private ActionResult RedirectToLocal(string returnUrl)
