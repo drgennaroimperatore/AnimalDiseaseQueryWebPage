@@ -6,18 +6,7 @@
 
 }
 
-<script>
 
-   
-    function CheckLoginFormValidity() {
-        var emailformelement = document.getElementById("login_email");
-        var loginFormValid = emailformelement.checkValidity();
-        console.log(loginFormValid);
-        console.log(emailformelement.validationMessage);
-        
-    }
-
-</script>
 
 <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -39,7 +28,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <section id="loginForm">
-                                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", @onsubmit = "CheckLoginFormValidity()" }))
+                                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                                     {
                                         @Html.AntiForgeryToken()
                                         <h4>Please Insert your Credentials</h4>
