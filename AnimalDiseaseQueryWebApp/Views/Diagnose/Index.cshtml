@@ -55,6 +55,18 @@
 
         $(document).ready(function () { $('#div_diagnose_loading_signs').hide(); });
 
+        //$('#exampleModalLong').on('show.bs.modal', function () {
+        //    console.log("login/registration modal shown");
+        //    //$('#myInput').trigger('focus')
+        //})
+
+        $(document).on('show.bs.modal', '#exampleModalLong', function () {
+            console.log('Registration/Login modal shown');
+          //  $('a[data-toggle="tab"]:first').trigger("show");
+            $('.nav-tabs a[href="#login_menu" ]').tab('show');
+
+        })
+
 
     $(function () {
         $('#select_diagnose_animal').change(function () {
