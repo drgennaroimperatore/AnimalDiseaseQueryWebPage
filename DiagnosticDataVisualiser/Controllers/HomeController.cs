@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -423,6 +424,8 @@ ORDER BY
         {
             public string caseID { get; set; }
             public string userCHDisease { get; set; }
+            public string comment { get; set; }
+            public string date { get; set; }
         }
         public class DiseaseRankQuery
         {
@@ -479,7 +482,7 @@ if size(Dset) = 1
 
                 string[] nameAndPercentage = c.userCHDisease.Split(':');
                 string userChosenDiseaseName = nameAndPercentage[0].Trim();
-                float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1], out userChosenDiseasePercentage);
+                float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1].Replace("%", ""), out userChosenDiseasePercentage);
 
                 string caseID = c.caseID.ToString();
                 string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRank WHERE caseID = " + caseID +" ORDER BY rank";
@@ -594,7 +597,7 @@ if size(Dset) = 1
 
                 string[] nameAndPercentage = c.userCHDisease.Split(':');
                 string userChosenDiseaseName = nameAndPercentage[0].Trim();
-                float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1], out userChosenDiseasePercentage);
+                float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1].Replace("%", ""), out userChosenDiseasePercentage);
 
                 string caseID = c.caseID.ToString();
                 string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRankN WHERE caseID = " + caseID + " ORDER BY rank";
@@ -700,13 +703,155 @@ if size(Dset) = 1
                 }
 
             }
-
+            
 
             return Json(result);
         }
 
+        public void PopulateMatchResultsTable(match match, Eddie eddie)
+        {
 
+              /*caseInfo -> diseaseRank
+            setCase ->diseaseRankN*/
+            //if we already have data in here do nothing
+
+          /*  if (match.match_results.ToList().Count > 0)
+                return;*/
+            List<String> animals = eddie.species.Distinct().Select(x => x.speciesName).ToList();
+
+            foreach (String animalName in animals)
+            {
+                string caseRawQuery = @"SELECT caseID, userCHdisease,comment,date FROM caseInfo WHERE species = @p0";
+                var casesFromCaseInfo = eddie.Database.SqlQuery<CaseQuery>(caseRawQuery, animalName).ToList();
+
+                foreach(CaseQuery cq in casesFromCaseInfo)
+                {
+
+                    string[] nameAndPercentage = cq.userCHDisease.Split(':');
+                    string userChosenDiseaseName = nameAndPercentage[0].Trim();
+                    float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1].Replace("%",""), out userChosenDiseasePercentage);
+
+                    string caseID = cq.caseID.ToString();
+                    string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRank WHERE caseID = " + caseID + " ORDER BY rank";
+
+                    var diseaseRank = eddie.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
+                    if (diseaseRank.Count == 0)
+                        continue;
+
+                    float[] firstThreePercs = new float[3];
+                    for (int i = 0; i < 3; i++)
+                        float.TryParse(diseaseRank[i].percentage, out firstThreePercs[i]);
+
+                    string commentContent = cq.comment;
+                    if (String.IsNullOrEmpty(cq.comment))
+                         commentContent = "NO COMMENT";
+                    else
+                    {
+                        if (cq.comment.Length > 200)
+                        {
+                            commentContent = cq.comment.Substring(0, 200);
+                        }
+                    }
+
+
+
+                    match.match_results.Add(new match_results
+                    {
+                        caseID = Convert.ToInt32(cq.caseID + 1000),
+                        Ed_dis1 = diseaseRank[0].diseaseName,
+                        Ed_perc1 = firstThreePercs[0],
+                        Ed_dis2 = diseaseRank[1].diseaseName,
+                        Ed_perc2 = firstThreePercs[1],
+                        Ed_dis3 = diseaseRank[2].diseaseName,
+                        Ed_perc3 = firstThreePercs[2],
+                        user_dis = userChosenDiseaseName,
+                        user_perc = userChosenDiseasePercentage,
+                        comment = commentContent,
+                        obv_date = Convert.ToDateTime(cq.date),
+                        species = animalName
+
+                    });//add 100 to cases from case info
+                }
+
+                 caseRawQuery = @"SELECT caseID, userCHdisease,comment,date FROM setCase WHERE species = @p0";
+                 casesFromCaseInfo = eddie.Database.SqlQuery<CaseQuery>(caseRawQuery, animalName).ToList();
+
+                foreach (CaseQuery cq in casesFromCaseInfo)
+                {
+
+                    string[] nameAndPercentage = cq.userCHDisease.Split(':');
+                    string userChosenDiseaseName = nameAndPercentage[0].Trim();
+                    float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1].Replace("%", ""), out userChosenDiseasePercentage);
+
+                    string caseID = cq.caseID.ToString();
+                    string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRankN WHERE caseID = " + caseID + " ORDER BY rank";
+
+                    var diseaseRank = eddie.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
+                    if (diseaseRank.Count == 0 || diseaseRank.Count < 3)
+                        continue;
+
+                    float[] firstThreePercs = new float[3];
+                    for (int i = 0; i < 3; i++)
+                        float.TryParse(diseaseRank[i].percentage, out firstThreePercs[i]);
+
+                    string commentContent = cq.comment;
+                    if (String.IsNullOrEmpty(cq.comment))
+                        commentContent = "NO COMMENT";
+                    else
+                    {
+                        if (cq.comment.Length>200)
+                        {
+                           commentContent = cq.comment.Substring(0, 200);
+                        }
+                    }
+                    
+
+                    match.match_results.Add(new match_results
+                    {
+                        caseID = Convert.ToInt32(cq.caseID ),
+                        Ed_dis1 = diseaseRank[0].diseaseName,
+                        Ed_perc1 = firstThreePercs[0],
+                        Ed_dis2 = diseaseRank[1].diseaseName,
+                        Ed_perc2 = firstThreePercs[1],
+                        Ed_dis3 = diseaseRank[2].diseaseName,
+                        Ed_perc3 = firstThreePercs[2],
+                        user_dis = userChosenDiseaseName,
+                        user_perc = userChosenDiseasePercentage,
+                        comment = commentContent,
+                        obv_date = Convert.ToDateTime(cq.date),
+                        species = animalName,
+                        
+
+                    });//add 100 to cases from case info
+                }
+            }
+
+            try
+            {
+                // Your code...
+                // Could also be before try if you know the exception occurs in SaveChanges
+
+                match.SaveChanges();
+            }
+            catch (DbEntityValidationException e)
+            {
+                foreach (var eve in e.EntityValidationErrors)
+                {
+                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+
+            }
+
+               
+
+        }
     }
-
-
 }
+
+  
