@@ -259,7 +259,7 @@ namespace AnimalDiseaseQueryWebApp.Models
         public int ID { get; set; }
         public int SignID { get; set; }
         public int CaseID { get; set; }
-        public SignPresence SignPresence { get; set; }
+        public string SignPresence { get; set; }
 
         public virtual Sign Sign { get; set;}
         public virtual Case Case { get; set; }

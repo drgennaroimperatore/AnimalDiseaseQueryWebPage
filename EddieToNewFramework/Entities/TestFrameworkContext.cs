@@ -334,7 +334,7 @@ namespace EddieToNewFramework
                     .HasColumnName("SignID")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.SignPresence).HasColumnType("int(11)");
+                entity.Property(e => e.SignPresence).HasColumnType("varchar(11)");
 
                 entity.HasOne(d => d.Case)
                     .WithMany(p => p.SignForCases)

@@ -41,9 +41,18 @@ namespace DDNF.Controllers
         {
             //comment
             HomeViewModel model = new HomeViewModel();
-            model.SpeciesInEddie = context.Animals.Select(s => s.Name).Distinct().ToList();
-            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            model.BuildVersion = version.ToString();
+            try
+            {
+               
+                model.SpeciesInEddie = context.Animals.Select(s => s.Name).Distinct().ToList();
+                Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                model.BuildVersion = version.ToString();
+            }
+
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             return View(model);
         }

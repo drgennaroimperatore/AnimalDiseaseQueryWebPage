@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Reflection;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace EddieToNewFramework
 {
@@ -114,8 +115,12 @@ namespace EddieToNewFramework
             }
 
 
-            //CopyCaseData(CASE_INFO_TABLE);
+
+
+            CopyCaseData(CASE_INFO_TABLE);
             CopyCaseData(SET_CASE_TABLE);
+
+            Console.WriteLine("ALL CASES COPIED PLEASE PRESS ENTER...");
 
 
             CleanUp();
@@ -159,7 +164,7 @@ namespace EddieToNewFramework
 
             if (tableName.Equals(SET_CASE_TABLE))
             {
-                Console.WriteLine("Copying Cases From " + SET_CASE_TABLE);
+                Console.WriteLine("Copying Cases From " + tableName);
 
                 caseData = eddie.SetCase.Select
                       (c => new EddieCase()
@@ -177,13 +182,15 @@ namespace EddieToNewFramework
                           Sex = c.Sex,
                           Species = c.Species,
                           UserChdisease = c.UserChdisease,
-                          UserChTreatment = c.UserChtreatment
+                          UserChTreatment = c.UserChtreatment,
+                          
 
                       }).ToList();
 
             }
             else if (tableName.Equals(CASE_INFO_TABLE))
             {
+                Console.WriteLine("Copying Cases From " + tableName);
                 caseData = eddie.CaseInfo.Select
                  (c => new EddieCase()
                  {
@@ -207,7 +214,41 @@ namespace EddieToNewFramework
 
             }
             Console.WriteLine("Total Cases: " + caseData.Count);
+            Console.WriteLine("Calculating cases per thread");
+            int nOfThreads = 4;
+            int batches = (int)Math.Floor((double)caseData.Count / nOfThreads);
+            int remainder = caseData.Count % nOfThreads;
 
+            Console.WriteLine("Cases per thread " + batches);
+            Console.WriteLine("Remainder " + remainder);
+
+            /*  for (int i = 0; i < nOfThreads; i++)
+              {
+                  Console.WriteLine("Start: " + i * batches);
+                  Console.WriteLine("End: " + (batches + (i * batches) - 1));
+
+                  int startIndex = i * batches;
+                  int endIndex = batches + (i * batches) - 1;
+
+
+
+              }*/
+
+
+            ProcessCases(tableName, caseData, 0, 0);
+
+
+
+
+        }
+
+
+           
+
+  
+
+        private int ProcessCases(string tableName, List<EddieCase> caseData,int startIndex, int endIndex)
+        {
             foreach (EddieCase c in caseData)
             {
                 int animalID = -1;
@@ -215,12 +256,12 @@ namespace EddieToNewFramework
                 int ownerID = -1;
                 try
                 {
-                    string logFileStartLine = "Adding Case From " + SET_CASE_TABLE + " ID: " + c.CaseId;
+                    string logFileStartLine = "Adding Case From " + tableName + " ID: " + c.CaseId;
                     Console.WriteLine(logFileStartLine);
 
                     if (CheckIfCaseWasAlreadyInserted(c.CaseId, tableName)) // skip if this case was already inserted 
                         continue;
-                   // logFileWriter.WriteLine(logFileStartLine);
+                    // logFileWriter.WriteLine(logFileStartLine);
 
                     #region GENERAL CASE INFORMATION
                     Cases newCase = new Cases();
@@ -233,7 +274,7 @@ namespace EddieToNewFramework
                     newCase.DateOfCaseObserved = caseDate;
 
                     newCase.OriginDbname = "Eddie";
-                    newCase.OriginTableName = SET_CASE_TABLE;
+                    newCase.OriginTableName = tableName;
                     newCase.OriginId = c.CaseId;
 
                     newCase.Location = c.Location + "," + c.Region;
@@ -246,13 +287,15 @@ namespace EddieToNewFramework
                     ownerID = IdentifyOrCreateOwnerOfCase(c.Owner, c.Region, c.Location);
 
                     newCase.PatientId = IdentifyOrCreateNewPatient(animalID, ownerID);
+                    
                     #endregion
 
                     #region INFO ON DISEASE CHOSEN BY USER
                     string[] diseaseInfo = GetInfoOnDiseaseChosenByUser(c.UserChdisease);
                     newCase.DiseaseChosenByUserId = GetDiseaseID(diseaseInfo[0]);
-                    float likelihoodOfDiseaseChosenByUser; float.TryParse(diseaseInfo[1], out likelihoodOfDiseaseChosenByUser);
+                    float likelihoodOfDiseaseChosenByUser; float.TryParse(diseaseInfo[1].Trim(), out likelihoodOfDiseaseChosenByUser);
                     newCase.LikelihoodOfDiseaseChosenByUser = likelihoodOfDiseaseChosenByUser;
+                    newCase.RankOfDiseaseChosenByUser = GetRankOfDiseaseChosenByUser(c.CaseId, tableName);
                     #endregion
 
                     ReturnValue DiseasePredictedByApp = GetInfoOnDiseasePredictedByAppRankedFirst(c.CaseId, tableName);
@@ -264,7 +307,7 @@ namespace EddieToNewFramework
 
                     newCase.DiseasePredictedByAppId = DiseasePredictedByApp.ID;
 
-                   
+
 
                     #region INFO ON TREATMENT CHOSEN BY USER
                     //!!!TO DO CHANGE THIS WHEN TREATMENT DESIGH IS COMPLETE!!!!!
@@ -299,15 +342,15 @@ namespace EddieToNewFramework
                 #endregion
 
                 #region INFO ON RESULTS OF THE CASE
-               ReturnValue ResultsOfTheCaseInsertionOutcome = GetResultsForCaseAndPopulateTable(c.CaseId, currentCaseID, tableName);
+                ReturnValue ResultsOfTheCaseInsertionOutcome = GetResultsForCaseAndPopulateTable(c.CaseId, currentCaseID, tableName);
                 if (ResultsOfTheCaseInsertionOutcome.ThereWasAnError)
                     continue;
                 #endregion
 
                 Console.WriteLine("Added Case Succesfully");
-               // logFileWriter.WriteLine("Added Case {0} from {1} Successfully", c.CaseId, tableName);
+                // logFileWriter.WriteLine("Added Case {0} from {1} Successfully", c.CaseId, tableName);
             }
-
+            return 1;
         }
 
         private bool CheckIfCaseWasAlreadyInserted(int originalCaseID, string tableName)
@@ -444,6 +487,69 @@ namespace EddieToNewFramework
             return ADDB.Diseases.Where(x => x.Name.Equals(diseaseLookupDictionary[diseaseName])).First().Id;
         }
 
+        private int GetRankOfDiseaseChosenByUser(int caseId, string tableName)
+        {
+            bool thereWasAProblem = false;
+            string diseaseRankTableName = "";
+            int result = -1;
+
+            if (tableName.Equals(SET_CASE_TABLE))
+            {
+                //disease n (same rule applies join with newer table)
+                diseaseRankTableName = "diseaseRankN";
+
+            }
+            else if (tableName.Equals(CASE_INFO_TABLE))
+            {
+                //diseaseRank
+                diseaseRankTableName = "diseaseRank";
+
+            }
+
+
+            string rawSQL = "SELECT " 
+                + diseaseRankTableName + ".percentage," 
+                + diseaseRankTableName + ".diseaseName," 
+                + diseaseRankTableName + ".caseID,"
+                + diseaseRankTableName + ".ID," 
+                + diseaseRankTableName+".rank"+
+                " FROM " + diseaseRankTableName + "," + tableName +
+                " WHERE " + diseaseRankTableName + ".caseID=@p0 " +
+                "AND " + tableName + ".caseID=@p0 " +
+                "AND " + diseaseRankTableName + ".diseaseName= (SELECT SUBSTRING_INDEX("+tableName+ ".userCHdisease, ':', 1) as result) " +
+                "ORDER BY rank ASC";
+
+            try
+            {
+#pragma warning disable EF1000 // Possible SQL injection vulnerability.
+
+                if (tableName.Equals(SET_CASE_TABLE))
+                {
+                    List<DiseaseRankN> diseaseRankNs = eddie.DiseaseRankN.FromSql(rawSQL, caseId).ToList();
+                    result = eddie.DiseaseRankN.FromSql(rawSQL, caseId).ToList()[0].Rank;
+                }
+                else if (tableName.Equals(CASE_INFO_TABLE))
+                {
+                    List<DiseaseRank> diseaseRankNs = eddie.DiseaseRank.FromSql(rawSQL, caseId).ToList();
+                    result = eddie.DiseaseRank.FromSql(rawSQL, caseId).ToList()[0].Rank;
+                   
+                }
+
+
+
+                }
+
+            catch(Exception e )
+            {
+                thereWasAProblem = true;
+              
+                logFileWriter.WriteLine("Problem with {0} in method GetRankOfDiseaseChosenByUser from table {1}", caseId, tableName);
+                logFileWriter.WriteLine("Excpetion details: {0} {1}", e.Message, e.StackTrace);
+            }
+
+            return result;
+        }
+
         private DiseasePredictedByUserReturnValue GetInfoOnDiseasePredictedByAppRankedFirst(int caseId, string tableName)
         {
 #pragma warning disable EF1000 // Possible SQL injection vulnerability.
@@ -514,20 +620,20 @@ namespace EddieToNewFramework
             return ADDB.Signs.Where(x => x.Name.Equals(symptomName)).First().Id;
         }
 
-        private int TranslateSymptomPresenceFromEddieToNewFrameWork(string eddieSymptomPresence)
+        private string TranslateSymptomPresenceFromEddieToNewFrameWork(string eddieSymptomPresence)
         {
-            int presence = -1;
+            string presence = "";
 
             switch (eddieSymptomPresence)
             {
                 case "Absent":
-                    presence = 0;
+                    presence = "NP";
                     break;
                 case "Present":
-                    presence = 1;
+                    presence = "P";
                     break;
                 case "Unknown":
-                    presence = 2;
+                    presence = "NO";
                     break;
             }
 
