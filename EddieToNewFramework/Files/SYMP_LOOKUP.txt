@@ -14,6 +14,7 @@ Diarrhoea,DIARRHOEA
 Dysentery/Bloody diarrhoea,DYSENTERY (BLOOD IN FAECES)
 Dyspnoea/ Coughing,DYSPNOEA / COUGHING (DIFFICULTY BREATHING)
 Dyspnoea/Difficulty breathing,DYSPNOEA / COUGHING (DIFFICULTY BREATHING)
+Dyspnoea/ difficulty breathing,DYSPNOEA / COUGHING (DIFFICULTY BREATHING)
 Fecal output (absence of),FECAL OUTPUT (ABSENSE OF)
 Hair loss / Alopecia,HAIR LOSS (ALOPECIA)
 Icterus/ Yellowsh mucous membrane,ICTERUS (YELLOWING OF MEMBRANES)
