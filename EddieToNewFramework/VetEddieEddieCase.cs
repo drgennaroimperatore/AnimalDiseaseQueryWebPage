@@ -4,11 +4,14 @@ using System.Text;
 
 namespace EddieToNewFramework
 {
-    class VetEddieEddieCase
+   public class VetEddieEddieCase
     {
+      
+        public double ucDiseasePercentage { get; set; }
+        public int ucDiseaseRank { get; set; }
         public int CaseId { get; set; }
-        public string Date { get; set; }
-        public string Owner { get; set; }
+        public DateTime Date { get; set; }
+      //  public string Owner { get; set; }
         public string AnimalId { get; set; }
         public string Region { get; set; }
         public string Location { get; set; }
@@ -16,7 +19,6 @@ namespace EddieToNewFramework
         public string Age { get; set; }
         public string Breed { get; set; }
         public string Sex { get; set; }
-        public string Comment { get; set; }
-        public string CommentTreatment { get; set; }
+
     }
 }

@@ -30,6 +30,7 @@ namespace EddieToNewFramework
         public virtual DbSet<SuspectCases> SuspectCases { get; set; }
         public virtual DbSet<TreatmentDiseases> TreatmentDiseases { get; set; }
         public virtual DbSet<Treatments> Treatments { get; set; }
+       
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
