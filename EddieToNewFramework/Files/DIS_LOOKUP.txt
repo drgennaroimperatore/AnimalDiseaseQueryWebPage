@@ -1,9 +1,12 @@
 Abscess /Pus,PUS / ABCESS
+Abscess,PUS / ABCESS
 AHS,AHS
+African horse sickness,AHS
 Anthrax,ANTHRAX
 Ascaris_foals,ASCARIS_FOALS
 Babesiosis,BABESIOSIS
 Blackleg,BLACKLEG
+Blackleg /Black quarter,BLACKLEG
 Brucellosis,BRUCELLOSIS
 Camel calf diarrhoea,CAMEL CALF DIARRHOEA
 CBPP,CBPP
@@ -19,15 +22,21 @@ GI parasites,GI_PARASITE
 GI_non-infectious_colic,GI_NON-INFECTIOUS_COLIC
 Habronemiasis,HABRONEMIASIS
 Haemochosis,HAEMONCHOSIS
+Haemonchosis,HAEMONCHOSIS
 Heat_stress,HEAT_STRESS
+Heat stress,HEAT_STRESS
 Hemorrhagic septicemia,HEMORRHAGIC SEPTICEMIA
 Hypocalcemia / Pregnancy toxemia,HYPOCALCEMIA / PREGNANCY TOX.
+Hypoglycemia /Pregnancy toxemia,HYPOCALCEMIA / PREGNANCY TOX.
 LSD,LSD
 Lungworm,LUNGWORM
+Lungworm /Verminous pneumonia,LUNGWORM
 Mange mite,MANGE MITE
+Mange mites,MANGE MITE
 Mastitis,MASTITIS
 Nasal bot,NASAL BOT
 Pasteurollosis,PASTEUROLLOSIS
+Pasteurellosis_pneumonic,PASTEUROLLOSIS 
 Plant poisoning,PLANT POISONING
 Pox,POX
 PPR,PPR
@@ -39,6 +48,7 @@ Resp_upper_bact,RESP_UP_BACT
 Resp_viral,RESP_VIRAL
 Strangles,STRANGLES
 Sudden death/UnkownDis,SDS / UNKNOWN CAMEL DISEASE
+Sudden death_Unkown D+,SDS / UNKNOWN CAMEL DISEASE
 Tetanus,TETANUS
 Trichostrongylosis,TRICHOSTRONGIULOSIS
 Trypanosomosis,TRYPANOSOMOSIS

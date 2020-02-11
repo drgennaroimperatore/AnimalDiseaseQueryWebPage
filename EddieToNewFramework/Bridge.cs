@@ -16,6 +16,12 @@ namespace EddieToNewFramework
             public bool ThereWasAnError { get; set; }
         }
 
+        public class ResultReturnValue: ReturnValue
+        {
+            public List<ResultForCases> resultForCase { get; set; }
+        }
+
+        
 
         protected TestFrameworkContext ADDB;
         
@@ -88,6 +94,7 @@ namespace EddieToNewFramework
         protected abstract bool CheckIfCaseWasAlreadyInserted(int originalCaseID, string tableName);
         protected abstract void CleanUpNewPatientAndNewOwnerAsAResultOfAnError(int patientID, int ownerID);
         protected abstract int IdentifyOrCreateOwnerOfCase(string name, string region, string location);
+        protected abstract int IdentifyOrCreateNewPatient(int animalID, int ownerID);
 
         protected int GetAnimalIDBasedOnCaseInfo(string name, string sex, string age)
         {
@@ -143,7 +150,18 @@ namespace EddieToNewFramework
 
         protected int GetDiseaseID(string diseaseName)
         {
-            return ADDB.Diseases.Where(x => x.Name.Equals(diseaseLookupDictionary[diseaseName])).First().Id;
+            string lookup = "";
+            try
+            {
+                lookup = diseaseLookupDictionary[diseaseName];
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(diseaseName + " not Found in disease lookup dictionary");
+            }
+
+            return ADDB.Diseases.Where(x => x.Name.Equals(lookup)).First().Id;
         }
 
         protected int GetSignID(string signName)

@@ -349,7 +349,7 @@ namespace EddieToNewFramework
 
         
 
-        private int IdentifyOrCreateNewPatient(int animalID, int ownerID)
+        protected override int IdentifyOrCreateNewPatient(int animalID, int ownerID)
         {
             //this method tries to identify the patient to see if two cases are the same
             //for the moment we'll treat each case as dealing with one patient
