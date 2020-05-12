@@ -52,6 +52,7 @@ namespace DDNF.Controllers
             catch(Exception e)
             {
                 Console.WriteLine(e.Message);
+                return View(e.Message);
             }
 
             return View(model);

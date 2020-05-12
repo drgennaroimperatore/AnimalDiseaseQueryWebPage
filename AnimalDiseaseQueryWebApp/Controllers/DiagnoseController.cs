@@ -17,17 +17,24 @@ namespace AnimalDiseaseQueryWebApp.Controllers
         // GET: Diagnose
         public ActionResult Index(ADDB context, DiagnoseViewModel model)
         {
-
-            if (!User.Identity.IsAuthenticated)
+            try
             {
-                Console.WriteLine("Auth");
+
+                if (!User.Identity.IsAuthenticated)
+                {
+                    Console.WriteLine("Auth");
+                }
+
+
+                model.animals = context.Animals.ToList();
+
+                if (context.SignCore.Count() == 0)
+                    LoadSignsMasterList(context); //load the signcore table if the signcore table is empty
             }
-
-
-            model.animals = context.Animals.ToList();
-
-            if (context.SignCore.Count() == 0)
-                LoadSignsMasterList(context); //load the signcore table if the signcore table is empty
+            catch(Exception e)
+            {
+                return View(e.Message);
+            }
 
             return View(model);
         }

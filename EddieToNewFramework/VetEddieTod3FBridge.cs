@@ -40,10 +40,32 @@ namespace EddieToNewFramework
             throw new NotImplementedException();
         }
 
+        public DateTime GetLatestImportedCase()
+        {
+            DateTime date = new DateTime();
+
+            try
+            {
+              date=  testFrameworkContext.Cases.Where(c => c.OriginDbname != "D3FFramework" && c.OriginDbname!="Eddie").Max(c => c.DateOfCaseObserved);
+
+            }catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            Console.WriteLine(date);
+            return date;
+        }
+
+       
         
 
         protected override void CopyCaseData(string tableName)
         {
+
+            DateTime latestImportedCase = GetLatestImportedCase();
+            string licString = latestImportedCase.ToString("yyyy-MM-dd");
+            
+
             string rawSql = "SELECT veteddie_eddie.cases.*, " +
                 "disease.diseaseName AS ucDiseaseName, " +
                 "appDiseaseRank.percentage AS ucDiseasePercentage, " +
@@ -52,8 +74,9 @@ namespace EddieToNewFramework
                 "appDiseaseRank WHERE disease.diseaseID = cases.ucDisease " +
                 "AND appDiseaseRank.caseID = cases.caseID " +
                 "AND appDiseaseRank.diseaseID = cases.ucDisease " +
+                "AND cases.date > @p0 "+
                 "ORDER BY cases.caseID ASC";
-            string[] parameters = { };
+            string[] parameters = {licString };
 
             List<Cases> copiedCases = new List<Cases>();
 
@@ -193,6 +216,8 @@ namespace EddieToNewFramework
             return transposedSymptoms;
 
         }
+
+
 
 
         public List<ResultForCases> GetTransposedResultsForCase(int originalCaseID)

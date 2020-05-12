@@ -12,7 +12,8 @@ namespace EddieToNewFramework
 
             VetEddieTod3FBridge v2d3f = new VetEddieTod3FBridge("1.0f");
             v2d3f.Initialise();
-            v2d3f.TransposeContents();
+             v2d3f.TransposeContents();
+            //v2d3f.GetLatestImportedCase();
 
             Console.ReadLine();
         }

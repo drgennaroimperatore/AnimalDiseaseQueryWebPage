@@ -10,6 +10,7 @@ namespace DDNF.Models
         public ADDB()
             : base("name=Model1")
         {
+            
         }
 
         public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }

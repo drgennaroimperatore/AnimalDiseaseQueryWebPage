@@ -38,7 +38,7 @@ namespace EddieToNewFramework
             {
 
                 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=localhost;port=3306;database=dbs283960;uid=root;password=sha9tTer");
+                optionsBuilder.UseMySql("server=188.121.44.186;port=3306;database=DebugFramework;uid=gennaro2;password=sha9tTer");
             }
         }
 

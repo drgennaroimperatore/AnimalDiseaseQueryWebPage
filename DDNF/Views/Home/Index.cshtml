@@ -172,7 +172,7 @@
 
 
 
-     function drawDiseaseHistogramByAnimalandMonth(species =' CATTLE', queryYear = '2019') {
+     function drawDiseaseHistogramByAnimalandMonth(species =' CATTLE', queryYear = '2020') {
 
          $("#histogram_month_disease_div").html('<div id="spinner_disease_animal_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem; " role="status"> < span class="sr-only" > Loading...</span > </div > ');
 
@@ -246,7 +246,7 @@
 
     }
 
-    function drawCasesBySpeciesAndYear(queryYear = '2019') {
+    function drawCasesBySpeciesAndYear(queryYear = '2020') {
 
         $("#histogram_cases_year_div").html('<div id= "spinner_cases_year_chart" class= "spinner-grow text-primary" style = "width: 6rem; height: 6rem;" role = "status" ><span class="sr-only">Loading...</span> </div >');
 
@@ -365,6 +365,7 @@
 
         <div>
             <select id="select_year_casesbyMonthHistogram">
+                <option value="2020">2020</option>
                 <option value="2019">2019</option>
                 <option value="2018">2018</option>
 
@@ -393,6 +394,7 @@
                 </select>
 
                 <select id="select_year_diseasebyMonthHistogram">
+                    <option value="2020">2020</option>
                     <option value="2019">2019</option>
                     <option value="2018">2018</option>
 

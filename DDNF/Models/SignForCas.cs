@@ -15,7 +15,7 @@ namespace DDNF.Models
 
         public int CaseID { get; set; }
 
-        public int SignPresence { get; set; }
+        public string SignPresence { get; set; }
 
         public virtual Case Case { get; set; }
 
