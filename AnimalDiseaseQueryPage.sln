@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateForAuthentication",
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "DLSandbox", "DLSandbox\DLSandbox.pyproj", "{B36585A5-2B7A-4CC7-AA4F-C135E5F0A7F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HerdManager", "HerdManager\HerdManager.csproj", "{39DCD3BD-9896-42BC-AC52-D86AA00C8944}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,12 @@ Global
 		{B36585A5-2B7A-4CC7-AA4F-C135E5F0A7F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B36585A5-2B7A-4CC7-AA4F-C135E5F0A7F0}.PublishToDevWeb|Any CPU.ActiveCfg = Release|Any CPU
 		{B36585A5-2B7A-4CC7-AA4F-C135E5F0A7F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39DCD3BD-9896-42BC-AC52-D86AA00C8944}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39DCD3BD-9896-42BC-AC52-D86AA00C8944}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39DCD3BD-9896-42BC-AC52-D86AA00C8944}.PublishToDevWeb|Any CPU.ActiveCfg = Release|Any CPU
+		{39DCD3BD-9896-42BC-AC52-D86AA00C8944}.PublishToDevWeb|Any CPU.Build.0 = Release|Any CPU
+		{39DCD3BD-9896-42BC-AC52-D86AA00C8944}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39DCD3BD-9896-42BC-AC52-D86AA00C8944}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
