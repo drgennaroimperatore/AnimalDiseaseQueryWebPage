@@ -30,13 +30,15 @@ namespace EddieToNewFramework
         public virtual DbSet<SuspectCases> SuspectCases { get; set; }
         public virtual DbSet<TreatmentDiseases> TreatmentDiseases { get; set; }
         public virtual DbSet<Treatments> Treatments { get; set; }
+       
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=188.121.44.186;port=3306;database=TestFramework;uid=gennaro2;password=sha9tTer");
+
+                #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseMySql("server=localhost;port=3306;database=dbs283960;uid=root;password=sha9tTer");
             }
         }
 

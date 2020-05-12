@@ -307,13 +307,13 @@ namespace AnimalDiseaseQueryWebApp.Controllers
                     switch (signPresence)
                     {
                         case "P":
-                            signForCase.SignPresence = SignPresence.PRESENT;
+                            signForCase.SignPresence = "P";
                             break;
                         case "NP":
-                            signForCase.SignPresence = SignPresence.NOT_PRESENT;
+                            signForCase.SignPresence = "NP";
                             break;
                         case "NO":
-                            signForCase.SignPresence = SignPresence.NOT_OBSERVED;
+                            signForCase.SignPresence = "NO";
                             break;
                     }
 
