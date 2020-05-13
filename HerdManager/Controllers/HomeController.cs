@@ -26,5 +26,15 @@ namespace HerdManager.Controllers
 
             return View();
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult InsertHerd(HDB context, Herd herd)
+        {
+            
+
+            return Json("Success");
+        }
+
     }
 }
