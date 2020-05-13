@@ -189,13 +189,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animal.cs" />
+    <Compile Include="AnimalMovementsForDynamicEvent.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="BirthsForProductivityEvent.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DeathsForDynamicEvent.cs" />
+    <Compile Include="Disease.cs" />
+    <Compile Include="DiseasesForHealthEvent.cs" />
+    <Compile Include="DynamicEvent.cs" />
+    <Compile Include="Farmer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HDB.cs" />
+    <Compile Include="HealthEvent.cs" />
+    <Compile Include="Herd.cs" />
+    <Compile Include="HerdVisit.cs" />
+    <Compile Include="MilkForProductivityEvent.cs" />
     <Compile Include="Models\Animal.cs" />
     <Compile Include="Models\Case.cs" />
     <Compile Include="Models\C__MigrationHistory.cs" />
@@ -212,7 +225,10 @@
     <Compile Include="Models\SignForCas.cs" />
     <Compile Include="Models\SuspectCas.cs" />
     <Compile Include="Models\Treatment.cs" />
+    <Compile Include="ProductivityEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sign.cs" />
+    <Compile Include="SignsForHealthEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
