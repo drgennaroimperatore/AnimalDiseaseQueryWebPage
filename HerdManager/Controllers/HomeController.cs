@@ -28,12 +28,39 @@ namespace HerdManager.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
+
+       public class InsertionOutcome
+        {
+          public  String outcome { get; set; }
+          public  String ID { get; set; }
+
+        }
+
+        public JsonResult InsertFarmer(HDB context, Farmer farmer)
+        {
+            context.Farmers.Add(farmer);
+            context.SaveChanges();
+            return Json(new InsertionOutcome { outcome = "Success", ID = farmer.ID.ToString() });
+
+
+
+        }
+     
         public JsonResult InsertHerd(HDB context, Herd herd)
         {
-            
 
-            return Json("Success");
+            context.Herds.Add(herd);
+            context.SaveChanges();
+
+            return Json( new InsertionOutcome { outcome ="Success", ID = herd.ID.ToString() });
+        }
+
+        public JsonResult InsertHerdVisit(HDB context, HerdVisit herdVisit)
+        {
+            context.HerdVisits.Add(herdVisit);
+            context.SaveChanges();
+
+            return Json(new InsertionOutcome { outcome = "Success", ID = herdVisit.ID.ToString() });
         }
 
     }
