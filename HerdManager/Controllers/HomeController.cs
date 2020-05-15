@@ -62,6 +62,60 @@ namespace HerdManager.Controllers
 
             return Json(new InsertionOutcome { outcome = "Success", ID = herdVisit.ID.ToString() });
         }
+        #region HEALTH EVENTS
+        public JsonResult InsertHealthEvent (HDB context, HealthEvent healthEvent)
+        {
+            context.HealthEvents.Add(healthEvent);
+            context.SaveChanges();
+
+            return Json(new InsertionOutcome { outcome = "Success", ID = healthEvent.ID.ToString() });
+        }
+
+        public JsonResult InsertDiseaseForHealthEvent(HDB context, DiseasesForHealthEvent dhe)
+        {
+            context.DiseasesForHealthEvents.Add(dhe);
+            context.SaveChanges();
+
+            return Json(new InsertionOutcome { outcome = "Success", ID = dhe.ID.ToString() });
+        }
+
+        public JsonResult InsertSignForHealthEvent(HDB context, SignsForHealthEvent she)
+        {
+            context.SignsForHealthEvents.Add(she);
+            context.SaveChanges();
+
+            return Json(new InsertionOutcome { outcome = "Success", ID = she.ID.ToString() });
+        }
+
+        #endregion
+
+        #region PRODUCTIVITY EVENT
+        [AllowAnonymous]
+        public JsonResult InsertProductivityEvent(HDB context, ProductivityEvent productivityEvent)
+        {
+            context.ProductivityEvents.Add(productivityEvent);
+            context.SaveChanges();
+
+            return Json(new InsertionOutcome { outcome = "Success", ID = productivityEvent.ID.ToString()});
+        }
+
+        public JsonResult InsertMilkForProductivityEvent(HDB context, MilkForProductivityEvent mpe)
+        {
+            context.MilkForProductivityEvents.Add(mpe);
+            context.SaveChanges();
+
+            return Json(new InsertionOutcome { outcome = "Success", ID = mpe.ID.ToString() });
+        }
+        [AllowAnonymous]
+        public JsonResult InsertBirthsForProductivityEvent(HDB context, BirthsForProductivityEvent bpe)
+        {
+            context.BirthsForProductivityEvents.Add(bpe);
+            context.SaveChanges();
+
+            return Json(new InsertionOutcome { outcome = "Success", ID = bpe.ID.ToString() });
+        }
+
+        #endregion
 
     }
 }
