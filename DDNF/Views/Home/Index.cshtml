@@ -90,9 +90,10 @@
 
                         // Set chart options
                         var options = {
-                            'title': 'Animals In Eddie',
+                            'title': 'Breakdown of Cases by Species',
                             'width': 700,
-                            'height': 900
+                            'height': 900,
+                            'fontsize':16
                         };
 
                         // Instantiate and draw our chart, passing in some options.
@@ -153,10 +154,16 @@
 
                         // Set chart options
                         var options = {
-                            'title': 'Occurences of Diseases in Eddie',
+                            'title': 'Occurences of Diseases by Species',
                             'width': 800,
-                            'height': 300,
-                            'legend': {position:"none"},
+                            'height': 700,
+                            'legend': { position: "none", textStyle: { color: 'blue', fontSize: 16 } },
+                            'hAxes': [
+                                {
+                                   
+                                    textStyle: { color: 'black', fontSize: 10 }
+                                }
+                            ]
                         };
 
                         // Instantiate and draw our chart, passing in some options.
@@ -225,9 +232,10 @@
                         ]);*/
 
                         var options = {
-                            width: 1400,
-                            height: 1200,
-                            legend: { position: 'top', maxLines: 12 },
+                            title :'Species by Date',
+                            width: 900,
+                            height: 600,
+                            legend: { position: 'top', maxLines: 14 },
                             bar: { groupWidth: '95%' },
                             isStacked: true
                         };
@@ -328,6 +336,7 @@
 <div class="jumbotron">
     <h1>Diagnostic Data Visualiser</h1>
     <h6>@Model.BuildVersion</h6>
+    <h6>Total Cases @Model.TotalCases</h6>
 
 </div>
 
@@ -341,6 +350,11 @@
 
     </div>
 
+   
+</div>
+
+<div class="row">
+
     <div class="col-md-6">
         <div>
             <select id="select_animal_diseasebyAnimalBarChart">
@@ -351,17 +365,19 @@
             </select>
         </div>
 
-        <div id="barchart_div">
-            <div id="spinner_disease_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
+    </div>
+
+    <div id="barchart_div">
+        <div id="spinner_disease_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+            <span class="sr-only">Loading...</span>
         </div>
     </div>
+
 </div>
 
 <div class="row">
 
-    <div class="col-md-10">
+    <div class="col-md-2">
 
         <div>
             <select id="select_year_casesbyMonthHistogram">

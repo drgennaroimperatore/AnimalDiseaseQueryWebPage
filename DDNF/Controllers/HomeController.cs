@@ -43,7 +43,7 @@ namespace DDNF.Controllers
             HomeViewModel model = new HomeViewModel();
             try
             {
-               
+                model.TotalCases = context.Cases.Count();
                 model.SpeciesInEddie = context.Animals.Select(s => s.Name).Distinct().ToList();
                 Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
                 model.BuildVersion = version.ToString();
