@@ -46,7 +46,13 @@ namespace EddieToNewFramework
 
             try
             {
-              date=  testFrameworkContext.Cases.Where(c => c.OriginDbname != "D3FFramework" && c.OriginDbname!="Eddie").Max(c => c.DateOfCaseObserved);
+                var casesAlreadyCopied = testFrameworkContext.Cases.Where(c => c.OriginDbname != "D3FFramework" && c.OriginDbname != "Eddie");
+                if (casesAlreadyCopied.Count()==0)
+                {
+                    date = new DateTime(1990, 1, 1);//dummy date in the past
+                }
+                else
+                    date =  testFrameworkContext.Cases.Where(c => c.OriginDbname != "D3FFramework" && c.OriginDbname!="Eddie").Max(c => c.DateOfCaseObserved);
 
             }catch (Exception e)
             {

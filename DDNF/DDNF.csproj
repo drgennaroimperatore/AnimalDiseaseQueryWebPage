@@ -189,7 +189,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animal.cs" />
     <Compile Include="AnimalMovementsForDynamicEvent.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -197,7 +196,6 @@
     <Compile Include="BirthsForProductivityEvent.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DeathsForDynamicEvent.cs" />
-    <Compile Include="Disease.cs" />
     <Compile Include="DiseasesForHealthEvent.cs" />
     <Compile Include="DynamicEvent.cs" />
     <Compile Include="Farmer.cs" />

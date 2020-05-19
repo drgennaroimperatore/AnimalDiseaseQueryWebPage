@@ -14,6 +14,7 @@ CCPP,CCPP
 Coenurosis,COENUROSIS
 Colibacillosis,COLIBACILLOSIS
 Contagious ecthyma /ORF/,CONTAGIOUS ECTHYMA (ORF)
+Contagious ecthyma /Orf/,CONTAGIOUS ECTHYMA (ORF)
 Cowdriosis,COWDRIOSIS
 Epizootic lymphangitis,LYMPHA_EPI
 Fasciolosis,FASCIOLOSIS
