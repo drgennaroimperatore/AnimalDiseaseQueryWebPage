@@ -141,20 +141,20 @@
 
                         //Create the data table.
                         var view = new google.visualization.DataView(dataTable);
-                        view.setColumns([0, 1,
+                     /*   view.setColumns([0, 1,
                             {
                                 calc: "stringify",
                                 sourceColumn: 1,
                                 type: "string",
                                 role: "annotation"
                             },
-                            2]);
+                            2]);*/ //uncomment this to display labels on top of bars... 
 
 
 
                         // Set chart options
                         var options = {
-                            'title': 'Occurences of Diseases by Species',
+                            'title': 'Occurrence of Disease by Species',
                             'width': 800,
                             'height': 700,
                             'legend': { position: "none", textStyle: { color: 'blue', fontSize: 16 } },
@@ -425,3 +425,14 @@
             </div>
         </div>
     </div>
+
+<div>
+    <div style="text-align:center">
+        <h3 style="color:black">Links</h3>
+        <div class="web_app_links">
+            <input class="btn btn-info" type="button" value="D3F Home" onclick="location.href='http://d3f.world/'" />
+            <input class="btn btn-info" type="button" value="About Us" onclick="location.href='http://d3f.world/Landing/AboutUs'" />
+            <input class="btn btn-info" type="button" value="Diagnose" onclick="location.href='http://d3f.world/Diagnose'" />
+        </div>
+    </div>
+</div>
