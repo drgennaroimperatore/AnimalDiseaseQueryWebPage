@@ -288,6 +288,10 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\customselect.css" />
     <Content Include="favicon.ico" />
+    <Content Include="Files\addisunilogo.png" />
+    <Content Include="Files\brookelogo.png" />
+    <Content Include="Files\ebtilogo.png" />
+    <Content Include="Files\unilogo.png" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Models\Model1.edmx.sql" />
@@ -317,6 +321,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Files\Revie et al 2018 - ISVEE poster on D3F and ontologies.pdf" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -389,7 +394,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Files\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
