@@ -9,6 +9,10 @@ namespace VetEddieAutomaticCopier
 {
     class Copier
     {
+        OdbcConnection d3fConnection = new OdbcConnection("DSN=d3fdb");
+
+        OdbcConnection vetEddieConnection = new OdbcConnection("DSN=veteddie");
+
         public void CopyNewCases()
         {
             /*  const string driver = "DRIVER={MySQL ODBC 8.0 ANSI Driver};";
@@ -22,9 +26,7 @@ namespace VetEddieAutomaticCopier
               const string vetEddieConnectionString = driver + server + vetEddieDatabase + user + password + option;*/
 
 
-            OdbcConnection d3fConnection = new OdbcConnection("DSN=d3fdb");
-
-            OdbcConnection vetEddieConnection = new OdbcConnection("DSN=veteddie");
+           
             try
             {
 
@@ -99,6 +101,10 @@ namespace VetEddieAutomaticCopier
                         Console.WriteLine("Checking data integrity before attempting sync...");
                         bool integrityOK = true;
 
+                        Dictionary<String, List<String>> columnLookup = new Dictionary<string, List<string>>();
+
+                       
+
                         foreach (String tableName in vetEddieTableNames)
                         {
                            
@@ -113,7 +119,7 @@ namespace VetEddieAutomaticCopier
                             List<String> d3ftableColumns = new List<string>();
                             List<String> vetEddieTableColumns = new List<string>();
 
-                            while(vetEddieColumnReader.Read())
+                            while (vetEddieColumnReader.Read())
                             {
                                 vetEddieTableColumns.Add(vetEddieColumnReader.GetValue(0).ToString());
                             }
@@ -129,9 +135,23 @@ namespace VetEddieAutomaticCopier
 
                             Console.WriteLine("Found {0} columns in d3f version of vet eddie for table {1}", d3fColumnCount,tableName);
                             Console.WriteLine("Found {0} columns in original vet eddie for table {1}", vetEddieColumnCount, tableName);
-                            
 
+                            if(vetEddieColumnCount != d3fColumnCount)
+                            {
+                                Console.WriteLine("Disparity between column count found in table {0}", tableName);
+                                if (d3fColumnCount > vetEddieColumnCount)
+                                    Console.WriteLine("d3f version of vet eddie has {0} column(s) more than original vet eddie " + (d3fColumnCount - vetEddieColumnCount).ToString());
+                                if(vetEddieColumnCount > d3fColumnCount)
+                                    Console.WriteLine("original version of vet eddie has {0} column(s) more than d3f version of vet eddie " + (vetEddieColumnCount - d3fColumnCount).ToString());
+
+                                integrityOK = false;
+                                break;
+                            }
+
+                            columnLookup.Add(tableName, vetEddieTableColumns);
                             
+                
+                    
                             vetEddieColumnReader.Close();
                             d3fColumnReader.Close();
 
@@ -141,6 +161,29 @@ namespace VetEddieAutomaticCopier
 
                         if(integrityOK)
                         {
+                            Console.WriteLine("Integrity check successful");
+
+                            //StringBuilder insertion = new StringBuilder();
+                            int c = 0;
+
+                            foreach (String tableName in vetEddieTableNames)
+                            {
+
+                                Console.WriteLine("Syncing table {0}/{1}", c,vetEddieTableCount);
+
+
+                                String query = syncTables(tableName, columnLookup[tableName]);
+                                if (query.Equals(""))
+                                    continue;
+                                OdbcCommand insertIntoD3F = new OdbcCommand(query, d3fConnection);
+                                int rowsAffectedByInsertion = insertIntoD3F.ExecuteNonQuery();
+
+                                Console.WriteLine("Sync complete for table {0} ", c);
+
+                                //break; // just do for one for debug,.. 
+                            }
+
+
 
                         }
                         else
@@ -185,7 +228,110 @@ namespace VetEddieAutomaticCopier
         }
 
        
+        private string syncTables(string tableName, List<string> columnNames)
+        {
+            Console.WriteLine("Syncing {0}", tableName);
+            OdbcCommand deletealld3f = new OdbcCommand("DELETE FROM " + tableName, d3fConnection); 
+            OdbcCommand getAllRowsInVetEddieTable = new OdbcCommand("SELECT * FROM "+ tableName,vetEddieConnection);
+            OdbcCommand getRowsCountInVetEddieTable = new OdbcCommand("SELECT COUNT(*) FROM " + tableName,vetEddieConnection);
 
+            int totalRowsinVetEddie = Convert.ToInt32(getRowsCountInVetEddieTable.ExecuteScalar());
+            if (totalRowsinVetEddie == 0)
+                return "";
+      
+
+            int totalRowsDeleted = deletealld3f.ExecuteNonQuery();
+            Console.WriteLine("Cleaned {0} - Total Rows Affected {1} ", tableName, totalRowsDeleted);
+            
+
+
+
+            // queries that return result set are executed by ExecuteReader()
+            // If you are to run queries like insert, update, delete then
+            // you would invoke them by using ExecuteNonQuery() 
+
+            OdbcDataReader rowsInVetEddieTable = getAllRowsInVetEddieTable.ExecuteReader();
+            StringBuilder insertionQuery = new StringBuilder();
+            int progressCount = 0;
+
+            StringBuilder insertIntoD3fStringBuilder = new StringBuilder("INSERT INTO " + tableName);
+            insertIntoD3fStringBuilder.Append(" (");
+
+
+            foreach (String name in columnNames)
+            {
+                insertIntoD3fStringBuilder.Append(name);
+                if (columnNames.IndexOf(name) < columnNames.Count - 1)
+                    insertIntoD3fStringBuilder.Append(",");
+
+            }
+            insertIntoD3fStringBuilder.Append(") ");
+            insertIntoD3fStringBuilder.Append("VALUES");
+
+           int rowIndex = 1;
+
+            while (rowsInVetEddieTable.Read())
+           {
+                 
+                insertIntoD3fStringBuilder.Append("(");
+              
+
+                int columnCount = rowsInVetEddieTable.FieldCount;
+
+                for(int i=0; i<columnCount; i++)
+                {
+                   string val = rowsInVetEddieTable.GetValue(i).ToString();
+                    String type = rowsInVetEddieTable.GetDataTypeName(i);
+                   // Console.Write(" " + type + " ");
+
+                    if(type.Equals("varchar") || type.Equals("date"))
+                    {
+                        insertIntoD3fStringBuilder.Append("'");
+                        insertIntoD3fStringBuilder.Append(val);
+                        
+                        insertIntoD3fStringBuilder.Append("'");
+                    }
+                    else
+                       insertIntoD3fStringBuilder.Append(val);
+                    if (i < columnCount - 1)
+                        insertIntoD3fStringBuilder.Append(",");
+             
+                }
+                insertIntoD3fStringBuilder.Append(")");
+                //Console.WriteLine(insertIntoD3fStringBuilder.ToString());
+                if (rowIndex < totalRowsinVetEddie)
+                    insertIntoD3fStringBuilder.Append(",");
+
+               insertIntoD3fStringBuilder.AppendLine();
+                rowIndex++;
+
+               
+               
+                progressCount++;
+                double progress = ((float)progressCount / (float)totalRowsinVetEddie) * 100.0f;
+                Console.WriteLine("Syncing Progress {0}% ", progress);
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                if(progress< 99)
+                    ClearCurrentConsoleLine();
+
+                // break;//DELETE LATER
+                
+            }
+            
+            rowsInVetEddieTable.Close();
+
+            Console.WriteLine(insertIntoD3fStringBuilder.ToString());
+
+            return insertIntoD3fStringBuilder.ToString();
+        }
+
+        private void ClearCurrentConsoleLine()
+        {
+            int currentLineCursor = Console.CursorTop;
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, currentLineCursor);
+        }
 
 
     }

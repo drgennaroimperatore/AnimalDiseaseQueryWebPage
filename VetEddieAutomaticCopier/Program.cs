@@ -10,6 +10,7 @@ namespace VetEddieAutomaticCopier
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             Copier c = new Copier();
             c.CopyNewCases();
             Console.ReadLine();
