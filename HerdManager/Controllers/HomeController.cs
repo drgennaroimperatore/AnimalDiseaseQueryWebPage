@@ -117,5 +117,9 @@ namespace HerdManager.Controllers
 
         #endregion
 
+        #region DYNAMIC EVENTS
+
+        #endregion
+
     }
 }
