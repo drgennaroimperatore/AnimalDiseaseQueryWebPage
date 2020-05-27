@@ -119,6 +119,30 @@ namespace HerdManager.Controllers
 
         #region DYNAMIC EVENTS
 
+        public JsonResult InsertDynamicEvent(HDB context, DynamicEvent dynamicEvent)
+        {
+            context.DynamicEvents.Add(dynamicEvent);
+            context.SaveChanges();
+
+            return Json(new InsertionOutcome { outcome = "Success", ID = dynamicEvent.ID.ToString() });
+        }
+
+        public JsonResult InsertAnimalMovementForDynamicEvent(HDB context, AnimalMovementsForDynamicEvent amde)
+        {
+            context.AnimalMovementsForDynamicEvents.Add(amde);
+            context.SaveChanges();
+
+            return Json(new InsertionOutcome { outcome = "Success",ID= amde.ID.ToString()});
+        }
+
+        public JsonResult InsertDeathForDynamicEvent(HDB context, DeathsForDynamicEvent dde)
+        {
+            context.DeathsForDynamicEvents.Add(dde);
+            context.SaveChanges();
+
+            return Json(new InsertionOutcome { outcome = "Success", ID = dde.ID.ToString() });
+        }
+
         #endregion
 
     }
