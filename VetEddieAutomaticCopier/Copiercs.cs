@@ -25,8 +25,7 @@ namespace VetEddieAutomaticCopier
               const string D3FconnectionString = driver + server + D3Fdatabase + user + password + option;
               const string vetEddieConnectionString = driver + server + vetEddieDatabase + user + password + option;*/
 
-
-           
+         
             try
             {
 
