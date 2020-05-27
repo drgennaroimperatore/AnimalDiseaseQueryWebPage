@@ -27,6 +27,7 @@ namespace HerdManager
         public virtual DbSet<Sign> Signs { get; set; }
         public virtual DbSet<SignsForHealthEvent> SignsForHealthEvents { get; set; }
         public virtual DbSet<DiseasesForHealthEvent> DiseasesForHealthEvents { get; set; }
+        public virtual DbSet<User> Users { get; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -87,6 +88,14 @@ namespace HerdManager
                 .HasMany(e => e.SignsForHealthEvents)
                 .WithRequired(e => e.Sign)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<User>()
+               .Property(e => e.Name)
+               .IsUnicode(false);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.UUID)
+                .IsUnicode(false);
         }
     }
 }

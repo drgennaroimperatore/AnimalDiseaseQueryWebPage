@@ -62,6 +62,18 @@ namespace EddieToNewFramework
             return date;
         }
 
+        public List<int> GetOriginalIDOfLatestImportedCases(string tableName)
+        {
+            List<int> origIDs = new List<int>();
+            var casesAlreadyCopied = testFrameworkContext.Cases.Where(c => c.OriginDbname != "D3FFramework" && c.OriginDbname != "Eddie");
+            if (casesAlreadyCopied.Count() == 0)
+                return origIDs;
+            var latestCases = casesAlreadyCopied.Select(  x=> new { x.OriginId, x.DateOfCaseObserved}).Where(x => x.DateOfCaseObserved == GetLatestImportedCase());
+            origIDs = latestCases.Select(x => x.OriginId).ToList();
+            return origIDs;
+
+        }
+
        
         
 
@@ -80,15 +92,18 @@ namespace EddieToNewFramework
                 "appDiseaseRank WHERE disease.diseaseID = cases.ucDisease " +
                 "AND appDiseaseRank.caseID = cases.caseID " +
                 "AND appDiseaseRank.diseaseID = cases.ucDisease " +
-                "AND cases.date > @p0 "+
+                "AND cases.date >= @p0 "+
                 "ORDER BY cases.caseID ASC";
             string[] parameters = {licString };
 
             List<Cases> copiedCases = new List<Cases>();
+            List<int> latestIDs = GetOriginalIDOfLatestImportedCases(tableName);
 
             try
             {              
               cases = vetEddieContext.VetEddieCaseQuery.FromSql<VetEddieEddieCase>(rawSql, parameters).ToList();
+                List<VetEddieEddieCase> casesToRemove = cases.Where(x => latestIDs.Contains(x.CaseId)).ToList();
+                cases.RemoveRange(cases.IndexOf(casesToRemove[0]), casesToRemove.Count());
 
                 copiedCases = cases.Select(c =>
               new Cases
@@ -104,6 +119,7 @@ namespace EddieToNewFramework
                   ResultForCases = GetTransposedResultsForCase(c.CaseId),
                   OriginId = c.CaseId,
                   Location = c.Region + "," + c.Location,
+                  OriginTableName = TABLE_NAME,
                   OriginDbname = "veteddie_eddie",
                   Comments = c.CommentDisease,
 
@@ -111,17 +127,26 @@ namespace EddieToNewFramework
                              IdentifyOrCreateOwnerOfCase(c.OwnerName, c.Region, c.Location)),
                   TreatmentChosenByUserId = 1
                }).ToList();
+
+                if(copiedCases.Count==0)
+                {
+                    Console.WriteLine("Database is up to date. No new cases to add");
+                    return;
+                }
+
             } catch(Exception e)
             {
                 Console.WriteLine(e.Message);
             }
             finally
             {
-                Console.WriteLine("Copy process attemp completed");
+                Console.WriteLine("Copy process attempt completed");
                 try
                 {
+                    Console.WriteLine("Saving new Cases");
                     testFrameworkContext.Cases.AddRange(copiedCases);
                     testFrameworkContext.SaveChanges();
+                    Console.WriteLine("New cases added {0} ", copiedCases.Count);
                 }
                 catch (Exception e)
                 {
@@ -235,7 +260,7 @@ namespace EddieToNewFramework
             string rawSql = "SELECT cases.caseID, appDiseaseRank.rank, disease.diseaseName, appDiseaseRank.percentage " +
                 "FROM veteddie_eddie.appDiseaseRank,cases,disease " +
                 "WHERE cases.caseID =@p0 AND appDiseaseRank.diseaseID = disease.diseaseID AND cases.caseID = appDiseaseRank.caseID " +
-                "ORDER BY appDiseaseRank.percentage ASC";
+                "ORDER BY appDiseaseRank.percentage DESC";
 
             try
             {

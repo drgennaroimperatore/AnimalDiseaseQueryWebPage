@@ -168,7 +168,7 @@ namespace VetEddieAutomaticCopier
 
                             foreach (String tableName in vetEddieTableNames)
                             {
-
+                                c++;
                                 Console.WriteLine("Syncing table {0}/{1}", c,vetEddieTableCount);
 
 
@@ -254,8 +254,15 @@ namespace VetEddieAutomaticCopier
             StringBuilder insertionQuery = new StringBuilder();
             int progressCount = 0;
 
+            string[] skip = { "AMH", "ORO", "SOM", "TIG" };
+
             StringBuilder insertIntoD3fStringBuilder = new StringBuilder("INSERT INTO " + tableName);
             insertIntoD3fStringBuilder.Append(" (");
+
+            bool allSkipsHaveBeenRemoved = false;
+            // ignore language columns
+            foreach (string sk in skip)
+               allSkipsHaveBeenRemoved= columnNames.Remove(sk);
 
 
             foreach (String name in columnNames)
@@ -276,10 +283,19 @@ namespace VetEddieAutomaticCopier
                 insertIntoD3fStringBuilder.Append("(");
               
 
+
                 int columnCount = rowsInVetEddieTable.FieldCount;
+                if (allSkipsHaveBeenRemoved)
+                    columnCount = columnCount - skip.Length;//adjust the length of columns if we have removed the language ones
 
                 for(int i=0; i<columnCount; i++)
                 {
+                    if (rowsInVetEddieTable.GetName(i).Equals("AMH") || 
+                        rowsInVetEddieTable.GetName(i).Equals("ORO") || 
+                        rowsInVetEddieTable.GetName(i).Equals("SOM") || 
+                        rowsInVetEddieTable.GetName(i).Equals("TIG"))
+                        continue;
+
                    string val = rowsInVetEddieTable.GetValue(i).ToString();
                     String type = rowsInVetEddieTable.GetDataTypeName(i);
                    // Console.Write(" " + type + " ");
@@ -287,8 +303,24 @@ namespace VetEddieAutomaticCopier
                     if(type.Equals("varchar") || type.Equals("date"))
                     {
                         insertIntoD3fStringBuilder.Append("'");
+
+                        if (type.Equals("date")&& !val.Equals("0000-00-00"))
+                        {
+                            val = val.Split(' ')[0];
+                            //  Console.WriteLine(val);
+                            try
+                            {
+                                DateTime temp = DateTime.ParseExact(val, "dd/MM/yyyy", null);
+                                val = temp.ToString("yyyy-MM-dd");
+                            }
+                            catch(Exception e)
+                            {
+                                Console.WriteLine("Problem with date {0} ", val);
+                            }
+                           
+                           
+                        }
                         insertIntoD3fStringBuilder.Append(val);
-                        
                         insertIntoD3fStringBuilder.Append("'");
                     }
                     else
@@ -305,7 +337,7 @@ namespace VetEddieAutomaticCopier
                insertIntoD3fStringBuilder.AppendLine();
                 rowIndex++;
 
-               
+              //  Console.WriteLine(rowIndex);
                
                 progressCount++;
                 double progress = ((float)progressCount / (float)totalRowsinVetEddie) * 100.0f;

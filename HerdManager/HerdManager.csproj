@@ -247,6 +247,7 @@
     <Compile Include="Sign.cs" />
     <Compile Include="SignsForHealthEvent.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />

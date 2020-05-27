@@ -19,6 +19,7 @@ Cowdriosis,COWDRIOSIS
 Epizootic lymphangitis,LYMPHA_EPI
 Fasciolosis,FASCIOLOSIS
 FMD,FMD
+FMD (Foot & Mouth Disease),FMD
 GI parasites,GI_PARASITE
 GI_non-infectious_colic,GI_NON-INFECTIOUS_COLIC
 Habronemiasis,HABRONEMIASIS
@@ -30,6 +31,7 @@ Hemorrhagic septicemia,HEMORRHAGIC SEPTICEMIA
 Hypocalcemia / Pregnancy toxemia,HYPOCALCEMIA / PREGNANCY TOX.
 Hypoglycemia /Pregnancy toxemia,HYPOCALCEMIA / PREGNANCY TOX.
 LSD,LSD
+LSD (Lumpy Skin Disease/,LSD
 Lungworm,LUNGWORM
 Lungworm /Verminous pneumonia,LUNGWORM
 Mange mite,MANGE MITE
