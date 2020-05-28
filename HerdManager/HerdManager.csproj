@@ -238,6 +238,7 @@
     <Compile Include="HealthEvent.cs" />
     <Compile Include="Herd.cs" />
     <Compile Include="HerdVisit.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MilkForProductivityEvent.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />

@@ -15,8 +15,7 @@ namespace HerdManager
             Farmers = new HashSet<Farmer>();
         }
 
-        public int ID { get; set; }
-
+     
         [Required]
         [StringLength(100)]
         public string Name { get; set; }

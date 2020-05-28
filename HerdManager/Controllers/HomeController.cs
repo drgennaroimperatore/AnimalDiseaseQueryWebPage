@@ -36,13 +36,22 @@ namespace HerdManager.Controllers
 
         }
 
+        public JsonResult InsertUser(HDB context, HerdManager.User user)
+        {
+            if (context.Users.Where(x => x.UUID.Equals(user.UUID)).Count() == 0)
+            {
+                context.Users.Add(user);
+                context.SaveChanges();
+            }
+            return Json(new InsertionOutcome { outcome = "Success", ID = "200" });
+        }
+
         public JsonResult InsertFarmer(HDB context, Farmer farmer)
         {
             context.Farmers.Add(farmer);
             context.SaveChanges();
+
             return Json(new InsertionOutcome { outcome = "Success", ID = farmer.ID.ToString() });
-
-
 
         }
      

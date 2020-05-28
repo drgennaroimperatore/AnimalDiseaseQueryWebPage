@@ -31,7 +31,7 @@ namespace HerdManager
         [StringLength(100)]
         public string kebele { get; set; }
 
-        public int UserID { get; set; }
+        public string UserID { get; set; }
 
         public virtual User User { get; set; }
     }

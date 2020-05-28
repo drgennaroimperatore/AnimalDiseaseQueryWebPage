@@ -27,7 +27,7 @@ namespace HerdManager
         public virtual DbSet<Sign> Signs { get; set; }
         public virtual DbSet<SignsForHealthEvent> SignsForHealthEvents { get; set; }
         public virtual DbSet<DiseasesForHealthEvent> DiseasesForHealthEvents { get; set; }
-        public virtual DbSet<User> Users { get; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
