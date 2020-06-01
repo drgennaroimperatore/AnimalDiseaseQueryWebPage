@@ -27,7 +27,7 @@ namespace HerdManager
         public virtual DbSet<Sign> Signs { get; set; }
         public virtual DbSet<SignsForHealthEvent> SignsForHealthEvents { get; set; }
         public virtual DbSet<DiseasesForHealthEvent> DiseasesForHealthEvents { get; set; }
-        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<ILRIUser> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -89,11 +89,11 @@ namespace HerdManager
                 .WithRequired(e => e.Sign)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<ILRIUser>()
                .Property(e => e.Name)
                .IsUnicode(false);
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<ILRIUser>()
                 .Property(e => e.UUID)
                 .IsUnicode(false);
         }
