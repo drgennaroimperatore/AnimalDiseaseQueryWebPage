@@ -81,8 +81,7 @@ namespace HerdManager.Controllers
 
         public JsonResult InsertFarmer(HDB context, Farmer farmer)
         {
-            try
-            {
+          
                 if(context.Farmers.Count()>0)
                 {
                     if(context.Farmers.Select(f => f.ID).Contains(farmer.ID))
@@ -94,49 +93,8 @@ namespace HerdManager.Controllers
          
                 context.Farmers.Add(farmer);
                 context.SaveChanges();
-            }
-            catch (DbUpdateException dbu)
-            {
-                var builder = new StringBuilder("A DbUpdateException was caught while saving changes. ");
-
-                try
-                {
-                    foreach (var result in dbu.Entries)
-                    {
-                        builder.AppendFormat("Type: {0} was part of the problem. ", result.Entity.GetType().Name);
-                        Debug.WriteLine(result.Entity.GetType().ToString());
-                    }
-                }
-                catch (Exception e)
-                {
-                    builder.Append("Error parsing DbUpdateException: " + e.ToString());
-                }
-
-                Debug.WriteLine(builder.ToString());
-                    }
-
-         
-
-            catch (DbEntityValidationException e)
-            {
-                foreach (var eve in e.EntityValidationErrors)
-                {
-                    Debug.WriteLine(@"Entity of type ""{0}"" in state ""{1}"" 
-                   has the following validation errors:",
-                        eve.Entry.Entity.GetType().Name,
-                        eve.Entry.State);
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        Debug.WriteLine(@"- Property: ""{0}"", Error: ""{1}""",
-                            ve.PropertyName, ve.ErrorMessage);
-                    }
-                }
-
-
-
-
-            }
-            return Json(new InsertionOutcome { outcome = "Success", ID = farmer.ID.ToString() });
+    
+           return Json(new InsertionOutcome { outcome = "Success", ID = farmer.ID.ToString() });
         }
 
      
