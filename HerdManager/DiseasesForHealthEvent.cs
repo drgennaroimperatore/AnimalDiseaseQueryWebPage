@@ -9,7 +9,7 @@ namespace HerdManager
     [Table("HerdDatabase.DiseasesForHealthEvent")]
     public partial class DiseasesForHealthEvent
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
 
         [Key]
         [Column(Order = 0)]

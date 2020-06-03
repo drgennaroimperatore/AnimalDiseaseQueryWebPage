@@ -158,6 +158,7 @@ namespace HerdManager.Controllers
                 dhe.ID = 0;
             context.DiseasesForHealthEvents.Add(dhe);
             context.SaveChanges();
+           
 
             return Json(new InsertionOutcome { outcome = "Success", ID = dhe.ID.ToString() });
         }
@@ -175,6 +176,8 @@ namespace HerdManager.Controllers
                 she.ID = 0;
             context.SignsForHealthEvents.Add(she);
             context.SaveChanges();
+
+            
 
             return Json(new InsertionOutcome { outcome = "Success", ID = she.ID.ToString() });
         }
