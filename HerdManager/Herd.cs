@@ -21,6 +21,12 @@ namespace HerdManager
 
         public int farmerID { get; set; }
 
+        public int nBabies { get; set; }
+
+        public int nYoung { get; set; }
+
+        public int nOld { get; set; }
+
         public virtual Animal Animal { get; set; }
 
         public virtual Farmer Farmer { get; set; }

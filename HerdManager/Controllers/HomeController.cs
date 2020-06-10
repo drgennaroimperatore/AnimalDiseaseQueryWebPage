@@ -126,9 +126,9 @@ namespace HerdManager.Controllers
 
             if (herdVisit.ID < 0)
                 herdVisit.ID = 0;
-            string dateString = herdVisit.HerdVisitDate.ToString("yyyy-MM-dd");
-            IFormatProvider culture = new CultureInfo("en-US", true);
-            herdVisit.HerdVisitDate = DateTime.ParseExact(dateString, "yyyy-MM-dd", culture);
+            //string dateString = new DateTime(herdVisit.HerdVisitDate);
+            //IFormatProvider culture = new CultureInfo("en-GB", true);
+           // herdVisit.HerdVisitDate = dateString; // DateTime.ParseExact(dateString, "yyyy-MM-dd", culture);
             context.HerdVisits.Add(herdVisit);
             context.SaveChanges();
 
