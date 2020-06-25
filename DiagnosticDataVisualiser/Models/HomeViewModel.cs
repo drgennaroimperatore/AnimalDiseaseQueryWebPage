@@ -10,5 +10,6 @@ namespace DiagnosticDataVisualiser.Models
         public List<string> SpeciesInEddie { get; set; } 
         public string BuildVersion { get; set; }
         public bool isAdmin { get; set; }
+        public int TotalCases { get; set; }
     }
 }
