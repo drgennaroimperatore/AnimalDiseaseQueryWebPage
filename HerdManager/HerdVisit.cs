@@ -30,6 +30,8 @@ namespace HerdManager
 
         public int HerdID { get; set; }
 
+        public string comments { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DynamicEvent> DynamicEvents { get; set; }
 
