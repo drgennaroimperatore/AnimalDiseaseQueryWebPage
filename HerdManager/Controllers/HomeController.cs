@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -125,6 +126,9 @@ namespace HerdManager.Controllers
 
             if (herdVisit.ID < 0)
                 herdVisit.ID = 0;
+            //string dateString = new DateTime(herdVisit.HerdVisitDate);
+            //IFormatProvider culture = new CultureInfo("en-GB", true);
+           // herdVisit.HerdVisitDate = dateString; // DateTime.ParseExact(dateString, "yyyy-MM-dd", culture);
             context.HerdVisits.Add(herdVisit);
             context.SaveChanges();
 
