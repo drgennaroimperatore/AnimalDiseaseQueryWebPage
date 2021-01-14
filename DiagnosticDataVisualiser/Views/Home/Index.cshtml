@@ -68,7 +68,7 @@
     google.charts.setOnLoadCallback(drawDiseaseByAnimalChart);
     google.charts.setOnLoadCallback(drawDiseaseHistogramByAnimalandMonth);
     google.charts.setOnLoadCallback(drawCasesBySpeciesAndYear);
-    //google.charts.setOnLoadCallback(drawAccuracyTable);
+    google.charts.setOnLoadCallback(drawAccuracyTable);
 
     // Callback that creates and populates a data table,
     // instantiates the pie chart, passes in the data and
@@ -343,7 +343,54 @@ function drawChart() {
                 })
 
 
-    }
+        }
+
+        function drawAccuracyTable(species = ' CATTLE') {
+                $("#table_accuracy").html('<div id= "spinner_accuracy_table" class= "spinner-grow text-primary" style = "width: 6rem; height: 6rem;" role = "status" ><span class="sr-only">Loading...</span> </div >');
+                $.ajax({
+                url: '@Url.Action("DrawAccuracyTable", "Home")',
+                            contentType: 'application/json; charset=utf-8',
+                            type: 'post',
+                            data: '{animalName: "' + species + '" }',
+                            success: (function (result) {
+                                console.log(result);
+                                var rows = [];
+
+                                for (var r in result)
+                                {
+                                    console.log(result[r]);
+                                    console.log(result[r].NMatch);
+                                    var datarow = [];
+                                    datarow.push(r);
+                                    var match = { v: result[r].NMatch.Key, f: result[r].NMatch.Value };
+                                    var unsure = { v: result[r].NUnsure.Key, f: result[r].NUnsure.Value };
+                                    var Nomatch = { v: result[r].NNoMatch.Key, f: result[r].NNoMatch.Value };
+                                    datarow.push(match);
+                                    datarow.push(unsure);
+                                    datarow.push(Nomatch);
+                                    rows.push(datarow);
+                                }
+                                console.log(rows);
+                                var data = new google.visualization.DataTable();
+                                data.addColumn('string', 'Disease');
+                                data.addColumn('number', 'Match');
+                                data.addColumn('number', 'Unclear');
+                                data.addColumn('number', 'No Match');
+                                data.addRows(rows);
+
+                                var table = new google.visualization.Table(document.getElementById('table_accuracy'));
+
+                                table.draw(data, { showRowNumber: true, width: '100%', height: '100%' });
+
+
+                            }),
+                            error: (function (xhr, status) {
+                                alert(status);
+                            })
+
+            })
+
+            }
 
 
 
@@ -448,451 +495,470 @@ function drawChart() {
         </div>
     </div>
 
-    <div>
-        <div style="text-align:center">
-            <h3 style="color:black">Links</h3>
-            <div class="web_app_links">
-                <input class="btn btn-info" type="button" value="D3F Home" onclick="location.href='http://d3f.world/'" />
-                <input class="btn btn-info" type="button" value="About Us" onclick="location.href='http://d3f.world/Landing/AboutUs'" />
-                <input class="btn btn-info" type="button" value="Diagnose" onclick="location.href='http://d3f.world/Diagnose'" />
+    <div class="row">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div>
+                <select id="select_animal_accuracy_table">
+                    @foreach (string animal in Model.SpeciesInEddie)
+                    {
+                        <option value="@animal">@animal</option>
+                    }
+                </select>
+            </div>
+            <div id="table_accuracy">
+                <div id="spinner_accuracy_table" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                    <span class="sr-only">Loading...</span>
+
+                </div>
             </div>
         </div>
-    </div>
+        </div>
+
+        <div>
+            <div style="text-align:center">
+                <h3 style="color:black">Links</h3>
+                <div class="web_app_links">
+                    <input class="btn btn-info" type="button" value="D3F Home" onclick="location.href='http://d3f.world/'" />
+                    <input class="btn btn-info" type="button" value="About Us" onclick="location.href='http://d3f.world/Landing/AboutUs'" />
+                    <input class="btn btn-info" type="button" value="Diagnose" onclick="location.href='http://d3f.world/Diagnose'" />
+                </div>
+            </div>
+        </div>
 
 
 
-    @*function drawChart() {
+        @*function drawChart() {
 
 
-                $.ajax({
-                            url: '@Url.Action("DrawTestGraph", "Home")',
-                            contentType: 'application/json; charset=utf-8',
-                            type: 'post',
-                            //data: '{animalName: "' + species + '" }',
-                            success: (function (result) {
+                    $.ajax({
+                                url: '@Url.Action("DrawTestGraph", "Home")',
+                                contentType: 'application/json; charset=utf-8',
+                                type: 'post',
+                                //data: '{animalName: "' + species + '" }',
+                                success: (function (result) {
 
-                                var rows = [];
-                                //console.log(result);
-                                for (var r in result)
-                                {
-                                    data = result[r];
-                                    var row = [];
-                                    row.push(data.species);
-                                    row.push(data.Expr1);
-                                    rows.push(row);
-                                }
+                                    var rows = [];
+                                    //console.log(result);
+                                    for (var r in result)
+                                    {
+                                        data = result[r];
+                                        var row = [];
+                                        row.push(data.species);
+                                        row.push(data.Expr1);
+                                        rows.push(row);
+                                    }
 
-                                console.log(rows);
+                                    console.log(rows);
 
-                                 //Create the data table.
-                                var data = new google.visualization.DataTable();
-                                data.addColumn('string', 'Name');
-                                data.addColumn('number', 'Count');
-                                data.addRows(rows);
+                                     //Create the data table.
+                                    var data = new google.visualization.DataTable();
+                                    data.addColumn('string', 'Name');
+                                    data.addColumn('number', 'Count');
+                                    data.addRows(rows);
 
 
 
-                                // Set chart options
-                                var options = {
-                                    'title': 'Animals In Eddie',
-                                    'width': 700,
-                                    'height': 900
-                                };
+                                    // Set chart options
+                                    var options = {
+                                        'title': 'Animals In Eddie',
+                                        'width': 700,
+                                        'height': 900
+                                    };
 
-                                // Instantiate and draw our chart, passing in some options.
-                                var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-                                chart.draw(data, options);
-                            }),
-                            error: (function (xhr, status) {
-                                alert(status);
+                                    // Instantiate and draw our chart, passing in some options.
+                                    var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+                                    chart.draw(data, options);
+                                }),
+                                error: (function (xhr, status) {
+                                    alert(status);
+                                })
                             })
-                        })
-            }
-
-            function getRandomColor() {
-                var letters = '0123456789ABCDEF';
-                var color = '#';
-                for (var i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
                 }
-                return color;
-            }
 
-
-            function drawDiseaseByAnimalChart(species = 'Cattle') {
-                $("#barchart_div").html('<div id="spinner_disease_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem; " role="status"> < span class="sr-only" > Loading...</span > </div > ');
-                $.ajax({
-                            url: '@Url.Action("DrawDiseasebyAnimal", "Home")',
-                            contentType: 'application/json; charset=utf-8',
-                            type: 'post',
-                            data: '{animalName: "' + species + '" }',
-                            success: (function (result) {
-                                console.log(result);
-                                var tempArray = [];
-                                var labelArray = ["Disease", "Occurences", { role: "style" }];
-                                tempArray.push(labelArray);
-                                for (var r in result)
-                                {
-                                    var dataRow = [result[r].userCHDisease, result[r].Expr1, getRandomColor()];
-                                    tempArray.push(dataRow);
-                                  //  console.log(result[r].userCHDisease);
-
-
-                                }
-
-                                var dataTable = google.visualization.arrayToDataTable(tempArray);
-
-                                //Create the data table.
-                                var view = new google.visualization.DataView(dataTable);
-                                view.setColumns([0, 1,
-                                    {
-                                        calc: "stringify",
-                                        sourceColumn: 1,
-                                        type: "string",
-                                        role: "annotation"
-                                    },
-                                    2]);
-
-
-
-                                // Set chart options
-                                var options = {
-                                    'title': 'Occurences of Diseases in Eddie',
-                                    'width': 800,
-                                    'height': 300,
-                                    'legend': {position:"none"},
-                                };
-
-                                // Instantiate and draw our chart, passing in some options.
-                                var chart = new google.visualization.ColumnChart(document.getElementById('barchart_div'));
-                                chart.draw(view, options);
-                            }),
-                            error: (function (xhr, status) {
-                                alert(status);
-                            })
-                        })
-            }
-
-
-
-
-             function drawDiseaseHistogramByAnimalandMonth(species ='Cattle', queryYear = '2019') {
-
-                 $("#histogram_month_disease_div").html('<div id="spinner_disease_animal_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem; " role="status"> < span class="sr-only" > Loading...</span > </div > ');
-
-                 $.ajax({
-                           url: '@Url.Action("DrawDiseaseByAnimalAndDate", "Home")',
-
-                   type: 'POST',
-                   contentType: 'application/json; charset=utf-8',
-                   data: '{animalName: "' + species + '", year: "' + queryYear +'" }',
-
-                            dataType:"json",
-                            success: (function (result) {
-                                //console.log(result);
-                                var annotationRow = result.Annotations;
-                                var nOfDiseases = annotationRow.length - 1;
-                                annotationRow.push({ role: 'annotation' });
-
-
-                                var chartData = [];
-                                chartData.push(annotationRow);
-
-                                for (var i = 0; i < result.Arr.length; i++)
-                                {
-
-                                    var currentMonth = [];
-                                    for (var j = 0; j < result.Arr[i].length; j++)
-                                    {
-                                       // console.log("j=" + j);
-                                        if (j === 0 || j === result.Arr[i].length - 1) {
-                                            currentMonth.push(result.Arr[i][j]);
-                                        }
-                                        else {
-                                            currentMonth.push(parseInt(result.Arr[i][j]));
-                                        }
-
-                                    }
-
-                                    chartData.push(currentMonth);
-                                }
-
-                                console.log(chartData);
-
-                                var data = google.visualization.arrayToDataTable(chartData);
-                                    /*[
-                                    ['Disea', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
-                                        'Western', 'Literature', { role: 'annotation' }],
-                                    ['May', 10, 24, 20, 32, 18, 5, ''],
-                                    ['2020', 16, 22, 23, 30, 16, 9, ''],
-                                    ['2030', 28, 19, 29, 30, 12, 13, '']
-                                ]);*/
-
-                                var options = {
-                                    width: 1400,
-                                    height: 1200,
-                                    legend: { position: 'top', maxLines: 12 },
-                                    bar: { groupWidth: '95%' },
-                                    isStacked: true
-                                };
-
-
-                                var chart = new google.visualization.ColumnChart(document.getElementById('histogram_month_disease_div'));
-                                chart.draw(data, options);
-
-
-                            }),
-                            error: (function (xhr, status) {
-                                alert(status);
-                            })
-                        })
-
-
-            }
-
-            function drawCasesBySpeciesAndYear(queryYear = '2019') {
-
-                $("#histogram_cases_year_div").html('<div id= "spinner_cases_year_chart" class= "spinner-grow text-primary" style = "width: 6rem; height: 6rem;" role = "status" ><span class="sr-only">Loading...</span> </div >');
-
-                 $.ajax({
-                           url: '@Url.Action("DrawCasesBySpeciesAndYear", "Home")',
-
-                   type: 'POST',
-                   contentType: 'application/json; charset=utf-8',
-                   data: '{year: "' + queryYear +'" }',
-
-                            dataType:"json",
-                            success: (function (result) {
-                                //console.log(result);
-                                var annotationRow = result.Annotations;
-                                var nOfDiseases = annotationRow.length - 1;
-                                annotationRow.push({ role: 'annotation' });
-
-
-                                var chartData = [];
-                                chartData.push(annotationRow);
-
-                                for (var i = 0; i < result.Arr.length; i++)
-                                {
-
-                                    var currentMonth = [];
-                                    for (var j = 0; j < result.Arr[i].length; j++)
-                                    {
-                                      //  console.log("j=" + j);
-                                        if (j === 0 || j === result.Arr[i].length - 1) {
-                                            currentMonth.push(result.Arr[i][j]);
-                                        }
-                                        else {
-                                            currentMonth.push(parseInt(result.Arr[i][j]));
-                                        }
-
-                                    }
-
-                                    chartData.push(currentMonth);
-                                }
-
-                                console.log(chartData);
-
-                                var data = google.visualization.arrayToDataTable(chartData);
-                                    /*[
-                                    ['Disea', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
-                                        'Western', 'Literature', { role: 'annotation' }],
-                                    ['May', 10, 24, 20, 32, 18, 5, ''],
-                                    ['2020', 16, 22, 23, 30, 16, 9, ''],
-                                    ['2030', 28, 19, 29, 30, 12, 13, '']
-                                ]);*/
-
-                                var options = {
-                                    width: 900,
-                                    height: 700,
-                                    legend: { position: 'top', maxLines: 3 },
-                                    bar: { groupWidth: '95%' },
-                                    isStacked: true
-                                };
-
-
-                                var chart = new google.visualization.ColumnChart(document.getElementById('histogram_cases_year_div'));
-                                chart.draw(data, options);
-
-
-                            }),
-                            error: (function (xhr, status) {
-                                alert(status);
-                            })
-                        })
-
-
-            }
-
-            function drawAccuracyTable(species = 'Cattle') {
-                $("#table_accuracy").html('<div id= "spinner_accuracy_table" class= "spinner-grow text-primary" style = "width: 6rem; height: 6rem;" role = "status" ><span class="sr-only">Loading...</span> </div >');
-                $.ajax({
-                url: '@Url.Action("DrawAccuracyTable", "Home")',
-                            contentType: 'application/json; charset=utf-8',
-                            type: 'post',
-                            data: '{animalName: "' + species + '" }',
-                            success: (function (result) {
-                                console.log(result);
-                                var rows = [];
-
-                                for (var r in result)
-                                {
-                                    console.log(result[r]);
-                                    console.log(result[r].NMatch);
-                                    var datarow = [];
-                                    datarow.push(r);
-                                    var match = { v: result[r].NMatch.Key, f: result[r].NMatch.Value };
-                                    var unsure = { v: result[r].NUnsure.Key, f: result[r].NUnsure.Value };
-                                    var Nomatch = { v: result[r].NNoMatch.Key, f: result[r].NNoMatch.Value };
-                                    datarow.push(match);
-                                    datarow.push(unsure);
-                                    datarow.push(Nomatch);
-                                    rows.push(datarow);
-                                }
-                                console.log(rows);
-                                var data = new google.visualization.DataTable();
-                                data.addColumn('string', 'Disease');
-                                data.addColumn('number', 'Match');
-                                data.addColumn('number', 'Unclear');
-                                data.addColumn('number', 'No Match');
-                                data.addRows(rows);
-
-                                var table = new google.visualization.Table(document.getElementById('table_accuracy'));
-
-                                table.draw(data, { showRowNumber: true, width: '100%', height: '100%' });
-
-
-                            }),
-                            error: (function (xhr, status) {
-                                alert(status);
-                            })
-
-            })
-
-            }
-
-
-
-            </script>
-
-            <div class="container">
-                <div class="jumbotron">
-                    <h1>Diagnostic Data Visualiser</h1>
-                    <h6>@Model.BuildVersion</h6>
-
-                    @if (Model.isAdmin)
-                    {
-                        <button class="btn btn-info" type="button" onclick="document.location.href='@Url.Action("Index", "AdminPage")'"> Admin Page </button>
+                function getRandomColor() {
+                    var letters = '0123456789ABCDEF';
+                    var color = '#';
+                    for (var i = 0; i < 6; i++) {
+                        color += letters[Math.floor(Math.random() * 16)];
                     }
+                    return color;
+                }
 
-                </div>
 
-                <div class="row">
+                function drawDiseaseByAnimalChart(species = 'Cattle') {
+                    $("#barchart_div").html('<div id="spinner_disease_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem; " role="status"> < span class="sr-only" > Loading...</span > </div > ');
+                    $.ajax({
+                                url: '@Url.Action("DrawDiseasebyAnimal", "Home")',
+                                contentType: 'application/json; charset=utf-8',
+                                type: 'post',
+                                data: '{animalName: "' + species + '" }',
+                                success: (function (result) {
+                                    console.log(result);
+                                    var tempArray = [];
+                                    var labelArray = ["Disease", "Occurences", { role: "style" }];
+                                    tempArray.push(labelArray);
+                                    for (var r in result)
+                                    {
+                                        var dataRow = [result[r].userCHDisease, result[r].Expr1, getRandomColor()];
+                                        tempArray.push(dataRow);
+                                      //  console.log(result[r].userCHDisease);
 
-                    <div id="chart_div" class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <div id="spinner_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
+
+                                    }
+
+                                    var dataTable = google.visualization.arrayToDataTable(tempArray);
+
+                                    //Create the data table.
+                                    var view = new google.visualization.DataView(dataTable);
+                                    view.setColumns([0, 1,
+                                        {
+                                            calc: "stringify",
+                                            sourceColumn: 1,
+                                            type: "string",
+                                            role: "annotation"
+                                        },
+                                        2]);
+
+
+
+                                    // Set chart options
+                                    var options = {
+                                        'title': 'Occurences of Diseases in Eddie',
+                                        'width': 800,
+                                        'height': 300,
+                                        'legend': {position:"none"},
+                                    };
+
+                                    // Instantiate and draw our chart, passing in some options.
+                                    var chart = new google.visualization.ColumnChart(document.getElementById('barchart_div'));
+                                    chart.draw(view, options);
+                                }),
+                                error: (function (xhr, status) {
+                                    alert(status);
+                                })
+                            })
+                }
+
+
+
+
+                 function drawDiseaseHistogramByAnimalandMonth(species ='Cattle', queryYear = '2019') {
+
+                     $("#histogram_month_disease_div").html('<div id="spinner_disease_animal_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem; " role="status"> < span class="sr-only" > Loading...</span > </div > ');
+
+                     $.ajax({
+                               url: '@Url.Action("DrawDiseaseByAnimalAndDate", "Home")',
+
+                       type: 'POST',
+                       contentType: 'application/json; charset=utf-8',
+                       data: '{animalName: "' + species + '", year: "' + queryYear +'" }',
+
+                                dataType:"json",
+                                success: (function (result) {
+                                    //console.log(result);
+                                    var annotationRow = result.Annotations;
+                                    var nOfDiseases = annotationRow.length - 1;
+                                    annotationRow.push({ role: 'annotation' });
+
+
+                                    var chartData = [];
+                                    chartData.push(annotationRow);
+
+                                    for (var i = 0; i < result.Arr.length; i++)
+                                    {
+
+                                        var currentMonth = [];
+                                        for (var j = 0; j < result.Arr[i].length; j++)
+                                        {
+                                           // console.log("j=" + j);
+                                            if (j === 0 || j === result.Arr[i].length - 1) {
+                                                currentMonth.push(result.Arr[i][j]);
+                                            }
+                                            else {
+                                                currentMonth.push(parseInt(result.Arr[i][j]));
+                                            }
+
+                                        }
+
+                                        chartData.push(currentMonth);
+                                    }
+
+                                    console.log(chartData);
+
+                                    var data = google.visualization.arrayToDataTable(chartData);
+                                        /*[
+                                        ['Disea', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
+                                            'Western', 'Literature', { role: 'annotation' }],
+                                        ['May', 10, 24, 20, 32, 18, 5, ''],
+                                        ['2020', 16, 22, 23, 30, 16, 9, ''],
+                                        ['2030', 28, 19, 29, 30, 12, 13, '']
+                                    ]);*/
+
+                                    var options = {
+                                        width: 1400,
+                                        height: 1200,
+                                        legend: { position: 'top', maxLines: 12 },
+                                        bar: { groupWidth: '95%' },
+                                        isStacked: true
+                                    };
+
+
+                                    var chart = new google.visualization.ColumnChart(document.getElementById('histogram_month_disease_div'));
+                                    chart.draw(data, options);
+
+
+                                }),
+                                error: (function (xhr, status) {
+                                    alert(status);
+                                })
+                            })
+
+
+                }
+
+                function drawCasesBySpeciesAndYear(queryYear = '2019') {
+
+                    $("#histogram_cases_year_div").html('<div id= "spinner_cases_year_chart" class= "spinner-grow text-primary" style = "width: 6rem; height: 6rem;" role = "status" ><span class="sr-only">Loading...</span> </div >');
+
+                     $.ajax({
+                               url: '@Url.Action("DrawCasesBySpeciesAndYear", "Home")',
+
+                       type: 'POST',
+                       contentType: 'application/json; charset=utf-8',
+                       data: '{year: "' + queryYear +'" }',
+
+                                dataType:"json",
+                                success: (function (result) {
+                                    //console.log(result);
+                                    var annotationRow = result.Annotations;
+                                    var nOfDiseases = annotationRow.length - 1;
+                                    annotationRow.push({ role: 'annotation' });
+
+
+                                    var chartData = [];
+                                    chartData.push(annotationRow);
+
+                                    for (var i = 0; i < result.Arr.length; i++)
+                                    {
+
+                                        var currentMonth = [];
+                                        for (var j = 0; j < result.Arr[i].length; j++)
+                                        {
+                                          //  console.log("j=" + j);
+                                            if (j === 0 || j === result.Arr[i].length - 1) {
+                                                currentMonth.push(result.Arr[i][j]);
+                                            }
+                                            else {
+                                                currentMonth.push(parseInt(result.Arr[i][j]));
+                                            }
+
+                                        }
+
+                                        chartData.push(currentMonth);
+                                    }
+
+                                    console.log(chartData);
+
+                                    var data = google.visualization.arrayToDataTable(chartData);
+                                        /*[
+                                        ['Disea', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
+                                            'Western', 'Literature', { role: 'annotation' }],
+                                        ['May', 10, 24, 20, 32, 18, 5, ''],
+                                        ['2020', 16, 22, 23, 30, 16, 9, ''],
+                                        ['2030', 28, 19, 29, 30, 12, 13, '']
+                                    ]);*/
+
+                                    var options = {
+                                        width: 900,
+                                        height: 700,
+                                        legend: { position: 'top', maxLines: 3 },
+                                        bar: { groupWidth: '95%' },
+                                        isStacked: true
+                                    };
+
+
+                                    var chart = new google.visualization.ColumnChart(document.getElementById('histogram_cases_year_div'));
+                                    chart.draw(data, options);
+
+
+                                }),
+                                error: (function (xhr, status) {
+                                    alert(status);
+                                })
+                            })
+
+
+                }
+
+                function drawAccuracyTable(species = 'Cattle') {
+                    $("#table_accuracy").html('<div id= "spinner_accuracy_table" class= "spinner-grow text-primary" style = "width: 6rem; height: 6rem;" role = "status" ><span class="sr-only">Loading...</span> </div >');
+                    $.ajax({
+                    url: '@Url.Action("DrawAccuracyTable", "Home")',
+                                contentType: 'application/json; charset=utf-8',
+                                type: 'post',
+                                data: '{animalName: "' + species + '" }',
+                                success: (function (result) {
+                                    console.log(result);
+                                    var rows = [];
+
+                                    for (var r in result)
+                                    {
+                                        console.log(result[r]);
+                                        console.log(result[r].NMatch);
+                                        var datarow = [];
+                                        datarow.push(r);
+                                        var match = { v: result[r].NMatch.Key, f: result[r].NMatch.Value };
+                                        var unsure = { v: result[r].NUnsure.Key, f: result[r].NUnsure.Value };
+                                        var Nomatch = { v: result[r].NNoMatch.Key, f: result[r].NNoMatch.Value };
+                                        datarow.push(match);
+                                        datarow.push(unsure);
+                                        datarow.push(Nomatch);
+                                        rows.push(datarow);
+                                    }
+                                    console.log(rows);
+                                    var data = new google.visualization.DataTable();
+                                    data.addColumn('string', 'Disease');
+                                    data.addColumn('number', 'Match');
+                                    data.addColumn('number', 'Unclear');
+                                    data.addColumn('number', 'No Match');
+                                    data.addRows(rows);
+
+                                    var table = new google.visualization.Table(document.getElementById('table_accuracy'));
+
+                                    table.draw(data, { showRowNumber: true, width: '100%', height: '100%' });
+
+
+                                }),
+                                error: (function (xhr, status) {
+                                    alert(status);
+                                })
+
+                })
+
+                }
+
+
+
+                </script>
+
+                <div class="container">
+                    <div class="jumbotron">
+                        <h1>Diagnostic Data Visualiser</h1>
+                        <h6>@Model.BuildVersion</h6>
+
+                        @if (Model.isAdmin)
+                        {
+                            <button class="btn btn-info" type="button" onclick="document.location.href='@Url.Action("Index", "AdminPage")'"> Admin Page </button>
+                        }
 
                     </div>
 
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <div>
-                            <select id="select_animal_diseasebyAnimalBarChart">
-                                @foreach (string animal in Model.SpeciesInEddie)
-                                {
-                                    <option value="@animal">@animal</option>
-                                }
-                            </select>
+                    <div class="row">
+
+                        <div id="chart_div" class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <div id="spinner_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+
                         </div>
 
-                        <div id="barchart_div">
-                            <div id="spinner_disease_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
-                                <span class="sr-only">Loading...</span>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <div>
+                                <select id="select_animal_diseasebyAnimalBarChart">
+                                    @foreach (string animal in Model.SpeciesInEddie)
+                                    {
+                                        <option value="@animal">@animal</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div id="barchart_div">
+                                <div id="spinner_disease_animal_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+
+                            <div>
+                                <select id="select_year_casesbyMonthHistogram">
+                                    <option value="2019">2019</option>
+                                    <option value="2018">2018</option>
+
+                                </select>
+
+                            </div>
+
+                            <div id="histogram_cases_year_div">
+                                <div id="spinner_cases_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+
+                            <div>
+                                <select id="select_animal_diseasebyMonthHistogram">
+                                    @foreach (string animal in Model.SpeciesInEddie)
+                                    {
+                                        <option value="@animal">@animal</option>
+                                    }
+                                </select>
+
+                                <select id="select_year_diseasebyMonthHistogram">
+                                    <option value="2019">2019</option>
+                                    <option value="2018">2018</option>
+
+                                </select>
+
+                            </div>
+
+                            <div id="histogram_month_disease_div">
+                                <div id="spinner_disease_animal_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <div>
+                                <select id="select_animal_accuracy_table">
+                                    @foreach (string animal in Model.SpeciesInEddie)
+                                    {
+                                        <option value="@animal">@animal</option>
+                                    }
+                                </select>
+                            </div>
+                            <div id="table_accuracy">
+                                <div id="spinner_accuracy_table" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                                    <span class="sr-only">Loading...</span>
+
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
-
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-
-                        <div>
-                            <select id="select_year_casesbyMonthHistogram">
-                                <option value="2019">2019</option>
-                                <option value="2018">2018</option>
-
-                            </select>
-
-                        </div>
-
-                        <div id="histogram_cases_year_div">
-                            <div id="spinner_cases_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-
-                        <div>
-                            <select id="select_animal_diseasebyMonthHistogram">
-                                @foreach (string animal in Model.SpeciesInEddie)
-                                {
-                                    <option value="@animal">@animal</option>
-                                }
-                            </select>
-
-                            <select id="select_year_diseasebyMonthHistogram">
-                                <option value="2019">2019</option>
-                                <option value="2018">2018</option>
-
-                            </select>
-
-                        </div>
-
-                        <div id="histogram_month_disease_div">
-                            <div id="spinner_disease_animal_year_chart" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
+                <div>
+                    <div style="text-align:center">
+                        <h3 style="color:black">Links</h3>
+                        <div class="web_app_links">
+                            <input class="btn btn-info" type="button" value="About Us" onclick="location.href='http://d3f.world/Landing/AboutUs'" />
+                            <input class="btn btn-info" type="button" value="Diagnoser" onclick="location.href='http://d3f.world/Diagnose'" />
+                            <input class="btn btn-info" type="button" value="Visualiser" onclick="location.href='@Url.Action("Index", "Home")'" />
+                            <input class="btn btn-info" type="button" value="Populate Matches" onclick="location.href='@Url.Action("PopulateMatchResultsTable", "Home")'" />
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <div>
-                            <select id="select_animal_accuracy_table">
-                                @foreach (string animal in Model.SpeciesInEddie)
-                                {
-                                    <option value="@animal">@animal</option>
-                                }
-                            </select>
-                        </div>
-                        <div id="table_accuracy">
-                            <div id="spinner_accuracy_table" class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
-                                <span class="sr-only">Loading...</span>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div style="text-align:center">
-                    <h3 style="color:black">Links</h3>
-                    <div class="web_app_links">
-                        <input class="btn btn-info" type="button" value="About Us" onclick="location.href='http://d3f.world/Landing/AboutUs'" />
-                        <input class="btn btn-info" type="button" value="Diagnoser" onclick="location.href='http://d3f.world/Diagnose'" />
-                        <input class="btn btn-info" type="button" value="Visualiser" onclick="location.href='@Url.Action("Index", "Home")'" />
-                        <input class="btn btn-info" type="button" value="Populate Matches" onclick="location.href='@Url.Action("PopulateMatchResultsTable", "Home")'" />
-                    </div>
-                </div>
-            </div>
-        </body>
-        </html>*@
+            </body>
+            </html>*@

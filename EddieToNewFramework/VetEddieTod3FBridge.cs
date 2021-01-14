@@ -94,17 +94,25 @@ namespace EddieToNewFramework
                 "AND appDiseaseRank.diseaseID = cases.ucDisease " +
                 "AND cases.date >= @p0 "+
                 "ORDER BY cases.caseID ASC";
+
+            string nosympRawSql = "SELECT DISTINCT cases.caseID FROM cases,symptomsSelected WHERE symptomsSelected.caseID = cases.caseID";
             string[] parameters = {licString };
 
             List<Cases> copiedCases = new List<Cases>();
             List<int> latestIDs = GetOriginalIDOfLatestImportedCases(tableName);
 
+
             try
             {              
               cases = vetEddieContext.VetEddieCaseQuery.FromSql<VetEddieEddieCase>(rawSql, parameters).ToList();
                 List<VetEddieEddieCase> casesToRemove = cases.Where(x => latestIDs.Contains(x.CaseId)).ToList();
-                cases.RemoveRange(cases.IndexOf(casesToRemove[0]), casesToRemove.Count());
-
+                if(casesToRemove.Count>0)
+                    cases.RemoveRange(cases.IndexOf(casesToRemove[0]), casesToRemove.Count());
+                List<VetEddieCasesWithSymptoms> safeCases = vetEddieContext.VetEddieCasesWithSymptomsQuery.FromSql<VetEddieCasesWithSymptoms>(nosympRawSql,parameters).ToList();
+                List<int> safeids = safeCases.Select(x => x.caseID).ToList();
+                casesToRemove = cases.Where(x => !safeids.Contains(x.CaseId)).ToList();
+                if(casesToRemove.Count>0)
+                    cases.RemoveRange(cases.IndexOf(casesToRemove[0]), casesToRemove.Count());
                 copiedCases = cases.Select(c =>
               new Cases
               {
@@ -244,6 +252,12 @@ namespace EddieToNewFramework
                 Console.WriteLine(e.Message);
             }
 
+            if (transposedSymptoms.Count == 0)
+            {
+                Console.WriteLine("No symp for case " + originalCaseID);
+                Console.WriteLine();
+            }
+
             return transposedSymptoms;
 
         }
@@ -268,6 +282,11 @@ namespace EddieToNewFramework
                 transposedResults = vetEddieResults.Select
                     (s => new ResultForCases { DiseaseId = GetDiseaseID(s.DiseaseName),
                     PredictedLikelihoodOfDisease = (float) s.Percentage }).ToList();
+
+                if (vetEddieResults.Count == 0)
+                    Console.WriteLine("No results for case {0}", originalCaseID);
+                if (transposedResults.Count == 0)
+                    Console.WriteLine("No results for case {0}", originalCaseID);
             }
             catch (Exception e)
             {
@@ -297,7 +316,11 @@ namespace EddieToNewFramework
 
             ADDB.Owners.Add(owner);
             ADDB.SaveChanges();
+            if (ADDB.Owners.Count() == 0)
+                Console.WriteLine("No owners found");
+
             int id = ADDB.Owners.Last().Id;
+            
             return id;
         }
 

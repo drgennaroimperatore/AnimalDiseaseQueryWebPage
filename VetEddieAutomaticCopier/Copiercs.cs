@@ -81,7 +81,9 @@ namespace VetEddieAutomaticCopier
                 while (vetEddieTableReader.Read())
                 {
                     Console.Write(vetEddieTableReader.GetValue(0)+" ");
-                    vetEddieTableNames.Add(vetEddieTableReader.GetValue(0).ToString());
+                    string tableN = vetEddieTableReader.GetValue(0).ToString();
+                    if(!tableN.Contains("XX_")&& !tableN.Equals("imeiNumber"))
+                        vetEddieTableNames.Add(tableN);
                 }
                 vetEddieTableCount = vetEddieTableNames.Count;
 
@@ -139,9 +141,9 @@ namespace VetEddieAutomaticCopier
                             {
                                 Console.WriteLine("Disparity between column count found in table {0}", tableName);
                                 if (d3fColumnCount > vetEddieColumnCount)
-                                    Console.WriteLine("d3f version of vet eddie has {0} column(s) more than original vet eddie " + (d3fColumnCount - vetEddieColumnCount).ToString());
+                                    Console.WriteLine("d3f version of vet eddie has {0} column(s) more than original vet eddie " , (d3fColumnCount - vetEddieColumnCount).ToString());
                                 if(vetEddieColumnCount > d3fColumnCount)
-                                    Console.WriteLine("original version of vet eddie has {0} column(s) more than d3f version of vet eddie " + (vetEddieColumnCount - d3fColumnCount).ToString());
+                                    Console.WriteLine("original version of vet eddie has {0} column(s) more than d3f version of vet eddie " , (vetEddieColumnCount - d3fColumnCount).ToString());
 
                                 integrityOK = false;
                                 break;
@@ -303,7 +305,7 @@ namespace VetEddieAutomaticCopier
                     {
                         insertIntoD3fStringBuilder.Append("'");
 
-                        if (type.Equals("date")&& !val.Equals("0000-00-00"))
+                        if (type.Equals("date")&& !val.Equals("0000-00-00") && !val.Equals(""))
                         {
                             val = val.Split(' ')[0];
                             //  Console.WriteLine(val);

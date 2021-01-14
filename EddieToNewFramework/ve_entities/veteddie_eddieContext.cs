@@ -37,6 +37,7 @@ namespace EddieToNewFramework.ve_entities
         public virtual DbQuery<VetEddieEddieCase> VetEddieCaseQuery { get; set; }
         public virtual DbQuery<VetEddieSymptoms> VetEddieSymptomsQuery { get; set; }
         public virtual DbQuery<VetEddieResults> VetEddieResultsQuery { get; set; }
+        public virtual DbQuery<VetEddieCasesWithSymptoms> VetEddieCasesWithSymptomsQuery { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

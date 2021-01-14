@@ -11,7 +11,7 @@ namespace HerdManager
     {
         public int ID { get; set; }
 
-        public int litresOfMilkPerDay { get; set; }
+        public float litresOfMilkPerDay { get; set; }
 
         public int numberOfLactatingAnimals { get; set; }
 
