@@ -12,9 +12,9 @@ namespace HerdManager
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public HerdVisit()
         {
-            DynamicEvents = new HashSet<DynamicEvent>();
-            HealthEvents = new HashSet<HealthEvent>();
-            ProductivityEvents = new HashSet<ProductivityEvent>();
+            DynamicEvent = new HashSet<DynamicEvent>();
+            HealthEvent = new HashSet<HealthEvent>();
+            ProductivityEvent = new HashSet<ProductivityEvent>();
         }
 
         public int ID { get; set; }
@@ -28,19 +28,20 @@ namespace HerdManager
 
         public int oldAtVisit { get; set; }
 
-        public int HerdID { get; set; }
-
+        [StringLength(500)]
         public string comments { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DynamicEvent> DynamicEvents { get; set; }
+        public int HerdID { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<HealthEvent> HealthEvents { get; set; }
+        public virtual ICollection<DynamicEvent> DynamicEvent { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<HealthEvent> HealthEvent { get; set; }
 
         public virtual Herd Herd { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductivityEvent> ProductivityEvents { get; set; }
+        public virtual ICollection<ProductivityEvent> ProductivityEvent { get; set; }
     }
 }

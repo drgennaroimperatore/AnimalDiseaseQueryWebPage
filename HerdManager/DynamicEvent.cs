@@ -12,8 +12,8 @@ namespace HerdManager
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DynamicEvent()
         {
-            AnimalMovementsForDynamicEvents = new HashSet<AnimalMovementsForDynamicEvent>();
-            DeathsForDynamicEvents = new HashSet<DeathsForDynamicEvent>();
+            AnimalMovementsForDynamicEvent = new HashSet<AnimalMovementsForDynamicEvent>();
+            DeathsForDynamicEvent = new HashSet<DeathsForDynamicEvent>();
         }
 
         public int ID { get; set; }
@@ -21,10 +21,10 @@ namespace HerdManager
         public int herdVisitID { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AnimalMovementsForDynamicEvent> AnimalMovementsForDynamicEvents { get; set; }
+        public virtual ICollection<AnimalMovementsForDynamicEvent> AnimalMovementsForDynamicEvent { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DeathsForDynamicEvent> DeathsForDynamicEvents { get; set; }
+        public virtual ICollection<DeathsForDynamicEvent> DeathsForDynamicEvent { get; set; }
 
         public virtual HerdVisit HerdVisit { get; set; }
     }

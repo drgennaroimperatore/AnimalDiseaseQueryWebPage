@@ -12,49 +12,68 @@ namespace HerdManager
         {
         }
 
-        public virtual DbSet<AnimalMovementsForDynamicEvent> AnimalMovementsForDynamicEvents { get; set; }
-        public virtual DbSet<Animal> Animals { get; set; }
-        public virtual DbSet<BirthsForProductivityEvent> BirthsForProductivityEvents { get; set; }
-        public virtual DbSet<DeathsForDynamicEvent> DeathsForDynamicEvents { get; set; }
-        public virtual DbSet<Disease> Diseases { get; set; }
-        public virtual DbSet<DynamicEvent> DynamicEvents { get; set; }
-        public virtual DbSet<Farmer> Farmers { get; set; }
-        public virtual DbSet<HealthEvent> HealthEvents { get; set; }
-        public virtual DbSet<Herd> Herds { get; set; }
-        public virtual DbSet<HerdVisit> HerdVisits { get; set; }
-        public virtual DbSet<MilkForProductivityEvent> MilkForProductivityEvents { get; set; }
-        public virtual DbSet<ProductivityEvent> ProductivityEvents { get; set; }
-        public virtual DbSet<Sign> Signs { get; set; }
-        public virtual DbSet<SignsForHealthEvent> SignsForHealthEvents { get; set; }
-        public virtual DbSet<DiseasesForHealthEvent> DiseasesForHealthEvents { get; set; }
-        public virtual DbSet<ILRIUser> Users { get; set; }
+        public virtual DbSet<AnimalMovementsForDynamicEvent> AnimalMovementsForDynamicEvent { get; set; }
+        public virtual DbSet<Animals> Animals { get; set; }
+        public virtual DbSet<BirthsForProductivityEvent> BirthsForProductivityEvent { get; set; }
+        public virtual DbSet<BodyCondition> BodyCondition { get; set; }
+        public virtual DbSet<BodyConditionForHealthEvent> BodyConditionForHealthEvent { get; set; }
+        public virtual DbSet<DeathsForDynamicEvent> DeathsForDynamicEvent { get; set; }
+        public virtual DbSet<Diseases> Diseases { get; set; }
+        public virtual DbSet<DiseasesForHealthEvent> DiseasesForHealthEvent { get; set; }
+        public virtual DbSet<DynamicEvent> DynamicEvent { get; set; }
+        public virtual DbSet<Farmer> Farmer { get; set; }
+        public virtual DbSet<HealthEvent> HealthEvent { get; set; }
+        public virtual DbSet<Herd> Herd { get; set; }
+        public virtual DbSet<HerdVisit> HerdVisit { get; set; }
+        public virtual DbSet<MilkForProductivityEvent> MilkForProductivityEvent { get; set; }
+        public virtual DbSet<ProductivityEvent> ProductivityEvent { get; set; }
+        public virtual DbSet<Signs> Signs { get; set; }
+        public virtual DbSet<SignsForHealthEvent> SignsForHealthEvent { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Animal>()
+            modelBuilder.Entity<Animals>()
                 .Property(e => e.Name)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Animal>()
+            modelBuilder.Entity<Animals>()
                 .Property(e => e.Sex)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Animal>()
+            modelBuilder.Entity<Animals>()
                 .Property(e => e.Age)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Animal>()
-                .HasMany(e => e.Herds)
-                .WithRequired(e => e.Animal)
+            modelBuilder.Entity<Animals>()
+                .HasMany(e => e.Herd)
+                .WithRequired(e => e.Animals)
                 .HasForeignKey(e => e.speciesID);
+
+            modelBuilder.Entity<BodyCondition>()
+                .Property(e => e.label)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<BodyCondition>()
+                .Property(e => e.species)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<BodyCondition>()
+                .Property(e => e.description)
+                .IsUnicode(false);
 
             modelBuilder.Entity<DeathsForDynamicEvent>()
                 .Property(e => e.causeOfDeath)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Disease>()
+            modelBuilder.Entity<Diseases>()
                 .Property(e => e.Name)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<Diseases>()
+                .HasMany(e => e.DiseasesForHealthEvent)
+                .WithRequired(e => e.Diseases)
+                .HasForeignKey(e => e.diseaseID);
 
             modelBuilder.Entity<Farmer>()
                 .Property(e => e.firstName)
@@ -76,26 +95,36 @@ namespace HerdManager
                 .Property(e => e.kebele)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Sign>()
+            modelBuilder.Entity<HerdVisit>()
+                .Property(e => e.comments)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Signs>()
                 .Property(e => e.Probability)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Sign>()
+            modelBuilder.Entity<Signs>()
                 .Property(e => e.Name)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Sign>()
-                .HasMany(e => e.SignsForHealthEvents)
-                .WithRequired(e => e.Sign)
+            modelBuilder.Entity<Signs>()
+                .HasMany(e => e.SignsForHealthEvent)
+                .WithRequired(e => e.Signs)
+                .HasForeignKey(e => e.signID)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<ILRIUser>()
-               .Property(e => e.Name)
-               .IsUnicode(false);
+            modelBuilder.Entity<Users>()
+                .Property(e => e.Name)
+                .IsUnicode(false);
 
-            modelBuilder.Entity<ILRIUser>()
+            modelBuilder.Entity<Users>()
                 .Property(e => e.UUID)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<Users>()
+                .HasMany(e => e.Farmer)
+                .WithRequired(e => e.Users)
+                .HasForeignKey(e => e.UserID);
         }
     }
 }

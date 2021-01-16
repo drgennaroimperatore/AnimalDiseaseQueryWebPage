@@ -23,6 +23,6 @@ namespace HerdManager
 
         public virtual HealthEvent HealthEvent { get; set; }
 
-        public virtual Sign Sign { get; set; }
+        public virtual Signs Signs { get; set; }
     }
 }

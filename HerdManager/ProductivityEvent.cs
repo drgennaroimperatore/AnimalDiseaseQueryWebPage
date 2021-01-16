@@ -12,8 +12,8 @@ namespace HerdManager
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ProductivityEvent()
         {
-            BirthsForProductivityEvents = new HashSet<BirthsForProductivityEvent>();
-            MilkForProductivityEvents = new HashSet<MilkForProductivityEvent>();
+            BirthsForProductivityEvent = new HashSet<BirthsForProductivityEvent>();
+            MilkForProductivityEvent = new HashSet<MilkForProductivityEvent>();
         }
 
         public int ID { get; set; }
@@ -21,11 +21,11 @@ namespace HerdManager
         public int herdVisitID { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BirthsForProductivityEvent> BirthsForProductivityEvents { get; set; }
+        public virtual ICollection<BirthsForProductivityEvent> BirthsForProductivityEvent { get; set; }
 
         public virtual HerdVisit HerdVisit { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MilkForProductivityEvent> MilkForProductivityEvents { get; set; }
+        public virtual ICollection<MilkForProductivityEvent> MilkForProductivityEvent { get; set; }
     }
 }

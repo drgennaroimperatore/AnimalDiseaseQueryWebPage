@@ -12,8 +12,9 @@ namespace HerdManager
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public HealthEvent()
         {
-            DiseasesForHealthEvents = new HashSet<DiseasesForHealthEvent>();
-            SignsForHealthEvents = new HashSet<SignsForHealthEvent>();
+            BodyConditionForHealthEvent = new HashSet<BodyConditionForHealthEvent>();
+            DiseasesForHealthEvent = new HashSet<DiseasesForHealthEvent>();
+            SignsForHealthEvent = new HashSet<SignsForHealthEvent>();
         }
 
         public int ID { get; set; }
@@ -21,11 +22,14 @@ namespace HerdManager
         public int herdVisitID { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DiseasesForHealthEvent> DiseasesForHealthEvents { get; set; }
+        public virtual ICollection<BodyConditionForHealthEvent> BodyConditionForHealthEvent { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DiseasesForHealthEvent> DiseasesForHealthEvent { get; set; }
 
         public virtual HerdVisit HerdVisit { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SignsForHealthEvent> SignsForHealthEvents { get; set; }
+        public virtual ICollection<SignsForHealthEvent> SignsForHealthEvent { get; set; }
     }
 }
