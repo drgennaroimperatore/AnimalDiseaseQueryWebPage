@@ -192,6 +192,7 @@ namespace HerdManager.Controllers
             return Json(new InsertionOutcome { outcome = "Success", ID = she.ID.ToString() });
         }
 
+        [AllowAnonymous]
         public JsonResult InsertBodyConditionForHealthEvent(HDB context, BodyConditionForHealthEvent bodyConditionForHealthEvent)
         {
             if(context.BodyConditionForHealthEvent.Count()>0)

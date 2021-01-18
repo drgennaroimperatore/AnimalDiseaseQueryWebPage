@@ -13,6 +13,8 @@ namespace HerdManager
 
         public int healthEventID { get; set; }
 
+        public int bodyConditionID { get; set; }
+
         public int numberOfAffectedBabies { get; set; }
 
         public int numberOfAffectedYoung { get; set; }
@@ -20,5 +22,7 @@ namespace HerdManager
         public int numberOfAffectedOld { get; set; }
 
         public virtual HealthEvent HealthEvent { get; set; }
+
+        public virtual BodyCondition BodyCondition { get; set; }
     }
 }
