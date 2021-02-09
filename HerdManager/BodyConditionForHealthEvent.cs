@@ -21,8 +21,8 @@ namespace HerdManager
 
         public int numberOfAffectedOld { get; set; }
 
-        public virtual HealthEvent HealthEvent { get; set; }
-
         public virtual BodyCondition BodyCondition { get; set; }
+
+        public virtual HealthEvent HealthEvent { get; set; }
     }
 }

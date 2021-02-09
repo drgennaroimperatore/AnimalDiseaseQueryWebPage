@@ -12,7 +12,7 @@ namespace HerdManager
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Herd()
         {
-            HerdVisit = new HashSet<HerdVisit>();
+            HerdVisits = new HashSet<HerdVisit>();
         }
 
         public int ID { get; set; }
@@ -27,11 +27,11 @@ namespace HerdManager
 
         public int nOld { get; set; }
 
-        public virtual Animals Animals { get; set; }
+        public virtual Animal Animal { get; set; }
 
         public virtual Farmer Farmer { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<HerdVisit> HerdVisit { get; set; }
+        public virtual ICollection<HerdVisit> HerdVisits { get; set; }
     }
 }

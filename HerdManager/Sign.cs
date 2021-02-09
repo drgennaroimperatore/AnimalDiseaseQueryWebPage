@@ -6,27 +6,26 @@ namespace HerdManager
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("HerdDatabase.Animals")]
-    public partial class Animals
+    [Table("HerdDatabase.Signs")]
+    public partial class Sign
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Animals()
+        public Sign()
         {
-            Herd = new HashSet<Herd>();
+            SignsForHealthEvents = new HashSet<SignsForHealthEvent>();
         }
 
         public int Id { get; set; }
 
+        public int Type_of_Value { get; set; }
+
+        [StringLength(1073741823)]
+        public string Probability { get; set; }
+
         [StringLength(1073741823)]
         public string Name { get; set; }
 
-        [StringLength(1073741823)]
-        public string Sex { get; set; }
-
-        [StringLength(1073741823)]
-        public string Age { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Herd> Herd { get; set; }
+        public virtual ICollection<SignsForHealthEvent> SignsForHealthEvents { get; set; }
     }
 }

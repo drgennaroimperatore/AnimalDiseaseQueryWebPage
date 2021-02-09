@@ -6,26 +6,23 @@ namespace HerdManager
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("HerdDatabase.Users")]
-    public partial class Users
+    [Table("HerdDatabase.HealthIntervention")]
+    public partial class HealthIntervention
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Users()
+        public HealthIntervention()
         {
-            Farmer = new HashSet<Farmer>();
+            HealthInterventionForHealthEvents = new HashSet<HealthInterventionForHealthEvent>();
         }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string Name { get; set; }
-
-        [Required]
-        [StringLength(150)]
-        public string UUID { get; set; }
+        public string name { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Farmer> Farmer { get; set; }
+        public virtual ICollection<HealthInterventionForHealthEvent> HealthInterventionForHealthEvents { get; set; }
     }
 }

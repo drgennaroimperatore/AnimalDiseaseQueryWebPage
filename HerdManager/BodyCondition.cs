@@ -9,6 +9,12 @@ namespace HerdManager
     [Table("HerdDatabase.BodyCondition")]
     public partial class BodyCondition
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public BodyCondition()
+        {
+            BodyConditionForHealthEvents = new HashSet<BodyConditionForHealthEvent>();
+        }
+
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
 
@@ -25,5 +31,8 @@ namespace HerdManager
         [Required]
         [StringLength(500)]
         public string description { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BodyConditionForHealthEvent> BodyConditionForHealthEvents { get; set; }
     }
 }

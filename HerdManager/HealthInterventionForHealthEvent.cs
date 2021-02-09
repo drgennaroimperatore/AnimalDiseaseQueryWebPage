@@ -6,8 +6,8 @@ namespace HerdManager
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("HerdDatabase.DiseasesForHealthEvent")]
-    public partial class DiseasesForHealthEvent
+    [Table("HerdDatabase.HealthInterventionForHealthEvent")]
+    public partial class HealthInterventionForHealthEvent
     {
         public int ID { get; set; }
 
@@ -15,14 +15,22 @@ namespace HerdManager
 
         public int numberOfAffectedYoung { get; set; }
 
-        public int numberOfAffectedOld { get; set; }
+        public int numberOfAffectedAdult { get; set; }
 
-        public int diseaseID { get; set; }
+      
+        [StringLength(100)]
+        public string vaccination { get; set; }
+
+        
+        [StringLength(500)]
+        public string comments { get; set; }
 
         public int healthEventID { get; set; }
 
-        public virtual Disease Disease { get; set; }
+        public int healthInterventionID { get; set; }
 
         public virtual HealthEvent HealthEvent { get; set; }
+
+        public virtual HealthIntervention HealthIntervention { get; set; }
     }
 }

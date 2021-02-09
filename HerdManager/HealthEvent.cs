@@ -12,9 +12,10 @@ namespace HerdManager
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public HealthEvent()
         {
-            BodyConditionForHealthEvent = new HashSet<BodyConditionForHealthEvent>();
-            DiseasesForHealthEvent = new HashSet<DiseasesForHealthEvent>();
-            SignsForHealthEvent = new HashSet<SignsForHealthEvent>();
+            BodyConditionForHealthEvents = new HashSet<BodyConditionForHealthEvent>();
+            DiseasesForHealthEvents = new HashSet<DiseasesForHealthEvent>();
+            HealthInterventionForHealthEvents = new HashSet<HealthInterventionForHealthEvent>();
+            SignsForHealthEvents = new HashSet<SignsForHealthEvent>();
         }
 
         public int ID { get; set; }
@@ -22,14 +23,17 @@ namespace HerdManager
         public int herdVisitID { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BodyConditionForHealthEvent> BodyConditionForHealthEvent { get; set; }
+        public virtual ICollection<BodyConditionForHealthEvent> BodyConditionForHealthEvents { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DiseasesForHealthEvent> DiseasesForHealthEvent { get; set; }
+        public virtual ICollection<DiseasesForHealthEvent> DiseasesForHealthEvents { get; set; }
 
         public virtual HerdVisit HerdVisit { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SignsForHealthEvent> SignsForHealthEvent { get; set; }
+        public virtual ICollection<HealthInterventionForHealthEvent> HealthInterventionForHealthEvents { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SignsForHealthEvent> SignsForHealthEvents { get; set; }
     }
 }
