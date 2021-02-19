@@ -18,5 +18,13 @@ namespace HerdManager
         public int productivityEventID { get; set; }
 
         public virtual ProductivityEvent ProductivityEvent { get; set; }
+
+        public bool HasBeenUpdated (BirthsForProductivityEvent bpe)
+        {
+            return ((this.ID == bpe.ID
+                && this.productivityEventID == bpe.productivityEventID)
+                && (this.nOfBirths != bpe.nOfBirths ||
+                    this.nOfGestatingAnimals != bpe.nOfGestatingAnimals));
+        }
     }
 }

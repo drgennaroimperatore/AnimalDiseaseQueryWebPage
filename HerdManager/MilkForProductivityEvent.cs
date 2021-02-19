@@ -18,5 +18,12 @@ namespace HerdManager
         public int productivityEventID { get; set; }
 
         public virtual ProductivityEvent ProductivityEvent { get; set; }
+
+        public bool HasBeenUpdate(MilkForProductivityEvent mpe)
+        {
+            return ((this.ID == mpe.ID && this.productivityEventID == mpe.productivityEventID)
+                && (this.litresOfMilkPerDay == mpe.litresOfMilkPerDay
+                || this.numberOfLactatingAnimals == mpe.numberOfLactatingAnimals));
+        }
     }
 }

@@ -239,12 +239,13 @@ namespace HerdManager.Controllers
             {
                 if (context.HealthInterventionForHealthEvents.Select(s => s.ID).Contains(healthInterventionForHealthEvent.ID))
                 {
-                    HealthInterventionForHealthEvent oldHihe = context.HealthInterventionForHealthEvents.Find(healthInterventionForHealthEvent);
+                    HealthInterventionForHealthEvent oldHihe = context.HealthInterventionForHealthEvents.Find(healthInterventionForHealthEvent.ID);
                     if(oldHihe.HasBeenUpdated(healthInterventionForHealthEvent))
                     {
                         oldHihe.numberOfAffectedBabies = healthInterventionForHealthEvent.numberOfAffectedBabies;
                         oldHihe.numberOfAffectedYoung = healthInterventionForHealthEvent.numberOfAffectedYoung;
                         oldHihe.numberOfAffectedAdult = healthInterventionForHealthEvent.numberOfAffectedAdult;
+                        context.SaveChanges();
                         return Json(new InsertionOutcome { outcome = "Updated", ID = healthInterventionForHealthEvent.ID.ToString() });
                     }
                 
@@ -285,8 +286,18 @@ namespace HerdManager.Controllers
         {
             if(context.MilkForProductivityEvents.Count()>0)
             {
-                if(context.MilkForProductivityEvents.Select(m => m.ID).Contains(mpe.ID))
-                    return Json(new InsertionOutcome { outcome = "Found", ID = mpe.ID.ToString() });
+                if (context.MilkForProductivityEvents.Select(m => m.ID).Contains(mpe.ID))
+                {
+                    MilkForProductivityEvent oldMpe = context.MilkForProductivityEvents.Find(mpe.ID);
+                    if(mpe.HasBeenUpdate(oldMpe))
+                    {
+                        oldMpe.numberOfLactatingAnimals = mpe.numberOfLactatingAnimals;
+                        oldMpe.litresOfMilkPerDay = mpe.litresOfMilkPerDay;
+                        return Json(new InsertionOutcome { outcome = "Updated", ID = mpe.ID.ToString() });
+                    }
+                    else
+                        return Json(new InsertionOutcome { outcome = "Found", ID = mpe.ID.ToString() });
+                }
             }
 
             if (mpe.ID < 0)
@@ -301,8 +312,19 @@ namespace HerdManager.Controllers
         {
             if(context.BirthsForProductivityEvents.Count()>0)
             {
-                if(context.BirthsForProductivityEvents.Select(b => b.ID).Contains(bpe.ID))
-                    return Json(new InsertionOutcome { outcome = "Found", ID = bpe.ID.ToString() });
+                if (context.BirthsForProductivityEvents.Select(b => b.ID).Contains(bpe.ID))
+                {
+                    BirthsForProductivityEvent oldBpe = context.BirthsForProductivityEvents.Find(bpe.ID);
+                    if(oldBpe.HasBeenUpdated(bpe))
+                    {
+                        oldBpe.nOfGestatingAnimals = bpe.nOfGestatingAnimals;
+                        oldBpe.nOfBirths = bpe.nOfBirths;
+                        context.SaveChanges();
+                        return Json(new InsertionOutcome { outcome = "Updated", ID = bpe.ID.ToString() });
+                    }
+                    else
+                        return Json(new InsertionOutcome { outcome = "Found", ID = bpe.ID.ToString() });
+                }
             }
 
             if (bpe.ID < 0)
