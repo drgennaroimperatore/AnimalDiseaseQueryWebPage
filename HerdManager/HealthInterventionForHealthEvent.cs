@@ -32,5 +32,15 @@ namespace HerdManager
         public virtual HealthEvent HealthEvent { get; set; }
 
         public virtual HealthIntervention HealthIntervention { get; set; }
+
+        public bool HasBeenUpdated(HealthInterventionForHealthEvent hihe)
+        {
+            return ((this.ID == hihe.ID
+                && this.healthEventID == hihe.healthEventID
+                && this.healthInterventionID == hihe.healthInterventionID)
+                && (this.numberOfAffectedAdult != hihe.numberOfAffectedAdult
+                || this.numberOfAffectedYoung != hihe.numberOfAffectedYoung
+                || this.numberOfAffectedBabies != hihe.numberOfAffectedBabies));
+        }
     }
 }

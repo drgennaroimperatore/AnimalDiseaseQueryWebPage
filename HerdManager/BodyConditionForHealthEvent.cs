@@ -24,5 +24,16 @@ namespace HerdManager
         public virtual BodyCondition BodyCondition { get; set; }
 
         public virtual HealthEvent HealthEvent { get; set; }
+
+        public bool HasBeenUpdated(BodyConditionForHealthEvent bche)
+        {
+            return ((bche.ID == this.ID &&
+                    bche.bodyConditionID == this.bodyConditionID &&
+                    bche.healthEventID == this.healthEventID) 
+                    && 
+                    (bche.numberOfAffectedBabies!= this.numberOfAffectedBabies 
+                    || bche.numberOfAffectedYoung != this.numberOfAffectedYoung
+                    || bche.numberOfAffectedOld != this.numberOfAffectedOld));
+        }
     }
 }

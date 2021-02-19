@@ -179,11 +179,14 @@ namespace HerdManager.Controllers
             {
                 if(context.SignsForHealthEvents.Select(s=> s.ID).Contains(she.ID))
                   {
-                    SignsForHealthEvent oldShe = context.SignsForHealthEvents.Find(she);
+                    SignsForHealthEvent oldShe = context.SignsForHealthEvents.Where(b => b.ID == she.ID).FirstOrDefault();
                     if (she.HasBeenUpdated(oldShe))
                     {
-                        oldShe = she;
+                        oldShe.numberOfAffectedBabies = she.numberOfAffectedBabies;
+                        oldShe.numberOfAffectedOld = she.numberOfAffectedOld;
+                        oldShe.numberOfAffectedYoung = she.numberOfAffectedYoung;
                         context.SaveChanges();
+                        return Json(new InsertionOutcome { outcome = "Updated", ID = she.ID.ToString() });
                     }
 
                     else
@@ -207,14 +210,22 @@ namespace HerdManager.Controllers
             {
                 if (context.BodyConditionForHealthEvents.Select(s => s.ID).Contains(bodyConditionForHealthEvent.ID))
                 {
-                    return Json(new InsertionOutcome { outcome = "Found", ID = bodyConditionForHealthEvent.ID.ToString() });
-                }
+                    BodyConditionForHealthEvent oldBhce = context.BodyConditionForHealthEvents.Find(bodyConditionForHealthEvent);
+ 
+                    if(bodyConditionForHealthEvent.HasBeenUpdated(oldBhce))
+                    {
+                        oldBhce = bodyConditionForHealthEvent;
+                        return Json(new InsertionOutcome { outcome = "Updated", ID = bodyConditionForHealthEvent.ID.ToString() });
+                    }
+                    else
+                        return Json(new InsertionOutcome { outcome = "Found", ID = bodyConditionForHealthEvent.ID.ToString() });
+
+                    }
             }
             if(bodyConditionForHealthEvent.ID<0)
                bodyConditionForHealthEvent.ID = 0;
-
+        
             
-
             context.BodyConditionForHealthEvents.Add(bodyConditionForHealthEvent);
             context.SaveChanges();
        
@@ -228,12 +239,20 @@ namespace HerdManager.Controllers
             {
                 if (context.HealthInterventionForHealthEvents.Select(s => s.ID).Contains(healthInterventionForHealthEvent.ID))
                 {
+                    HealthInterventionForHealthEvent oldHihe = context.HealthInterventionForHealthEvents.Find(healthInterventionForHealthEvent);
+                    if(oldHihe.HasBeenUpdated(healthInterventionForHealthEvent))
+                    {
+                        oldHihe.numberOfAffectedBabies = healthInterventionForHealthEvent.numberOfAffectedBabies;
+                        oldHihe.numberOfAffectedYoung = healthInterventionForHealthEvent.numberOfAffectedYoung;
+                        oldHihe.numberOfAffectedAdult = healthInterventionForHealthEvent.numberOfAffectedAdult;
+                        return Json(new InsertionOutcome { outcome = "Updated", ID = healthInterventionForHealthEvent.ID.ToString() });
+                    }
+                
                     return Json(new InsertionOutcome { outcome = "Found", ID = healthInterventionForHealthEvent.ID.ToString() });
                 }
             }
             if (healthInterventionForHealthEvent.ID < 0)
                 healthInterventionForHealthEvent.ID = 0;
-
 
 
             context.HealthInterventionForHealthEvents.Add(healthInterventionForHealthEvent);
