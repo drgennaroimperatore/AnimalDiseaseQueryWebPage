@@ -359,12 +359,35 @@ namespace HerdManager.Controllers
         {
             if(context.AnimalMovementsForDynamicEvents.Count()>0)
             {
-                if(context.AnimalMovementsForDynamicEvents.Select(a=> a.ID ).Contains(amde.ID))
-                    return Json(new InsertionOutcome { outcome = "Found", ID = amde.ID.ToString() });
+                if (context.AnimalMovementsForDynamicEvents.Select(a => a.ID).Contains(amde.ID))
+                {
+                    AnimalMovementsForDynamicEvent oldAmde = context.AnimalMovementsForDynamicEvents.Find(amde.ID);
+
+                    if (oldAmde.HasBeenUpdated(amde))
+                    {
+                        oldAmde.lostBabies = amde.lostBabies;
+                        oldAmde.lostYoung = amde.lostYoung;
+                        oldAmde.lostOld = amde.lostOld;
+
+                        oldAmde.boughtBabies = amde.boughtBabies;
+                        oldAmde.boughtYoung = amde.boughtYoung;
+                        oldAmde.boughtOld = amde.boughtOld;
+
+                        oldAmde.soldBabies = amde.soldBabies;
+                        oldAmde.soldYoung = amde.soldYoung;
+                        oldAmde.soldOld = amde.soldOld;
+
+                        context.SaveChanges();
+                        return Json(new InsertionOutcome { outcome = "Found", ID = amde.ID.ToString() });
+                    }
+                    else
+                        return Json(new InsertionOutcome { outcome = "Found", ID = amde.ID.ToString() });
+
+                }
             }
 
             if (amde.ID < 0)
-                amde.ID = 0;
+                 amde.ID = 0;
             context.AnimalMovementsForDynamicEvents.Add(amde);
             context.SaveChanges();
 

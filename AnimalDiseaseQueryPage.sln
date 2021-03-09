@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetEddieAutomaticCopier", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellForAutomaticCopy", "ShellForAutomaticCopy\ShellForAutomaticCopy.csproj", "{D5B2D5FD-8AAB-4214-BD71-7F9E47B2287D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocationsForExcelXMLGenerator", "LocationsForExcelXMLGenerator\LocationsForExcelXMLGenerator.csproj", "{3B593016-CD44-47A3-9D6C-F00954CE3A56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,14 @@ Global
 		{D5B2D5FD-8AAB-4214-BD71-7F9E47B2287D}.PublishToIONOS|Any CPU.Build.0 = Release|Any CPU
 		{D5B2D5FD-8AAB-4214-BD71-7F9E47B2287D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5B2D5FD-8AAB-4214-BD71-7F9E47B2287D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B593016-CD44-47A3-9D6C-F00954CE3A56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B593016-CD44-47A3-9D6C-F00954CE3A56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B593016-CD44-47A3-9D6C-F00954CE3A56}.PublishToDevWeb|Any CPU.ActiveCfg = Release|Any CPU
+		{3B593016-CD44-47A3-9D6C-F00954CE3A56}.PublishToDevWeb|Any CPU.Build.0 = Release|Any CPU
+		{3B593016-CD44-47A3-9D6C-F00954CE3A56}.PublishToIONOS|Any CPU.ActiveCfg = Release|Any CPU
+		{3B593016-CD44-47A3-9D6C-F00954CE3A56}.PublishToIONOS|Any CPU.Build.0 = Release|Any CPU
+		{3B593016-CD44-47A3-9D6C-F00954CE3A56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B593016-CD44-47A3-9D6C-F00954CE3A56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
