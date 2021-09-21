@@ -14,9 +14,11 @@ namespace LocationsForExcelXMLGenerator
         static void Main(string[] args)
         {
             LocationReader lr = new LocationReader();
-            lr.generateXML();
-            
 
+            Console.WriteLine("Generating locations.xml...");
+            lr.generateXML();
+
+            Console.WriteLine("Press key to exit...");
             Console.ReadLine();
 
         }

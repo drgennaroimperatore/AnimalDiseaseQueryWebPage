@@ -42,8 +42,10 @@ namespace LocationsForExcelXMLGenerator
             // readSheet(); // use default values
             XmlWriterSettings xmlWriterSettings = new XmlWriterSettings()
             {
-                Indent = true
-               
+                Indent = true,
+                
+
+
             };
             using (XmlWriter writer = XmlWriter.Create(pathJson,xmlWriterSettings))
             {
@@ -100,6 +102,28 @@ namespace LocationsForExcelXMLGenerator
                 double pid = (double)vals[index, PARENT_COLUMN];
                 string label = (string)vals[index, LABEL_COLUMN];
                 string type = (string)vals[index, TYPE_COLUMN];
+                if (type.StartsWith("Region"))
+                    type = "Region";
+                if (!label.Equals("SNNP"))
+                {
+                    if(label.Contains(" ") && label.Length > 0)
+                    {
+                        string[] names = label.Split(' ');
+                        label = "";
+                        int i = 0;
+                        foreach (String n in names)
+                        {
+                            if (n.Length == 0)
+                                continue;
+                            label += n[0] + (n.Substring(1, n.Length - 1).ToLower());
+                            if (i < names.Length-1)
+                                label += " ";
+                            i++;
+                        }
+                    }
+                    else
+                        label = label[0] + (label.Substring(1, label.Length - 1).ToLower());
+                }
               
 
                 if (pid == parentID)
@@ -109,7 +133,7 @@ namespace LocationsForExcelXMLGenerator
                     writer.WriteAttributeString("parent_ID", ((int)pid).ToString());
                     writer.WriteAttributeString("name", label);
 
-               
+              
                     getChildren(writer, index, vals, id);
 
                     writer.WriteEndElement();
@@ -119,6 +143,8 @@ namespace LocationsForExcelXMLGenerator
                           
            
         }
+
+       
         
     }
 }
