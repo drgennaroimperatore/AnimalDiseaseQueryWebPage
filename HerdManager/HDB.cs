@@ -83,9 +83,12 @@ namespace HerdManager
             modelBuilder.Entity<Farmer>()
                 .Property(e => e.region)
                 .IsUnicode(false);
+            modelBuilder.Entity<Farmer>()
+              .Property(e => e.zone)
+              .IsUnicode(false);
 
             modelBuilder.Entity<Farmer>()
-                .Property(e => e.district)
+                .Property(e => e.woreda)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Farmer>()

@@ -31,7 +31,11 @@ namespace HerdManager
 
         [Required]
         [StringLength(100)]
-        public string district { get; set; }
+        public string zone { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string woreda { get; set; }
 
         [Required]
         [StringLength(100)]
