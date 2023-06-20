@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -15,44 +16,35 @@ namespace NewData2023WebCrawler
         private static List<List<KeyValuePair<String, String>>> goatCases = new List<List<KeyValuePair<String, String>>>();
         private static List<List<KeyValuePair<String, String>>> horsemuleCases = new List<List<KeyValuePair<String, String>>>();
         private static List<List<KeyValuePair<String, String>>> donkeyCases = new List<List<KeyValuePair<String, String>>>();
-        private static List<List<KeyValuePair<String, String>>> = new List<List<KeyValuePair<String, String>>>();
-            private static async Task GetCaseDetails(HttpClient client, string caseName, List<KeyValuePair<String, String>> tableData)
+        private static List<List<KeyValuePair<String, String>>> camelCases= new List<List<KeyValuePair<String, String>>>();
+
+        private static void 
+
+        private static String parseMainCaseData(HtmlNode mainCase, String caseName, List<KeyValuePair<String, String>> tableData)
         {
+            List<HtmlNode> fullReportRows = mainCase.Elements("tr").ToList();
 
+            String species = "";
 
-            var content = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>(caseName, caseName)
-
-                });
-            var result = await client.PostAsync("/cases/case_viewN.php", content);
-            string resultContent = await result.Content.ReadAsStringAsync();
-            Console.WriteLine(resultContent);
-
-            HtmlDocument htmldocument = new HtmlDocument();
-            htmldocument.LoadHtml(resultContent);
-            HtmlNode root = htmldocument.DocumentNode;
-            HtmlNode div = root.ChildNodes[2].ChildNodes[3].ChildNodes[3]; // div class container
-            
-            List<HtmlNode> caseTable= div.Elements("table").ToList();
-            if (caseTable.Count <4)
-            {
-                Console.WriteLine();
-                return; // skip dirty data
-            }
-            HtmlNode singleCaseFullReport = caseTable[0];
-            List<HtmlNode> fullReportRows = singleCaseFullReport.Elements("tr").ToList();
-            
-            
             tableData.Add(new KeyValuePair<String, String>("caseID", caseName));
 
             foreach (HtmlNode row in fullReportRows)
             {
-              var children = row.ChildNodes;
-            tableData.Add(new KeyValuePair<String,String>(children[0].InnerText, children[1].InnerText));
-            }
-            HtmlNode mainSymptoms = caseTable[1];
 
+                var children = row.ChildNodes;
+                if (children.Count == 0)
+                {
+                    Console.WriteLine();
+                }
+                if (children[0].InnerText == "Species")
+                    species = children[1].InnerText;
+                tableData.Add(new KeyValuePair<String, String>(children[0].InnerText, children[1].InnerText));
+            }
+            return species;
+        }
+
+        private static void parseMainSymptoms(HtmlNode mainSymptoms, List<KeyValuePair<String, String>> tableData )
+        {
             List<HtmlNode> symptomRows = mainSymptoms.Elements("tr").ToList();
             for (int i = 1; i < symptomRows.Count; i++)
             {
@@ -60,30 +52,215 @@ namespace NewData2023WebCrawler
                 tableData.Add(new KeyValuePair<String, String>(children[0].InnerText, children[1].InnerText));
             }
 
-            HtmlNode expertChoice = caseTable[4];
+            
+        }
+
+        private static List<KeyValuePair<String, String>> parseAppRank(HtmlNode appRank)
+        {
+            return null;
+        }
+
+        private static void parseExpertChoice(HtmlNode expertChoice, List<KeyValuePair<String, String>> tableData)
+        {
             List<HtmlNode> expertChoicesRows = expertChoice.Elements("tr").ToList();
             foreach (var row in expertChoicesRows)
             {
+                if (row.ChildNodes.Count < 2)
+                {
+                    Console.WriteLine();
+                    return;
+                }
                 var children = row.ChildNodes;
                 tableData.Add(new KeyValuePair<String, String>(children[0].InnerText, children[1].InnerText));
 
             }
-            if(caseTable.Count>5) // we get here if zz_other
+
+           
+        }
+
+        private static void parseOtherChoice(HtmlNode otherChoice, List<KeyValuePair<String, String>> tableData)
+        {
+            List<HtmlNode> otherChoiceRows = otherChoice.Elements("tr").ToList();
+
+            foreach (var row in otherChoiceRows)
             {
-                HtmlNode otherChoice= caseTable[5];
-                List<HtmlNode> otherChoiceRows = otherChoice.Elements("tr").ToList();
+                if (row.ChildNodes.Count < 2)
+                    return; // if we get here there is a main treatment table
 
-                foreach (var row in otherChoiceRows)
-                {
-                    var children = row.ChildNodes;
-                    tableData.Add(new KeyValuePair<String, String>(children[0].InnerText, children[1].InnerText));
+                var children = row.ChildNodes;
+                tableData.Add(new KeyValuePair<String, String>(children[0].InnerText, children[1].InnerText));
 
-                }
             }
+        }
 
-            Console.WriteLine();
+        private static List<KeyValuePair<String, String>> parseTreatments(HtmlNode treatments)
+        {
+            return null;
+        }
+
+
+        private static HtmlNode getMainDiv(String htmlString)
+        {
+            HtmlDocument htmldocument = new HtmlDocument();
+            htmldocument.LoadHtml(htmlString);
+            HtmlNode root = htmldocument.DocumentNode;
+            return root.ChildNodes[2].ChildNodes[3].ChildNodes[3]; // div class container
 
         }
+
+
+        private static async Task GetCaseDetails(HttpClient client, string caseName, List<KeyValuePair<String, String>> tableData)
+        {
+            try
+            {
+                var content = new FormUrlEncodedContent(new[]
+                {
+                new KeyValuePair<string, string>(caseName, caseName)
+
+                });
+                var result = await client.PostAsync("/cases/case_viewN.php", content);
+                string resultContent = await result.Content.ReadAsStringAsync();
+               // Console.WriteLine(resultContent);
+
+                List<HtmlNode> caseTable = getMainDiv(resultContent).Elements("table").ToList();
+                if (caseTable.Count <=3)
+                {
+                    Console.WriteLine();
+                    return; // skip dirty data
+                }
+
+                HtmlNode expertChoice = null;
+                if (caseTable.Count==4)
+                {
+
+                    if (caseTable[1].InnerText.Contains("App Disease Rank"))
+                        return; // skip dirty data
+                    else
+                    {
+                        expertChoice = caseTable[3];
+                        Console.WriteLine();
+                    }
+                }
+
+                HtmlNode singleCaseFullReport = caseTable[0];
+
+                String species = parseMainCaseData(singleCaseFullReport, caseName, tableData);
+
+                HtmlNode mainSymptoms = caseTable[1];
+
+                
+
+               
+
+                if (caseTable.Count==5)
+                {
+                    Console.WriteLine();
+                    
+                    if (caseTable[3].InnerText.Contains("Expert Choice"))
+                        expertChoice = caseTable[3];
+                    
+
+                    if(caseTable[4].InnerText.Contains("Expert Choice"))
+                    {
+                        expertChoice = caseTable[3];
+                          
+                    }
+
+                    if(caseTable[0].InnerText.Contains("Symptoms"))
+                    {
+                        Console.WriteLine();
+                    }
+                    
+                }
+                HtmlNode otherChoice = null;
+
+                if (caseTable.Count == 6)
+                {
+                    mainSymptoms = caseTable[1];
+                    expertChoice = caseTable[4];
+                    otherChoice = caseTable[5];
+                }
+
+               
+                if (caseTable.Count==7)
+                {
+                    mainSymptoms = caseTable[1];
+                    expertChoice = caseTable[4];
+                    otherChoice = caseTable[5];
+                    
+                }
+
+                
+                
+                
+                parseMainSymptoms(mainSymptoms, tableData);
+                if(expertChoice!=null) parseExpertChoice(expertChoice, tableData);
+                if (otherChoice != null) parseOtherChoice(otherChoice, tableData);
+
+                Console.WriteLine("");
+
+                bool hasOtherDisease = false;
+
+
+                foreach (var k in tableData)
+                {
+                    if (k.Key.Contains( "Other Disease"))
+                        hasOtherDisease = true;
+                }
+
+                if (!hasOtherDisease)
+                    tableData.Add(new KeyValuePair<string, string>("Other Disease Selected:", "")); // padding for other disease
+
+                Console.WriteLine();
+                switch (species)
+                {
+                    case "Cattle":
+                        cattleCases.Add(tableData);
+                        break;
+                    case "Sheep":
+                        sheepCases.Add(tableData);
+                        break;
+                    case "Goats":
+                        goatCases.Add(tableData);
+                        break;
+                    case "Camel":
+                        camelCases.Add(tableData);
+                        break;
+                    case "Horse/Mule":
+                        horsemuleCases.Add(tableData);
+                        break;
+                    case "Donkey":
+                        donkeyCases.Add(tableData);
+                        break;
+
+                }
+
+                Console.Clear();
+                Console.WriteLine("Cattle Cases: " + cattleCases.Count);
+                Console.WriteLine("Sheep Cases: " + sheepCases.Count);
+                Console.WriteLine("Goat Cases: " + goatCases.Count);
+                Console.WriteLine("Camel Cases: " + camelCases.Count);
+                Console.WriteLine("Horse and Mule Cases: " + horsemuleCases.Count);
+                Console.WriteLine("Donkey Cases: " + donkeyCases.Count);
+            }
+            catch (AggregateException ae)
+            {
+                foreach (var e in ae.Flatten().InnerExceptions)
+
+                {
+                    var stack = ae.StackTrace;
+
+                    Console.WriteLine(e.Message);
+                }
+            }
+            catch (Exception e)
+            {
+                var stack = e.StackTrace;
+                Console.WriteLine(e.Message);
+            }
+
+        }
+    
 
         public static async Task PostAsync()
         {
@@ -135,14 +312,11 @@ namespace NewData2023WebCrawler
                            HtmlAttributeCollection attribute = columns.FirstChild.Attributes;
                             var name = attribute[2].Value;
                             List<KeyValuePair<String, String>> td = new List<KeyValuePair<String, String>>();
-                            try
-                            {
+                            
                                 GetCaseDetails(client, name, td).Wait();
-                            } catch(Exception e)
-                            {
-                                Console.WriteLine(e.Message);
-                                continue;
-                            }
+                           
+                                
+                            
                             string caseID = name.Remove(0, 4); //remove the word case
                             currentCase.Add(caseID);
                             
