@@ -32,5 +32,17 @@ namespace HerdManager
         public int dynamicEventID { get; set; }
 
         public virtual DynamicEvent DynamicEvent { get; set; }
+
+        public bool HasBeenUpdated (AnimalMovementsForDynamicEvent amde)
+        {
+            return (
+                (this.ID == amde.ID && this.dynamicEventID == amde.dynamicEventID)
+                && 
+                ((this.lostBabies != amde.lostBabies || this.lostYoung != amde.lostYoung || this.lostOld != amde.lostOld)
+                || (this.boughtBabies != amde.boughtBabies || this.boughtYoung != amde.boughtYoung || this.boughtOld != amde.boughtOld)
+                || (this.soldBabies != amde.soldBabies || this.soldYoung != amde.soldYoung || this.soldOld != amde.soldOld))
+                );
+              
+        }
     }
 }

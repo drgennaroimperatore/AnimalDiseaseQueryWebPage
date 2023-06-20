@@ -9,6 +9,7 @@ Anoroxia/Loss of apetite,ANOREXIA / (LOSS OF APPETITE)
 Anorexia/Loss of appetite,ANOREXIA / (LOSS OF APPETITE)
 Ataxia/Incoordinated movement,ATAIXA / INCORDINATION OF MOVEMENT
 Ataxia/ Incoordination of movement,ATAIXA / INCORDINATION OF MOVEMENT
+Ataxia /Incoordinated movement,ATAIXA / INCORDINATION OF MOVEMENT
 Congested mucous membrane,CONGESTED MM
 Constipation,CONSTIPATION
 Coughing (including owner reported),COUGHING (INCL. OWNER REPORTED)
@@ -17,6 +18,7 @@ Depression / Apathy,APATHY / DEPRESSION
 Depression (Apathy),APATHY / DEPRESSION
 Diarrhoea,DIARRHOEA
 Dysentery/Bloody diarrhoea,DYSENTERY (BLOOD IN FAECES)
+Dysentery/Bloody diarrhea,DYSENTERY (BLOOD IN FAECES)
 Dyspnoea/ Coughing,DYSPNOEA / COUGHING (DIFFICULTY BREATHING)
 Dyspnoea/Difficulty breathing,DYSPNOEA / COUGHING (DIFFICULTY BREATHING)
 Dyspnoea/ difficulty breathing,DYSPNOEA / COUGHING (DIFFICULTY BREATHING)
@@ -28,7 +30,9 @@ Icterus/ Yellowsh mucous membrane,ICTERUS (YELLOWING OF MEMBRANES)
 Icterus (yellowish mucous membrane),ICTERUS (YELLOWING OF MEMBRANES)
 Lameness,LAMENESS
 Lymphnode enlargment,LYMPH NODE ENLARGEMENT
+Lymphnode enlargement,LYMPH NODE ENLARGEMENT
 Nasal discharge (mucoprullent),NASAL DISCHARGE (MUCOPURULENT)
+Nasal discharge (mucopurullent),NASAL DISCHARGE (MUCOPURULENT)
 Nasal discharge (serous),NASAL DISCHARGE (SEROUS)
 Nodular lesions,NODULAR LESSION
 Nodular lesions (painful),NODULAR LESSION

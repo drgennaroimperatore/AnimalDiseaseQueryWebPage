@@ -9,6 +9,12 @@ namespace HerdManager
     [Table("HerdDatabase.Farmer")]
     public partial class Farmer
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Farmer()
+        {
+            Herds = new HashSet<Herd>();
+        }
+
         public int ID { get; set; }
 
         [Required]
@@ -25,7 +31,11 @@ namespace HerdManager
 
         [Required]
         [StringLength(100)]
-        public string district { get; set; }
+        public string zone { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string woreda { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -33,6 +43,9 @@ namespace HerdManager
 
         public int UserID { get; set; }
 
-        public virtual ILRIUser User { get; set; }
+        public virtual User User { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Herd> Herds { get; set; }
     }
 }

@@ -15,19 +15,23 @@ namespace HerdManager
         public virtual DbSet<AnimalMovementsForDynamicEvent> AnimalMovementsForDynamicEvents { get; set; }
         public virtual DbSet<Animal> Animals { get; set; }
         public virtual DbSet<BirthsForProductivityEvent> BirthsForProductivityEvents { get; set; }
+        public virtual DbSet<BodyCondition> BodyConditions { get; set; }
+        public virtual DbSet<BodyConditionForHealthEvent> BodyConditionForHealthEvents { get; set; }
         public virtual DbSet<DeathsForDynamicEvent> DeathsForDynamicEvents { get; set; }
         public virtual DbSet<Disease> Diseases { get; set; }
+        public virtual DbSet<DiseasesForHealthEvent> DiseasesForHealthEvents { get; set; }
         public virtual DbSet<DynamicEvent> DynamicEvents { get; set; }
         public virtual DbSet<Farmer> Farmers { get; set; }
         public virtual DbSet<HealthEvent> HealthEvents { get; set; }
+        public virtual DbSet<HealthIntervention> HealthInterventions { get; set; }
+        public virtual DbSet<HealthInterventionForHealthEvent> HealthInterventionForHealthEvents { get; set; }
         public virtual DbSet<Herd> Herds { get; set; }
         public virtual DbSet<HerdVisit> HerdVisits { get; set; }
         public virtual DbSet<MilkForProductivityEvent> MilkForProductivityEvents { get; set; }
         public virtual DbSet<ProductivityEvent> ProductivityEvents { get; set; }
         public virtual DbSet<Sign> Signs { get; set; }
         public virtual DbSet<SignsForHealthEvent> SignsForHealthEvents { get; set; }
-        public virtual DbSet<DiseasesForHealthEvent> DiseasesForHealthEvents { get; set; }
-        public virtual DbSet<ILRIUser> Users { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -48,6 +52,18 @@ namespace HerdManager
                 .WithRequired(e => e.Animal)
                 .HasForeignKey(e => e.speciesID);
 
+            modelBuilder.Entity<BodyCondition>()
+                .Property(e => e.label)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<BodyCondition>()
+                .Property(e => e.species)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<BodyCondition>()
+                .Property(e => e.description)
+                .IsUnicode(false);
+
             modelBuilder.Entity<DeathsForDynamicEvent>()
                 .Property(e => e.causeOfDeath)
                 .IsUnicode(false);
@@ -67,13 +83,32 @@ namespace HerdManager
             modelBuilder.Entity<Farmer>()
                 .Property(e => e.region)
                 .IsUnicode(false);
+            modelBuilder.Entity<Farmer>()
+              .Property(e => e.zone)
+              .IsUnicode(false);
 
             modelBuilder.Entity<Farmer>()
-                .Property(e => e.district)
+                .Property(e => e.woreda)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Farmer>()
                 .Property(e => e.kebele)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<HealthIntervention>()
+                .Property(e => e.name)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<HealthInterventionForHealthEvent>()
+                .Property(e => e.vaccination)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<HealthInterventionForHealthEvent>()
+                .Property(e => e.comments)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<HerdVisit>()
+                .Property(e => e.comments)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Sign>()
@@ -89,11 +124,11 @@ namespace HerdManager
                 .WithRequired(e => e.Sign)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<ILRIUser>()
-               .Property(e => e.Name)
-               .IsUnicode(false);
+            modelBuilder.Entity<User>()
+                .Property(e => e.Name)
+                .IsUnicode(false);
 
-            modelBuilder.Entity<ILRIUser>()
+            modelBuilder.Entity<User>()
                 .Property(e => e.UUID)
                 .IsUnicode(false);
         }

@@ -583,7 +583,23 @@ namespace DiagnosticDataVisualiser.Controllers
             public string comment { get; set; }
             public string date { get; set; }
         }
+
+        public class CaseQueryMatchTable
+        {
+            public string caseID { get; set; }
+            public string userCHDisease { get; set; }
+            public string userCHDiseasePerc { get; set; }
+            public string comment { get; set; }
+            public string date { get; set; }
+
+        }
         public class DiseaseRankQuery
+        {
+            public string diseaseName { get; set; }
+            public string percentage { get; set; }
+        }
+
+        public class DiseaseRankQueryMatchTable
         {
             public string diseaseName { get; set; }
             public string percentage { get; set; }
@@ -591,422 +607,426 @@ namespace DiagnosticDataVisualiser.Controllers
 
         public enum AccuracyResult { MATCH, UNSURE, NO_MATCH }
 
-//        public JsonResult DrawAccuracyTable(Eddie context, string animalName, string year)
-//        {
+                public JsonResult DrawAccuracyTable(TestFramework context, string animalName)
+                {
 
 
 
-//            /* pseudo code from prof revie
-//             * Dset = {D1}
-//if D1 > 55%
-//   then Dset = {D1}    	# definitive diagnosis and we are done
-//   else i = 2
-//      while i <> 99
-//      if (D1 - Di < 10%) 	# or perhaps this should be 7% or 15% (we can vary)
-//         then Dset = {Dset} ++ {Di}
-//                   i = i + 1
-//         else i = 99      	# finished adding possible diagnoses
+        //            /* pseudo code from prof revie
+        //             * Dset = {D1}
+        //if D1 > 55%
+        //   then Dset = {D1}    	# definitive diagnosis and we are done
+        //   else i = 2
+        //      while i <> 99
+        //      if (D1 - Di < 10%) 	# or perhaps this should be 7% or 15% (we can vary)
+        //         then Dset = {Dset} ++ {Di}
+        //                   i = i + 1
+        //         else i = 99      	# finished adding possible diagnoses
 
-//if size(Dset) = 1
-//   then if {U1} == {Dset} 
-//               then “match”
-//               else “no_match”
-//   else if {U1} in {Dset}
-//               then “unsure”
-//               else “no_match”
+        //if size(Dset) = 1
+        //   then if {U1} == {Dset} 
+        //               then “match”
+        //               else “no_match”
+        //   else if {U1} in {Dset}
+        //               then “unsure”
+        //               else “no_match”
 
-//             */
+        //             */
 
-//            /*steps of the algo
-//             * 
+        //            /*steps of the algo
+        //             * 
+
+        //             3) if the first choice is 55% or more marke it as match
+        //             3) if not if the difference betwen the first disease and the each disease is less than 10% add it, when we are done exit the loop
+        //             4) if the list of disease contains one disease, if it matches the vet's then it is match, if it doesn't it is no match
+        //             5) if there is more than one disease, if the list contains the vet's choice we are unsure, if the list does not, it is a definite no match
+        //             */
+
+        //            /*caseInfo -> diseaseRank
+        //            setCase ->diseaseRankN
+        //                */
+
            
-//             3) if the first choice is 55% or more marke it as match
-//             3) if not if the difference betwen the first disease and the each disease is less than 10% add it, when we are done exit the loop
-//             4) if the list of disease contains one disease, if it matches the vet's then it is match, if it doesn't it is no match
-//             5) if there is more than one disease, if the list contains the vet's choice we are unsure, if the list does not, it is a definite no match
-//             */
-
-//            /*caseInfo -> diseaseRank
-//            setCase ->diseaseRankN
-//                */
-//            SortedDictionary<string, AccuracyTableData> result = new SortedDictionary<string, AccuracyTableData>();
-//            string caseRawQuery = @"SELECT caseID, userCHdisease FROM caseInfo WHERE species = @p0";
-//            var casesFromCaseInfo = context.Database.SqlQuery<CaseQuery>(caseRawQuery,animalName).ToList();
-
-//            foreach (CaseQuery c in casesFromCaseInfo)
-//            {
-
-//                string[] nameAndPercentage = c.userCHDisease.Split(':');
-//                string userChosenDiseaseName = nameAndPercentage[0].Trim();
-//                float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1].Replace("%", ""), out userChosenDiseasePercentage);
-
-//                string caseID = c.caseID.ToString();
-//                string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRank WHERE caseID = " + caseID +" ORDER BY rank";
-
-//                var diseaseRank = context.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
-//                if (diseaseRank.Count == 0)
-//                    continue;
-
-//                AccuracyResult accuracyResult = AccuracyResult.MATCH;
-                
-//                List<DiseaseRankQuery> highRankingDiagnoses = new List<DiseaseRankQuery>();
-//                highRankingDiagnoses.Add(diseaseRank.First());
-
-//                DiseaseRankQuery firstDiagnosis = highRankingDiagnoses.First();
-//                var d1 = Convert.ToDecimal(firstDiagnosis.percentage, new CultureInfo("en-GB"));
-
-//                /*TODO REST OF THE ALGORITHM*/
-//                if (d1 < 55)
-//                {
-//                    for (int i=1; i<diseaseRank.Count; i++ )
-//                    {
-//                        var di= Convert.ToDecimal(diseaseRank[i].percentage, new CultureInfo("en-GB"));
-//                        if ((d1 - di) < 10)
-//                            highRankingDiagnoses.Add(diseaseRank[i]);
-//                        else
-//                            i = diseaseRank.Count;
-//                    }                         
-//                }
-                    
-
-                
-//                /*THIS PART OF THE ALGORITHM CHECKS WETHER THE VET'S CHOICE IS IN THE LIST WE PREVIOUSLY CREATED*/
-//                if(highRankingDiagnoses.Count==1)
-//                {
-//                    if (highRankingDiagnoses.First().diseaseName.Split(':')[0].Equals(userChosenDiseaseName))
-//                        accuracyResult = AccuracyResult.MATCH;
-//                    else
-//                        accuracyResult = AccuracyResult.NO_MATCH;
-//                }
-//                else
-//                {
-//                    bool vetChoiceIsContainedInAppDiagnoses = highRankingDiagnoses.Where(x => x.diseaseName.Split(':')[0].Equals(userChosenDiseaseName)).Count() > 0;
-//                    if (vetChoiceIsContainedInAppDiagnoses)
-//                        accuracyResult = AccuracyResult.UNSURE;
-//                    else
-//                        accuracyResult = AccuracyResult.NO_MATCH;
-
-//                }
-
-//                // do the same for table
-
-//                if (result.ContainsKey(userChosenDiseaseName))
-//                {
-//                    switch (accuracyResult)
-//                    {
-//                        case AccuracyResult.MATCH:
-//                            KeyValuePair<int, string> oldResult = result[userChosenDiseaseName].NMatch;
-//                            string incrementedFormat = (oldResult.Key + 1).ToString();
-//                            result[userChosenDiseaseName].NMatch = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
-//                            break;
-
-//                        case AccuracyResult.UNSURE:
-//                            oldResult = result[userChosenDiseaseName].NUnsure;
-//                            incrementedFormat = (oldResult.Key + 1).ToString();
-//                            result[userChosenDiseaseName].NUnsure = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
-//                            break;
-
-//                        case AccuracyResult.NO_MATCH:
-//                            oldResult = result[userChosenDiseaseName].NNoMatch;
-//                            incrementedFormat = (oldResult.Key + 1).ToString();
-//                            result[userChosenDiseaseName].NNoMatch = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
-//                            break;
-//                    }
-//                }
-//                else
-//                {
-//                    int nMatch = 0;
-//                    int nUnsure = 0;
-//                    int nNoMatch = 0;
-
-//                    switch (accuracyResult)
-//                    {
-//                        case AccuracyResult.MATCH:
-//                            nMatch = 1;
-//                            break;
-
-//                        case AccuracyResult.UNSURE:
-//                            nUnsure = 1;
-//                            break;
-
-//                        case AccuracyResult.NO_MATCH:
-//                            nNoMatch= 1;
-//                            break;
-//                    }
-
-//                    result.Add(userChosenDiseaseName,
-//                        new AccuracyTableData
-//                        {
-//                            NMatch = new KeyValuePair<int, string>(nMatch, nMatch.ToString()),
-//                            NNoMatch = new KeyValuePair<int, string>(nNoMatch, nNoMatch.ToString()),
-//                            NUnsure = new KeyValuePair<int, string>(nUnsure, nUnsure.ToString())
-//                        });
-//                }
-
-//            }
-
-//            caseRawQuery = @"SELECT caseID, userCHdisease FROM setCase WHERE species = @p0";
-//            var casesFromSetCase = context.Database.SqlQuery<CaseQuery>(caseRawQuery, animalName).ToList();
-
-//            foreach (CaseQuery c in casesFromSetCase)
-//            {
-
-//                string[] nameAndPercentage = c.userCHDisease.Split(':');
-//                string userChosenDiseaseName = nameAndPercentage[0].Trim();
-//                float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1].Replace("%", ""), out userChosenDiseasePercentage);
-
-//                string caseID = c.caseID.ToString();
-//                string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRankN WHERE caseID = " + caseID + " ORDER BY rank";
-
-//                var diseaseRank = context.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
-//                if (diseaseRank.Count == 0)
-//                    continue;
-
-//                AccuracyResult accuracyResult = AccuracyResult.MATCH;
-
-//                List<DiseaseRankQuery> highRankingDiagnoses = new List<DiseaseRankQuery>();
-//                highRankingDiagnoses.Add(diseaseRank.First());
-
-//                DiseaseRankQuery firstDiagnosis = highRankingDiagnoses.First();
-//                var d1 = Convert.ToDecimal(firstDiagnosis.percentage, new CultureInfo("en-GB"));
-
-//                /*TODO REST OF THE ALGORITHM*/
-//                if (d1 < 55)
-//                {
-//                    for (int i = 1; i < diseaseRank.Count; i++)
-//                    {
-//                        var di = Convert.ToDecimal(diseaseRank[i].percentage, new CultureInfo("en-GB"));
-//                        if ((d1 - di) < 10)
-//                            highRankingDiagnoses.Add(diseaseRank[i]);
-//                        else
-//                            i = diseaseRank.Count;
-//                    }
-//                }
-
-
-
-//                /*THIS PART OF THE ALGORITHM CHECKS WETHER THE VET'S CHOICE IS IN THE LIST WE PREVIOUSLY CREATED*/
-//                if (highRankingDiagnoses.Count == 1)
-//                {
-//                    if (highRankingDiagnoses.First().diseaseName.Split(':')[0].Equals(userChosenDiseaseName))
-//                        accuracyResult = AccuracyResult.MATCH;
-//                    else
-//                        accuracyResult = AccuracyResult.NO_MATCH;
-//                }
-//                else
-//                {
-//                    bool vetChoiceIsContainedInAppDiagnoses = highRankingDiagnoses.Where(x => x.diseaseName.Split(':')[0].Equals(userChosenDiseaseName)).Count() > 0;
-//                    if (vetChoiceIsContainedInAppDiagnoses)
-//                        accuracyResult = AccuracyResult.UNSURE;
-//                    else
-//                        accuracyResult = AccuracyResult.NO_MATCH;
-
-//                }
-
-//                // do the same for table
-
-//                if (result.ContainsKey(userChosenDiseaseName))
-//                {
-//                    switch (accuracyResult)
-//                    {
-//                        case AccuracyResult.MATCH:
-//                            KeyValuePair<int, string> oldResult = result[userChosenDiseaseName].NMatch;
-//                            string incrementedFormat = (oldResult.Key + 1).ToString();
-//                            result[userChosenDiseaseName].NMatch = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
-//                            break;
-
-//                        case AccuracyResult.UNSURE:
-//                            oldResult = result[userChosenDiseaseName].NUnsure;
-//                            incrementedFormat = (oldResult.Key + 1).ToString();
-//                            result[userChosenDiseaseName].NUnsure = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
-//                            break;
-
-//                        case AccuracyResult.NO_MATCH:
-//                            oldResult = result[userChosenDiseaseName].NNoMatch;
-//                            incrementedFormat = (oldResult.Key + 1).ToString();
-//                            result[userChosenDiseaseName].NNoMatch = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
-//                            break;
-//                    }
-//                }
-//                else
-//                {
-//                    int nMatch = 0;
-//                    int nUnsure = 0;
-//                    int nNoMatch = 0;
-
-//                    switch (accuracyResult)
-//                    {
-//                        case AccuracyResult.MATCH:
-//                            nMatch = 1;
-//                            break;
-
-//                        case AccuracyResult.UNSURE:
-//                            nUnsure = 1;
-//                            break;
-
-//                        case AccuracyResult.NO_MATCH:
-//                            nNoMatch = 1;
-//                            break;
-//                    }
-
-//                    result.Add(userChosenDiseaseName,
-//                        new AccuracyTableData
-//                        {
-//                            NMatch = new KeyValuePair<int, string>(nMatch, nMatch.ToString()),
-//                            NNoMatch = new KeyValuePair<int, string>(nNoMatch, nNoMatch.ToString()),
-//                            NUnsure = new KeyValuePair<int, string>(nUnsure, nUnsure.ToString())
-//                        });
-//                }
-
-//            }
-            
-
-//            return Json(result);
-//        }
-
-//        public void PopulateMatchResultsTable(match match, Eddie eddie)
-//        {
-
-//              /*caseInfo -> diseaseRank
-//            setCase ->diseaseRankN*/
-//            //if we already have data in here do nothing
-
-//          /*  if (match.match_results.ToList().Count > 0)
-//                return;*/
-//            List<String> animals = eddie.species.Distinct().Select(x => x.speciesName).ToList();
-
-//            foreach (String animalName in animals)
-//            {
-//                string caseRawQuery = @"SELECT caseID, userCHdisease,comment,date FROM caseInfo WHERE species = @p0";
-//                var casesFromCaseInfo = eddie.Database.SqlQuery<CaseQuery>(caseRawQuery, animalName).ToList();
-
-//                foreach(CaseQuery cq in casesFromCaseInfo)
-//                {
-
-//                    string[] nameAndPercentage = cq.userCHDisease.Split(':');
-//                    string userChosenDiseaseName = nameAndPercentage[0].Trim();
-//                    float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1].Replace("%",""), out userChosenDiseasePercentage);
-
-//                    string caseID = cq.caseID.ToString();
-//                    string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRank WHERE caseID = " + caseID + " ORDER BY rank";
-
-//                    var diseaseRank = eddie.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
-//                    if (diseaseRank.Count == 0)
-//                        continue;
-
-//                    float[] firstThreePercs = new float[3];
-//                    for (int i = 0; i < 3; i++)
-//                        float.TryParse(diseaseRank[i].percentage, out firstThreePercs[i]);
-
-//                    string commentContent = cq.comment;
-//                    if (String.IsNullOrEmpty(cq.comment))
-//                         commentContent = "NO COMMENT";
-//                    else
-//                    {
-//                        if (cq.comment.Length > 200)
-//                        {
-//                            commentContent = cq.comment.Substring(0, 200);
-//                        }
-//                    }
-
-
-
-//                    match.match_results.Add(new match_results
-//                    {
-//                        caseID = Convert.ToInt32(cq.caseID + 1000),
-//                        Ed_dis1 = diseaseRank[0].diseaseName,
-//                        Ed_perc1 = firstThreePercs[0],
-//                        Ed_dis2 = diseaseRank[1].diseaseName,
-//                        Ed_perc2 = firstThreePercs[1],
-//                        Ed_dis3 = diseaseRank[2].diseaseName,
-//                        Ed_perc3 = firstThreePercs[2],
-//                        user_dis = userChosenDiseaseName,
-//                        user_perc = userChosenDiseasePercentage,
-//                        comment = commentContent,
-//                        obv_date = Convert.ToDateTime(cq.date),
-//                        species = animalName
-
-//                    });//add 100 to cases from case info
-//                }
-
-//                 caseRawQuery = @"SELECT caseID, userCHdisease,comment,date FROM setCase WHERE species = @p0";
-//                 casesFromCaseInfo = eddie.Database.SqlQuery<CaseQuery>(caseRawQuery, animalName).ToList();
-
-//                foreach (CaseQuery cq in casesFromCaseInfo)
-//                {
-
-//                    string[] nameAndPercentage = cq.userCHDisease.Split(':');
-//                    string userChosenDiseaseName = nameAndPercentage[0].Trim();
-//                    float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1].Replace("%", ""), out userChosenDiseasePercentage);
-
-//                    string caseID = cq.caseID.ToString();
-//                    string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRankN WHERE caseID = " + caseID + " ORDER BY rank";
-
-//                    var diseaseRank = eddie.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
-//                    if (diseaseRank.Count == 0 || diseaseRank.Count < 3)
-//                        continue;
-
-//                    float[] firstThreePercs = new float[3];
-//                    for (int i = 0; i < 3; i++)
-//                        float.TryParse(diseaseRank[i].percentage, out firstThreePercs[i]);
-
-//                    string commentContent = cq.comment;
-//                    if (String.IsNullOrEmpty(cq.comment))
-//                        commentContent = "NO COMMENT";
-//                    else
-//                    {
-//                        if (cq.comment.Length>200)
-//                        {
-//                           commentContent = cq.comment.Substring(0, 200);
-//                        }
-//                    }
-                    
-
-//                    match.match_results.Add(new match_results
-//                    {
-//                        caseID = Convert.ToInt32(cq.caseID ),
-//                        Ed_dis1 = diseaseRank[0].diseaseName,
-//                        Ed_perc1 = firstThreePercs[0],
-//                        Ed_dis2 = diseaseRank[1].diseaseName,
-//                        Ed_perc2 = firstThreePercs[1],
-//                        Ed_dis3 = diseaseRank[2].diseaseName,
-//                        Ed_perc3 = firstThreePercs[2],
-//                        user_dis = userChosenDiseaseName,
-//                        user_perc = userChosenDiseasePercentage,
-//                        comment = commentContent,
-//                        obv_date = Convert.ToDateTime(cq.date),
-//                        species = animalName,
-                        
-
-//                    });//add 100 to cases from case info
-//                }
-//            }
-
-//            try
-//            {
-//                // Your code...
-//                // Could also be before try if you know the exception occurs in SaveChanges
-
-//                match.SaveChanges();
-//            }
-//            catch (DbEntityValidationException e)
-//            {
-//                foreach (var eve in e.EntityValidationErrors)
-//                {
-//                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-//                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
-//                    foreach (var ve in eve.ValidationErrors)
-//                    {
-//                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-//                            ve.PropertyName, ve.ErrorMessage);
-//                    }
-//                }
-
-//            }
-
-               
-
-//        }
+        SortedDictionary<string, AccuracyTableData> result = new SortedDictionary<string, AccuracyTableData>();
+        string caseRawQuery = @"SELECT Cases.ID as caseID, Diseases.Name AS userCHDisease, Cases.LikelihoodOfDiseaseChosenByUser AS userCHDiseasePerc FROM Diseases,Cases,Patients,Animals WHERE Cases.DiseaseChosenByUserID=Diseases.Id AND Cases.PatientID= Patients.ID AND Patients.AnimalID= Animals.Id AND Animals.Name = "+"'"+animalName+"'";
+        var casesFromCaseInfo = context.Database.SqlQuery<CaseQueryMatchTable>(caseRawQuery, animalName).ToList();
+
+            foreach (CaseQueryMatchTable c in casesFromCaseInfo)
+            {
+
+                // string[] nameAndPercentage = c.userCHDisease.Split(':');
+                string userChosenDiseaseName = c.userCHDisease;
+        float userChosenDiseasePercentage; float.TryParse(c.userCHDiseasePerc, out userChosenDiseasePercentage);
+
+                string caseID = c.caseID.ToString();
+        string diseaseRankQuery = "SELECT Diseases.Name AS diseaseName, PredictedLikelihoodOfDisease AS percentage FROM `ResultForCases`,Diseases WHERE CaseID = "+caseID +" AND Diseases.Id=ResultForCases.DiseaseID ORDER BY PredictedLikelihoodOfDisease DESC";
+
+
+
+        var diseaseRank = context.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
+                if (diseaseRank.Count == 0)
+                    continue;
+
+                AccuracyResult accuracyResult = AccuracyResult.MATCH;
+
+        List<DiseaseRankQuery> highRankingDiagnoses = new List<DiseaseRankQuery>();
+        highRankingDiagnoses.Add(diseaseRank.First());
+
+                DiseaseRankQuery firstDiagnosis = highRankingDiagnoses.First();
+        var d1 = Convert.ToDecimal(firstDiagnosis.percentage, new CultureInfo("en-GB"));
+
+                //                /*TODO REST OF THE ALGORITHM*/
+                if (d1 < 55)
+                {
+                    for (int i = 1; i < diseaseRank.Count; i++)
+                    {
+                        var di = Convert.ToDecimal(diseaseRank[i].percentage, new CultureInfo("en-GB"));
+                        if ((d1 - di) < 10)
+                            highRankingDiagnoses.Add(diseaseRank[i]);
+                        else
+                            i = diseaseRank.Count;
+                    }
+                }
+
+
+
+                //                /*THIS PART OF THE ALGORITHM CHECKS WETHER THE VET'S CHOICE IS IN THE LIST WE PREVIOUSLY CREATED*/
+                if (highRankingDiagnoses.Count == 1)
+                {
+                    if (highRankingDiagnoses.First().diseaseName.Split(':')[0].Equals(userChosenDiseaseName))
+                        accuracyResult = AccuracyResult.MATCH;
+                    else
+                        accuracyResult = AccuracyResult.NO_MATCH;
+                }
+                else
+                {
+                    bool vetChoiceIsContainedInAppDiagnoses = highRankingDiagnoses.Where(x => x.diseaseName.Equals(userChosenDiseaseName)).Count() > 0;
+                    if (vetChoiceIsContainedInAppDiagnoses)
+                        accuracyResult = AccuracyResult.UNSURE;
+                    else
+                        accuracyResult = AccuracyResult.NO_MATCH;
+
+                }
+
+                // do the same for table
+
+                if (result.ContainsKey(userChosenDiseaseName))
+                {
+                    switch (accuracyResult)
+                    {
+                        case AccuracyResult.MATCH:
+                            KeyValuePair<int, string> oldResult = result[userChosenDiseaseName].NMatch;
+                            string incrementedFormat = (oldResult.Key + 1).ToString();
+                            result[userChosenDiseaseName].NMatch = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
+                            break;
+
+                        case AccuracyResult.UNSURE:
+                            oldResult = result[userChosenDiseaseName].NUnsure;
+                            incrementedFormat = (oldResult.Key + 1).ToString();
+                            result[userChosenDiseaseName].NUnsure = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
+                            break;
+
+                        case AccuracyResult.NO_MATCH:
+                            oldResult = result[userChosenDiseaseName].NNoMatch;
+                            incrementedFormat = (oldResult.Key + 1).ToString();
+                            result[userChosenDiseaseName].NNoMatch = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
+                            break;
+                    }
+                }
+                else
+                {
+                    int nMatch = 0;
+                    int nUnsure = 0;
+                    int nNoMatch = 0;
+
+                    switch (accuracyResult)
+                    {
+                        case AccuracyResult.MATCH:
+                            nMatch = 1;
+                            break;
+
+                        case AccuracyResult.UNSURE:
+                            nUnsure = 1;
+                            break;
+
+                        case AccuracyResult.NO_MATCH:
+                            nNoMatch = 1;
+                            break;
+                    }
+
+                    result.Add(userChosenDiseaseName,
+                        new AccuracyTableData
+                        {
+                            NMatch = new KeyValuePair<int, string>(nMatch, nMatch.ToString()),
+                            NNoMatch = new KeyValuePair<int, string>(nNoMatch, nNoMatch.ToString()),
+                            NUnsure = new KeyValuePair<int, string>(nUnsure, nUnsure.ToString())
+                        });
+                }
+
+            }
+
+            //caseRawQuery = @"SELECT caseID, userCHdisease FROM setCase WHERE species = @p0";
+            //var casesFromSetCase = context.Database.SqlQuery<CaseQuery>(caseRawQuery, animalName).ToList();
+
+            //foreach (CaseQuery c in casesFromSetCase)
+            //{
+
+            //    string[] nameAndPercentage = c.userCHDisease.Split(':');
+            //    string userChosenDiseaseName = nameAndPercentage[0].Trim();
+            //    float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1].Replace("%", ""), out userChosenDiseasePercentage);
+
+            //    string caseID = c.caseID.ToString();
+            //    string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRankN WHERE caseID = " + caseID + " ORDER BY rank";
+
+            //    var diseaseRank = context.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
+            //    if (diseaseRank.Count == 0)
+            //        continue;
+
+            //    AccuracyResult accuracyResult = AccuracyResult.MATCH;
+
+            //    List<DiseaseRankQuery> highRankingDiagnoses = new List<DiseaseRankQuery>();
+            //    highRankingDiagnoses.Add(diseaseRank.First());
+
+            //    DiseaseRankQuery firstDiagnosis = highRankingDiagnoses.First();
+            //    var d1 = Convert.ToDecimal(firstDiagnosis.percentage, new CultureInfo("en-GB"));
+
+            //    /*TODO REST OF THE ALGORITHM*/
+            //    if (d1 < 55)
+            //    {
+            //        for (int i = 1; i < diseaseRank.Count; i++)
+            //        {
+            //            var di = Convert.ToDecimal(diseaseRank[i].percentage, new CultureInfo("en-GB"));
+            //            if ((d1 - di) < 10)
+            //                highRankingDiagnoses.Add(diseaseRank[i]);
+            //            else
+            //                i = diseaseRank.Count;
+            //        }
+            //    }
+
+
+
+            //    //                /*THIS PART OF THE ALGORITHM CHECKS WETHER THE VET'S CHOICE IS IN THE LIST WE PREVIOUSLY CREATED*/
+            //    if (highRankingDiagnoses.Count == 1)
+            //    {
+            //        if (highRankingDiagnoses.First().diseaseName.Split(':')[0].Equals(userChosenDiseaseName))
+            //            accuracyResult = AccuracyResult.MATCH;
+            //        else
+            //            accuracyResult = AccuracyResult.NO_MATCH;
+            //    }
+            //    else
+            //    {
+            //        bool vetChoiceIsContainedInAppDiagnoses = highRankingDiagnoses.Where(x => x.diseaseName.Split(':')[0].Equals(userChosenDiseaseName)).Count() > 0;
+            //        if (vetChoiceIsContainedInAppDiagnoses)
+            //            accuracyResult = AccuracyResult.UNSURE;
+            //        else
+            //            accuracyResult = AccuracyResult.NO_MATCH;
+
+            //    }
+
+            //    // do the same for table
+
+            //    if (result.ContainsKey(userChosenDiseaseName))
+            //    {
+            //        switch (accuracyResult)
+            //        {
+            //            case AccuracyResult.MATCH:
+            //                KeyValuePair<int, string> oldResult = result[userChosenDiseaseName].NMatch;
+            //                string incrementedFormat = (oldResult.Key + 1).ToString();
+            //                result[userChosenDiseaseName].NMatch = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
+            //                break;
+
+            //            case AccuracyResult.UNSURE:
+            //                oldResult = result[userChosenDiseaseName].NUnsure;
+            //                incrementedFormat = (oldResult.Key + 1).ToString();
+            //                result[userChosenDiseaseName].NUnsure = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
+            //                break;
+
+            //            case AccuracyResult.NO_MATCH:
+            //                oldResult = result[userChosenDiseaseName].NNoMatch;
+            //                incrementedFormat = (oldResult.Key + 1).ToString();
+            //                result[userChosenDiseaseName].NNoMatch = new KeyValuePair<int, string>(oldResult.Key + 1, incrementedFormat);
+            //                break;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        int nMatch = 0;
+            //        int nUnsure = 0;
+            //        int nNoMatch = 0;
+
+            //        switch (accuracyResult)
+            //        {
+            //            case AccuracyResult.MATCH:
+            //                nMatch = 1;
+            //                break;
+
+            //            case AccuracyResult.UNSURE:
+            //                nUnsure = 1;
+            //                break;
+
+            //            case AccuracyResult.NO_MATCH:
+            //                nNoMatch = 1;
+            //                break;
+            //        }
+
+            //        result.Add(userChosenDiseaseName,
+            //            new AccuracyTableData
+            //            {
+            //                NMatch = new KeyValuePair<int, string>(nMatch, nMatch.ToString()),
+            //                NNoMatch = new KeyValuePair<int, string>(nNoMatch, nNoMatch.ToString()),
+            //                NUnsure = new KeyValuePair<int, string>(nUnsure, nUnsure.ToString())
+            //            });
+            //    }
+
+            //}
+
+
+            return Json(result);
+               }
+
+        //        public void PopulateMatchResultsTable(match match, Eddie eddie)
+        //        {
+
+        //              /*caseInfo -> diseaseRank
+        //            setCase ->diseaseRankN*/
+        //            //if we already have data in here do nothing
+
+        //          /*  if (match.match_results.ToList().Count > 0)
+        //                return;*/
+        //            List<String> animals = eddie.species.Distinct().Select(x => x.speciesName).ToList();
+
+        //            foreach (String animalName in animals)
+        //            {
+        //                string caseRawQuery = @"SELECT caseID, userCHdisease,comment,date FROM caseInfo WHERE species = @p0";
+        //                var casesFromCaseInfo = eddie.Database.SqlQuery<CaseQuery>(caseRawQuery, animalName).ToList();
+
+        //                foreach(CaseQuery cq in casesFromCaseInfo)
+        //                {
+
+        //                    string[] nameAndPercentage = cq.userCHDisease.Split(':');
+        //                    string userChosenDiseaseName = nameAndPercentage[0].Trim();
+        //                    float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1].Replace("%",""), out userChosenDiseasePercentage);
+
+        //                    string caseID = cq.caseID.ToString();
+        //                    string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRank WHERE caseID = " + caseID + " ORDER BY rank";
+
+        //                    var diseaseRank = eddie.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
+        //                    if (diseaseRank.Count == 0)
+        //                        continue;
+
+        //                    float[] firstThreePercs = new float[3];
+        //                    for (int i = 0; i < 3; i++)
+        //                        float.TryParse(diseaseRank[i].percentage, out firstThreePercs[i]);
+
+        //                    string commentContent = cq.comment;
+        //                    if (String.IsNullOrEmpty(cq.comment))
+        //                         commentContent = "NO COMMENT";
+        //                    else
+        //                    {
+        //                        if (cq.comment.Length > 200)
+        //                        {
+        //                            commentContent = cq.comment.Substring(0, 200);
+        //                        }
+        //                    }
+
+
+
+        //                    match.match_results.Add(new match_results
+        //                    {
+        //                        caseID = Convert.ToInt32(cq.caseID + 1000),
+        //                        Ed_dis1 = diseaseRank[0].diseaseName,
+        //                        Ed_perc1 = firstThreePercs[0],
+        //                        Ed_dis2 = diseaseRank[1].diseaseName,
+        //                        Ed_perc2 = firstThreePercs[1],
+        //                        Ed_dis3 = diseaseRank[2].diseaseName,
+        //                        Ed_perc3 = firstThreePercs[2],
+        //                        user_dis = userChosenDiseaseName,
+        //                        user_perc = userChosenDiseasePercentage,
+        //                        comment = commentContent,
+        //                        obv_date = Convert.ToDateTime(cq.date),
+        //                        species = animalName
+
+        //                    });//add 100 to cases from case info
+        //                }
+
+        //                 caseRawQuery = @"SELECT caseID, userCHdisease,comment,date FROM setCase WHERE species = @p0";
+        //                 casesFromCaseInfo = eddie.Database.SqlQuery<CaseQuery>(caseRawQuery, animalName).ToList();
+
+        //                foreach (CaseQuery cq in casesFromCaseInfo)
+        //                {
+
+        //                    string[] nameAndPercentage = cq.userCHDisease.Split(':');
+        //                    string userChosenDiseaseName = nameAndPercentage[0].Trim();
+        //                    float userChosenDiseasePercentage; float.TryParse(nameAndPercentage[1].Replace("%", ""), out userChosenDiseasePercentage);
+
+        //                    string caseID = cq.caseID.ToString();
+        //                    string diseaseRankQuery = "SELECT diseaseName, percentage FROM diseaseRankN WHERE caseID = " + caseID + " ORDER BY rank";
+
+        //                    var diseaseRank = eddie.Database.SqlQuery<DiseaseRankQuery>(diseaseRankQuery).ToList();
+        //                    if (diseaseRank.Count == 0 || diseaseRank.Count < 3)
+        //                        continue;
+
+        //                    float[] firstThreePercs = new float[3];
+        //                    for (int i = 0; i < 3; i++)
+        //                        float.TryParse(diseaseRank[i].percentage, out firstThreePercs[i]);
+
+        //                    string commentContent = cq.comment;
+        //                    if (String.IsNullOrEmpty(cq.comment))
+        //                        commentContent = "NO COMMENT";
+        //                    else
+        //                    {
+        //                        if (cq.comment.Length>200)
+        //                        {
+        //                           commentContent = cq.comment.Substring(0, 200);
+        //                        }
+        //                    }
+
+
+        //                    match.match_results.Add(new match_results
+        //                    {
+        //                        caseID = Convert.ToInt32(cq.caseID ),
+        //                        Ed_dis1 = diseaseRank[0].diseaseName,
+        //                        Ed_perc1 = firstThreePercs[0],
+        //                        Ed_dis2 = diseaseRank[1].diseaseName,
+        //                        Ed_perc2 = firstThreePercs[1],
+        //                        Ed_dis3 = diseaseRank[2].diseaseName,
+        //                        Ed_perc3 = firstThreePercs[2],
+        //                        user_dis = userChosenDiseaseName,
+        //                        user_perc = userChosenDiseasePercentage,
+        //                        comment = commentContent,
+        //                        obv_date = Convert.ToDateTime(cq.date),
+        //                        species = animalName,
+
+
+        //                    });//add 100 to cases from case info
+        //                }
+        //            }
+
+        //            try
+        //            {
+        //                // Your code...
+        //                // Could also be before try if you know the exception occurs in SaveChanges
+
+        //                match.SaveChanges();
+        //            }
+        //            catch (DbEntityValidationException e)
+        //            {
+        //                foreach (var eve in e.EntityValidationErrors)
+        //                {
+        //                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+        //                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+        //                    foreach (var ve in eve.ValidationErrors)
+        //                    {
+        //                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+        //                            ve.PropertyName, ve.ErrorMessage);
+        //                    }
+        //                }
+
+        //            }
+
+
+
+        //        }
     }
 }
 

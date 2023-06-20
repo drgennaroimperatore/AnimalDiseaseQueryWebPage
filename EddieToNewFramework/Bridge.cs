@@ -160,14 +160,37 @@ namespace EddieToNewFramework
                 Console.WriteLine(e.Message);
                 Console.WriteLine(diseaseName + " not Found in disease lookup dictionary");
             }
+            int id = 0;
+            try
+            {
+                id = ADDB.Diseases.Where(x => x.Name.Equals(lookup)).First().Id;
+            } catch (Exception e )
+            {
+                Console.WriteLine(e.Message);
+            }
 
-            return ADDB.Diseases.Where(x => x.Name.Equals(lookup)).First().Id;
+            return id;
         }
 
         protected int GetSignID(string signName)
         {
-            string symptomName = symptomLookupDictionary[signName.Trim()];
-            return ADDB.Signs.Where(x => x.Name.Equals(symptomName)).First().Id;
+            string symptomName = "";
+            try
+            {
+                symptomName = symptomLookupDictionary[signName.Trim()];
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            int id = 0;
+            try
+            {
+                id = ADDB.Signs.Where(x => x.Name.Equals(symptomName)).First().Id;
+            }catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return id;
         }
 
 

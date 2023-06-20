@@ -24,5 +24,14 @@ namespace HerdManager
         public virtual HealthEvent HealthEvent { get; set; }
 
         public virtual Sign Sign { get; set; }
+
+        public bool HasBeenUpdated(SignsForHealthEvent she)
+        {
+            return (she.ID == this.ID && this.healthEventID == she.healthEventID)
+                && (she.numberOfAffectedBabies != this.numberOfAffectedBabies ||
+                    she.numberOfAffectedYoung != this.numberOfAffectedYoung ||
+                    she.numberOfAffectedOld != this.numberOfAffectedOld);
+            
+        }
     }
 }

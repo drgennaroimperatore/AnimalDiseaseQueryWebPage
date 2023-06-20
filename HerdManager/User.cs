@@ -7,21 +7,20 @@ namespace HerdManager
     using System.Data.Entity.Spatial;
 
     [Table("HerdDatabase.Users")]
-    public partial class ILRIUser
+    public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ILRIUser()
+        public User()
         {
             Farmers = new HashSet<Farmer>();
         }
 
         public int ID { get; set; }
-     
+
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
 
-       
         [Required]
         [StringLength(150)]
         public string UUID { get; set; }

@@ -13,8 +13,14 @@ namespace HerdManager.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public ActionResult Index(HDB context)
         {
+            if(context.BodyConditions.Count()==0)
+            {
+                //populate the body condition reference table if it is empty
+                //context.BodyCondition.AddRange(BodyCondition.populate());
+            }
+            context.SaveChanges();
             return View();
         }
 
@@ -41,9 +47,9 @@ namespace HerdManager.Controllers
 
         }
 
-        public JsonResult InsertUser(HDB context, ILRIUser user)
+        public JsonResult InsertUser(HDB context, User user)
         {
-            ILRIUser oldUser = null;
+            User oldUser = null;
            
             try
             {
@@ -173,7 +179,18 @@ namespace HerdManager.Controllers
             {
                 if(context.SignsForHealthEvents.Select(s=> s.ID).Contains(she.ID))
                   {
-                    return Json(new InsertionOutcome { outcome = "Found", ID = she.ID.ToString() });
+                    SignsForHealthEvent oldShe = context.SignsForHealthEvents.Where(b => b.ID == she.ID).FirstOrDefault();
+                    if (she.HasBeenUpdated(oldShe))
+                    {
+                        oldShe.numberOfAffectedBabies = she.numberOfAffectedBabies;
+                        oldShe.numberOfAffectedOld = she.numberOfAffectedOld;
+                        oldShe.numberOfAffectedYoung = she.numberOfAffectedYoung;
+                        context.SaveChanges();
+                        return Json(new InsertionOutcome { outcome = "Updated", ID = she.ID.ToString() });
+                    }
+
+                    else
+                        return Json(new InsertionOutcome { outcome = "Found", ID = she.ID.ToString() });
                 }
             }
             if (she.ID < 0)
@@ -184,6 +201,65 @@ namespace HerdManager.Controllers
             
 
             return Json(new InsertionOutcome { outcome = "Success", ID = she.ID.ToString() });
+        }
+
+        [AllowAnonymous]
+        public JsonResult InsertBodyConditionForHealthEvent(HDB context, BodyConditionForHealthEvent bodyConditionForHealthEvent)
+        {
+            if(context.BodyConditionForHealthEvents.Count()>0)
+            {
+                if (context.BodyConditionForHealthEvents.Select(s => s.ID).Contains(bodyConditionForHealthEvent.ID))
+                {
+                    BodyConditionForHealthEvent oldBhce = context.BodyConditionForHealthEvents.Find(bodyConditionForHealthEvent);
+ 
+                    if(bodyConditionForHealthEvent.HasBeenUpdated(oldBhce))
+                    {
+                        oldBhce = bodyConditionForHealthEvent;
+                        return Json(new InsertionOutcome { outcome = "Updated", ID = bodyConditionForHealthEvent.ID.ToString() });
+                    }
+                    else
+                        return Json(new InsertionOutcome { outcome = "Found", ID = bodyConditionForHealthEvent.ID.ToString() });
+
+                    }
+            }
+            if(bodyConditionForHealthEvent.ID<0)
+               bodyConditionForHealthEvent.ID = 0;
+        
+            
+            context.BodyConditionForHealthEvents.Add(bodyConditionForHealthEvent);
+            context.SaveChanges();
+       
+
+            return Json(new InsertionOutcome { outcome = "Success", ID = bodyConditionForHealthEvent.ID.ToString() });
+        }
+
+        public JsonResult InsertHealthInterventionForHealthEvent(HDB context, HealthInterventionForHealthEvent healthInterventionForHealthEvent)
+        {
+            if (context.HealthInterventionForHealthEvents.Count() > 0)
+            {
+                if (context.HealthInterventionForHealthEvents.Select(s => s.ID).Contains(healthInterventionForHealthEvent.ID))
+                {
+                    HealthInterventionForHealthEvent oldHihe = context.HealthInterventionForHealthEvents.Find(healthInterventionForHealthEvent.ID);
+                    if(oldHihe.HasBeenUpdated(healthInterventionForHealthEvent))
+                    {
+                        oldHihe.numberOfAffectedBabies = healthInterventionForHealthEvent.numberOfAffectedBabies;
+                        oldHihe.numberOfAffectedYoung = healthInterventionForHealthEvent.numberOfAffectedYoung;
+                        oldHihe.numberOfAffectedAdult = healthInterventionForHealthEvent.numberOfAffectedAdult;
+                        context.SaveChanges();
+                        return Json(new InsertionOutcome { outcome = "Updated", ID = healthInterventionForHealthEvent.ID.ToString() });
+                    }
+                
+                    return Json(new InsertionOutcome { outcome = "Found", ID = healthInterventionForHealthEvent.ID.ToString() });
+                }
+            }
+            if (healthInterventionForHealthEvent.ID < 0)
+                healthInterventionForHealthEvent.ID = 0;
+
+
+            context.HealthInterventionForHealthEvents.Add(healthInterventionForHealthEvent);
+            context.SaveChanges();
+
+            return Json(new InsertionOutcome { outcome ="Success", ID = healthInterventionForHealthEvent.ID.ToString()});
         }
 
         #endregion
@@ -210,8 +286,18 @@ namespace HerdManager.Controllers
         {
             if(context.MilkForProductivityEvents.Count()>0)
             {
-                if(context.MilkForProductivityEvents.Select(m => m.ID).Contains(mpe.ID))
-                    return Json(new InsertionOutcome { outcome = "Found", ID = mpe.ID.ToString() });
+                if (context.MilkForProductivityEvents.Select(m => m.ID).Contains(mpe.ID))
+                {
+                    MilkForProductivityEvent oldMpe = context.MilkForProductivityEvents.Find(mpe.ID);
+                    if(mpe.HasBeenUpdate(oldMpe))
+                    {
+                        oldMpe.numberOfLactatingAnimals = mpe.numberOfLactatingAnimals;
+                        oldMpe.litresOfMilkPerDay = mpe.litresOfMilkPerDay;
+                        return Json(new InsertionOutcome { outcome = "Updated", ID = mpe.ID.ToString() });
+                    }
+                    else
+                        return Json(new InsertionOutcome { outcome = "Found", ID = mpe.ID.ToString() });
+                }
             }
 
             if (mpe.ID < 0)
@@ -226,8 +312,19 @@ namespace HerdManager.Controllers
         {
             if(context.BirthsForProductivityEvents.Count()>0)
             {
-                if(context.BirthsForProductivityEvents.Select(b => b.ID).Contains(bpe.ID))
-                    return Json(new InsertionOutcome { outcome = "Found", ID = bpe.ID.ToString() });
+                if (context.BirthsForProductivityEvents.Select(b => b.ID).Contains(bpe.ID))
+                {
+                    BirthsForProductivityEvent oldBpe = context.BirthsForProductivityEvents.Find(bpe.ID);
+                    if(oldBpe.HasBeenUpdated(bpe))
+                    {
+                        oldBpe.nOfGestatingAnimals = bpe.nOfGestatingAnimals;
+                        oldBpe.nOfBirths = bpe.nOfBirths;
+                        context.SaveChanges();
+                        return Json(new InsertionOutcome { outcome = "Updated", ID = bpe.ID.ToString() });
+                    }
+                    else
+                        return Json(new InsertionOutcome { outcome = "Found", ID = bpe.ID.ToString() });
+                }
             }
 
             if (bpe.ID < 0)
@@ -262,12 +359,35 @@ namespace HerdManager.Controllers
         {
             if(context.AnimalMovementsForDynamicEvents.Count()>0)
             {
-                if(context.AnimalMovementsForDynamicEvents.Select(a=> a.ID ).Contains(amde.ID))
-                    return Json(new InsertionOutcome { outcome = "Found", ID = amde.ID.ToString() });
+                if (context.AnimalMovementsForDynamicEvents.Select(a => a.ID).Contains(amde.ID))
+                {
+                    AnimalMovementsForDynamicEvent oldAmde = context.AnimalMovementsForDynamicEvents.Find(amde.ID);
+
+                    if (oldAmde.HasBeenUpdated(amde))
+                    {
+                        oldAmde.lostBabies = amde.lostBabies;
+                        oldAmde.lostYoung = amde.lostYoung;
+                        oldAmde.lostOld = amde.lostOld;
+
+                        oldAmde.boughtBabies = amde.boughtBabies;
+                        oldAmde.boughtYoung = amde.boughtYoung;
+                        oldAmde.boughtOld = amde.boughtOld;
+
+                        oldAmde.soldBabies = amde.soldBabies;
+                        oldAmde.soldYoung = amde.soldYoung;
+                        oldAmde.soldOld = amde.soldOld;
+
+                        context.SaveChanges();
+                        return Json(new InsertionOutcome { outcome = "Found", ID = amde.ID.ToString() });
+                    }
+                    else
+                        return Json(new InsertionOutcome { outcome = "Found", ID = amde.ID.ToString() });
+
+                }
             }
 
             if (amde.ID < 0)
-                amde.ID = 0;
+                 amde.ID = 0;
             context.AnimalMovementsForDynamicEvents.Add(amde);
             context.SaveChanges();
 
