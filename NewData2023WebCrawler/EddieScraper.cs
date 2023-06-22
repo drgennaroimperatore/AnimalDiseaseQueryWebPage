@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 namespace NewData2023WebCrawler
 {
     class EddieScraper
@@ -18,7 +20,36 @@ namespace NewData2023WebCrawler
         private static List<List<KeyValuePair<String, String>>> donkeyCases = new List<List<KeyValuePair<String, String>>>();
         private static List<List<KeyValuePair<String, String>>> camelCases= new List<List<KeyValuePair<String, String>>>();
 
-        private static void 
+        private static void SerialiseToJsonAndSave(List<List<KeyValuePair<String, String>>> cases, String filename)
+        {
+            string jsonString = JsonSerializer.Serialize(cases);
+
+            string FilePath  = System.IO.Directory.GetCurrentDirectory()+"\\"+filename+".json";
+            System.IO.File.WriteAllText(@FilePath, jsonString);
+        }
+
+        public static List<List<KeyValuePair<String, String>>> DeserialiseJsonFile(String filename)
+        {
+            return 
+                JsonSerializer.Deserialize<List<List<KeyValuePair<String, String>>>>( System.IO.File.ReadAllText(System.IO.Directory.GetCurrentDirectory() + "\\" + filename + ".json"));
+        }
+
+        public static List<List<KeyValuePair<String, String>>> CleanJsonFile(string filename)
+        {
+
+            JsonNode root = JsonNode.Parse( System.IO.File.ReadAllText(System.IO.Directory.GetCurrentDirectory() + "\\" + filename + ".json"));
+            
+            JsonArray array = root.AsArray();
+            
+            foreach(var element in array)
+            {
+                JsonArray currCase = element.AsArray();
+
+
+            }
+
+            return null;
+        }
 
         private static String parseMainCaseData(HtmlNode mainCase, String caseName, List<KeyValuePair<String, String>> tableData)
         {
@@ -120,7 +151,8 @@ namespace NewData2023WebCrawler
                 });
                 var result = await client.PostAsync("/cases/case_viewN.php", content);
                 string resultContent = await result.Content.ReadAsStringAsync();
-               // Console.WriteLine(resultContent);
+                // Console.WriteLine(resultContent);
+                
 
                 List<HtmlNode> caseTable = getMainDiv(resultContent).Elements("table").ToList();
                 if (caseTable.Count <=3)
@@ -326,6 +358,8 @@ namespace NewData2023WebCrawler
                         currentCase.Add(caseInnerText);
                     }
                 }
+
+                SerialiseToJsonAndSave(sheepCases, "sheep");
 
                 Console.WriteLine();
 

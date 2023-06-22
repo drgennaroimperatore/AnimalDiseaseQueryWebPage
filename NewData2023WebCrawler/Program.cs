@@ -11,10 +11,12 @@ namespace NewData2023WebCrawler
         static void Main(string[] args)
         {
             Console.WriteLine("Starting....");
-           
-            
 
-                EddieScraper.PostAsync().Wait();
+
+
+            //EddieScraper.PostAsync().Wait();
+            // var data= EddieScraper.DeserialiseJsonFile("sheep");
+            EddieScraper.CleanJsonFile("sheep");
             
             Console.WriteLine("End");
             Console.ReadLine();
