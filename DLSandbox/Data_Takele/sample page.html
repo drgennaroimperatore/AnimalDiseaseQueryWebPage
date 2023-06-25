@@ -1,0 +1,80 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>EDDiE</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="../cases/case.php">EDDiE</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        
+        
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Main <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="../species/species.php">Species</a></li>
+            <li><a href="../symptoms/symptoms.php">Symptom</a></li>
+            <li><a href="../disease/disease.php">Disease</a></li>
+            <li><a href="../drug/drug.php">Drug</a></li>
+            <li><a href="../treatment/treatment1.php">Treatment Main</a></li>
+            <li><a href="../treatmentOther/treatment1.php">Treatment Other</a></li>
+            <li><a href="../imei/imei.php">IMEI</a></li>
+            <li><a href="../users/users.php">Users</a></li>
+          </ul>
+        </li>
+        
+           <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Relations <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="../probabilities/probability.php">Probablities</a></li>
+            <li><a href="../spec_sympMain/select_spec.php">Main Symptoms</a></li>
+            <li><a href="../spec_sympAdd/select_spec.php">Additional Symptoms</a></li>
+            <li><a href="../spec_disMain/select_spec.php">Main Diseases</a></li>
+            <li><a href="../spec_disOther/select_spec.php">Other Diseases</a></li>
+            
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="../lo.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+      <div class='container'>
+      <br>
+      
+      <p style='text-align:center;font-weight: bold'>Single Case full Report! </p><hr width=50% style='border-width: 2px;border-color:green'>
+        <table style='margin-left: auto;margin-right: auto;width:40%'><tr><td style='color:blue'>Date</td><td style='font-weight: bold'>2023-05-24</td></tr>
+         <tr><td style='color:blue'>Owner</td><td style='font-weight: bold'>Abraha Hagos </td></tr>
+         <tr><td style='color:blue'>Amimal ID</td><td style='font-weight: bold'>9590</td></tr>
+         <tr><td style='color:blue'>Region</td><td style='font-weight: bold'>Oromia</td></tr>
+         <tr><td style='color:blue'>Location</td><td style='font-weight: bold'>H/lejisa( latt : 0  -  longt : 0 )</td></tr>
+         <tr><td style='color:blue'>Species</td><td style='font-weight: bold'>Cattle</td></tr>
+         <tr><td style='color:blue'>Age</td><td style='font-weight: bold'>Older than 2 Years</td></tr>
+         <tr><td style='color:blue'>Breed</td><td style='font-weight: bold'>Local</td></tr>
+         <tr><td style='color:blue'>Sex</td><td style='font-weight: bold'>Female</td></tr>
+        </table><hr width=50% style='border-width: 2px;border-color:green'><table style='margin-left: auto;margin-right: auto;width:40%'> <tr><td colspan=2 style='text-align:center;font-weight: bold'>***   Main Symptoms   ***</td></tr> <tr><td style='color:blue'>- Anaemia (pallor)</td><td style='font-weight: bold'>1</td></tr> <tr><td style='color:blue'>- Ataxia /Incoordinated movement</td><td style='font-weight: bold'>1</td></tr> <tr><td style='color:blue'>- Anorexia/Loss of appetite</td><td style='font-weight: bold'>1</td></tr> <tr><td style='color:blue'>- Constipation</td><td style='font-weight: bold'>2</td></tr> <tr><td style='color:blue'>- Diarrhoea</td><td style='font-weight: bold'>1</td></tr> <tr><td style='color:blue'>- Dyspnoea (difficulty breathing)</td><td style='font-weight: bold'>2</td></tr> <tr><td style='color:blue'>- Staring/Rough coat</td><td style='font-weight: bold'>2</td></tr> <tr><td style='color:blue'>- Stunted growth</td><td style='font-weight: bold'>1</td></tr> <tr><td style='color:blue'>- Lymphnode enlargement</td><td style='font-weight: bold'>2</td></tr> <tr><td style='color:blue'>- Submandibular/ Ventral oedema</td><td style='font-weight: bold'>1</td></tr> <tr><td style='color:blue'>- Weakness</td><td style='font-weight: bold'>1</td></tr> <tr><td style='color:blue'>- Weight loss/ Emaciation</td><td style='font-weight: bold'>1</td></tr> <tr><td style='color:blue'>- Pyrexia (fever)</td><td style='font-weight: bold'>1</td></tr> <tr><td style='color:blue'>- Icterus (yellowish mucous membrane)</td><td style='font-weight: bold'>1</td></tr> <tr><td style='color:blue'>- Dysentery/Bloody diarrhea</td><td style='font-weight: bold'>1</td></tr></table>
+        <hr width=50% style='border-width: 2px;border-color:green'>
+        <table style='margin-left: auto;margin-right: auto;width:40%'> <tr><td colspan=2 style='text-align:center;font-weight: bold'>***   Additional Symptoms   ***</td></tr> <tr><td style='color:blue'>- Hair loss (alopecia)</td><td style='font-weight: bold'></td></tr> <tr><td style='color:blue'>- Lameness</td><td style='font-weight: bold'></td></tr> <tr><td style='color:blue'>- Circling</td><td style='font-weight: bold'></td></tr> <tr><td style='color:blue'>- Yellowish/ flake discharge</td><td style='font-weight: bold'></td></tr> <tr><td style='color:blue'>- Anuria</td><td style='font-weight: bold'></td></tr> <tr><td style='color:blue'>- Dark red urine (hematuria)</td><td style='font-weight: bold'></td></tr> <tr><td style='color:blue'>- Jaundice</td><td style='font-weight: bold'></td></tr> <tr><td style='color:blue'>- Wound</td><td style='font-weight: bold'></td></tr> <tr><td style='color:blue'>- Loss of consciousness</td><td style='font-weight: bold'></td></tr></table>
+        <hr width=50% style='border-width: 2px;border-color:green'>
+        <table style='margin-left: auto;margin-right: auto;width:40%'> 
+            <tr><td colspan=2 style='text-align:center;font-weight: bold'>***   App Disease Rank   ***</td></tr> <tr><td style='color:blue'>- zz_Other</td><td style='font-weight: bold'>48.5</td></tr> <tr><td style='color:blue'>- Colibacillosis</td><td style='font-weight: bold'>38.2</td></tr> <tr><td style='color:blue'>- GI parasites</td><td style='font-weight: bold'>4.3</td></tr> <tr><td style='color:blue'>- Fasciolosis</td><td style='font-weight: bold'>4.3</td></tr> <tr><td style='color:blue'>- FMD (Foot & Mouth Disease)</td><td style='font-weight: bold'>4.2</td></tr> <tr><td style='color:blue'>- Cowdriosis</td><td style='font-weight: bold'>0.4</td></tr> <tr><td style='color:blue'>- Babesiosis</td><td style='font-weight: bold'>0.1</td></tr> <tr><td style='color:blue'>- Lungworm /Verminous pneumonia</td><td style='font-weight: bold'>0.1</td></tr> <tr><td style='color:blue'>- Trypanosomosis</td><td style='font-weight: bold'>0</td></tr> <tr><td style='color:blue'>- Pasteurellosis_pneumonic</td><td style='font-weight: bold'>0</td></tr> <tr><td style='color:blue'>- LSD (Lumpy Skin Disease/</td><td style='font-weight: bold'>0</td></tr> <tr><td style='color:blue'>- CBPP</td><td style='font-weight: bold'>0</td></tr> <tr><td style='color:blue'>- Blackleg /Black quarter</td><td style='font-weight: bold'>0</td></tr> <tr><td style='color:blue'>- Tuberculosis</td><td style='font-weight: bold'>0</td></tr> <tr><td style='color:blue'>- Rabies</td><td style='font-weight: bold'>0</td></tr> <tr><td style='color:blue'>- Anthrax</td><td style='font-weight: bold'>0</td></tr></table>
+        <hr width=50% style='border-width: 2px;border-color:green'>
+        <table style='margin-left: auto;margin-right: auto;width:40%'> 
+            <tr><td style='color:blue;text-align:left'>Expert Choice (Disease) : </td><td style='font-weight: bold;text-align:left'>zz_Other</td></tr><table style='margin-left: auto;margin-right: auto;width:40%'> <tr><td style='color:blue;text-align:left'>Other Disease Selected : </td><td style='font-weight: bold;text-align:left'>Abscess</td></tr></table><hr width=50% style='border-width: 2px;border-color:green'></div>
